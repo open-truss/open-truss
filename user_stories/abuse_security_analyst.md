@@ -30,6 +30,9 @@ They are tasked with protecting the platform from abuse, upholding the terms of 
 - **Responding to spam campaigns**
   - Scenario - Bad actors are creating fake accounts and posting spam on the platform.
   - Workflow - The analyst goes into the spam workflow which fetches recently created users that have posted suspicious content. They review the user and additional context (recently created content, other users on the same IP, etc) then suspend the account or content.
+- **Viewing and evaluating an abuse detection rule**
+  - Scenario - Automated abuse detections need to be periodically reviewed.
+  - Workflow - The analyst goes the rule dashboard which fetches rule performance metrics, associated zendesk false positive ticket write ins, rule definitions, relevant audit events (creation date, deploy dates, etc), matching content or accounts, etc. They review the detection to confirm it is still behaving as expected and if not disable the detection within the dashboard.
 - **Handling DMCA requests**
   - Scenario - A user writes into Zendesk citing multiple pieces of content on the platform that violates copyright laws.
   - Workflow - The analyst goes into the DMCA ticket workflow which fetches open DMCA tickets from Zendesk. They review the content and additional context (user metadata, render of original content side by side, etc) then take down anything in violation. At the final stage, the workflow displays a summary, list of actions taken, the conversation history with the user, and the ability respond to and close the zendesk ticket.
