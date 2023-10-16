@@ -4,7 +4,7 @@ Open Truss uses nested composible configurations to define everything in the sys
 - **Workflow**.
   - A grouping of pieces of configuration. It has all of the information necessary to be usable on its own.
   - Workflows have a name and optionally a description.
-  - Workflows also consist of the follow additional key concepts:
+  - Workflows also include some combination of the following:
     - **Query**.
       - A specification for how to retrieve data for a workflow.
       - Queries must specify their `type` (e.g. MYSQL, GRAPHQL, REST) and `source` (the URL or configured host to use).
