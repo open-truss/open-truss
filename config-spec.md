@@ -8,7 +8,7 @@ Open Truss uses nested composible configurations to define everything in the sys
     - **Query**.
       - A specification for how to retrieve data for a workflow.
       - Queries must specify their `type` (e.g. MYSQL, GRAPHQL, REST) and `source` (the URL or configured host to use).
-      - A workflow can only have a single query. ???
+      - A workflow can only have a single query.
     - **Components**.
       - A list of React components to render for this workflow.
       - Each component is automatically given its workflow's query's results.
