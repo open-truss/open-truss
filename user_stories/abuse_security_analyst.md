@@ -39,4 +39,6 @@ They are tasked with protecting the platform from abuse, upholding the terms of 
 - **Monitoring the launch of a new product**
   - Scenario - A new product is launched and we want a dashboard that monitors how it is being used and potentially abused.
   - Workflow - The analyst goes into the new product dashboard which fetches data from relevant sources. The dashboard could display recent zendesk tickets filtered by the product, most active users, recently created content or activity, log data from splunk, and trending topics from social media.
-
+- **Gracefully reverting workflow changes**
+  - Scenario - A team of abuse analysts share workflows to stay in sync. A teammate pushed a disruptive change that needs to be rolled back.
+  - Workflow - The analyst reverts the change on the workflow or can individually use a previous version of the workflow. This flexibility reduces the disruption that can happen when tools change unexpectedly and makes it easier to move quickly and experiment with new changes.
