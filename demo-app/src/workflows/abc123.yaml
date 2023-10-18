@@ -1,17 +1,19 @@
 ---
-name: Three Divs
-description: Renders 3 divs
+name: Title and two divs
+description: Renders a title and two divs
 
 workflows:
-  - components:
-    - component: PageTitle
+  - component:
+      component: PageTitle
+      props:
+        children: Page title
+  - component:
+      component: div
       props:
         children: First div
-    - component: div
-      props:
-        children: Second div
         style:
           color: red
-    - component: div
+  - component:
+      component: div
       props:
-        children: Third div
+        children: Second div

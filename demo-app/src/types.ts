@@ -9,7 +9,7 @@ interface ComponentConfiguration {
   props?: OpenTrussComponentProps
 }
 
-export interface Workflow {
-  workflows?: Workflow[]
-  components: ComponentConfiguration[]
+export interface WorkflowConfiguration {
+  workflows?: WorkflowConfiguration[]
+  component?: ComponentConfiguration
 }

@@ -1,30 +1,13 @@
 import { promises as fs } from 'fs'
 import * as yaml from 'yaml'
-import { Workflow } from '@/types'
-import displayComponents from '@/display-components'
+import { WorkflowConfiguration } from '@/types'
+import Workflow from './Workflow'
 
 async function WorkflowPage({ params }: { params: { id: string }}) {
-  // 1. read file
   const fileContents = await fs.readFile(`./src/workflows/${params.id}.yaml`, 'utf-8')
+  const workflow: WorkflowConfiguration = yaml.parse(fileContents)
 
-  // 2. parse yaml
-  const config: Workflow = yaml.parse(fileContents)
-
-  // 3. iterate over stuff
-  const workflows = config.workflows || []
-  const componentsToRender = workflows.map(({ components }) => {
-    return (components || []).map(({ component, props }, i) => {
-      const Component = displayComponents[component] || component
-      return <Component key={i} {...props} />
-    })
-  })
-
-  // 4. render it
-  return (
-    <>
-      {componentsToRender}
-    </>
-  )
+  return <Workflow workflow={workflow} />
 }
 
 export default WorkflowPage
