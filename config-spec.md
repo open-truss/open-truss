@@ -3,13 +3,16 @@ Open Truss uses nested composable configurations to define everything in the sys
 ## Key concepts
 - **Workflow**.
   - A grouping of pieces of configuration. It has all of the information necessary to be usable on its own.
-  - Workflows have optional names and descriptions.
   - Workflows can specify a **Query**.
-    - **Query**.
+    - (optional) **Name**.
+    - (optional) **Description**.
+    - (optional) **Query**.
       - A specification for how to retrieve data for a workflow.
       - Queries must specify their `type` (e.g. MYSQL, GRAPHQL, REST) and `source` (the URL or configured host to use).
       - A workflow can only have a single query.
-  - Workflows can either specify a component to render or nested workflows:
+    - (optional) **Layout**.
+      - Spec for `layout` is to be determined, but could probably start with some sort of Flexbox configuration.
+  - Additionally, Workflows can specify a component to render _or_ nested workflows:
     - **Component**.
       - A React component to render for this workflow.
       - Components are automatically given their workflow's query's results, if any.
@@ -30,6 +33,7 @@ Open Truss uses nested composable configurations to define everything in the sys
 # defines the name and description and then renders additional workflows underneath it.
 name: Accounts created on 2023-10-16
 description: Renders PageTitle, DataTable, and TotalCount components.
+layout: TBD
 
 workflows:
   # This workflow has no query. Its PageTitle component has its props set in the configuration.
