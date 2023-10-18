@@ -10,6 +10,8 @@ workflows:
     - component: div
       props:
         children: Second div
+        style:
+          color: red
     - component: div
       props:
         children: Third div

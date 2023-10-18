@@ -3,9 +3,9 @@ import * as yaml from 'yaml'
 import { Workflow } from '@/types'
 import displayComponents from '@/display-components'
 
-async function WorkflowRenderer() {
+async function WorkflowPage({ params }: { params: { id: string }}) {
   // 1. read file
-  const fileContents = await fs.readFile('./src/workflow.yaml', 'utf-8')
+  const fileContents = await fs.readFile(`./src/workflows/${params.id}.yaml`, 'utf-8')
 
   // 2. parse yaml
   const config: Workflow = yaml.parse(fileContents)
@@ -27,4 +27,4 @@ async function WorkflowRenderer() {
   )
 }
 
-export default WorkflowRenderer
+export default WorkflowPage

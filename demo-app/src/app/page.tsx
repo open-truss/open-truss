@@ -1,7 +1,7 @@
-import WorkflowRenderer from "@/components/WorkflowRenderer";
+import AvailableWorkflows from "@/components/AvailableWorkflows";
 
 export default function Home() {
   return (
-    <WorkflowRenderer />
+    <AvailableWorkflows />
   )
 }
