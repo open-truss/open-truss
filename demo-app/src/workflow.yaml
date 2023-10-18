@@ -4,12 +4,12 @@ description: Renders 3 divs
 
 workflows:
   - components:
-      - component: PageTitle
-        props:
-          children: First div
-      - component: div
-        props:
-          children: Second div
-      - component: div
-        props:
-          children: Third div
+    - component: PageTitle
+      props:
+        children: First div
+    - component: div
+      props:
+        children: Second div
+    - component: div
+      props:
+        children: Third div
