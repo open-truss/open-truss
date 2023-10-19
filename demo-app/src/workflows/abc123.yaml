@@ -13,7 +13,7 @@ workflows:
         children: First div
         style:
           color: red
-  - component:
-      component: div
-      props:
-        children: Second div
+  - query:
+      query: select * from playlists limit 10;
+    component:
+      component: JsonResults
