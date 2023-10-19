@@ -20,7 +20,6 @@ function Workflow({ workflow }: { workflow: WorkflowConfiguration }) {
 
   // Render this workflow's component
   const Component = displayComponents[component] || component
-  if (componentConfiguration)
   return <Component {...props} />
 }
 
