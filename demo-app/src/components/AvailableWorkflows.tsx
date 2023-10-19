@@ -1,8 +1,13 @@
 import { promises as fs } from 'fs'
 import Link from 'next/link'
 
+// TODO this should be cached since what's on disk can't change
+function availableWorkflowsFromDisk() {
+  return fs.readdir('./src/workflows/')
+}
+
 async function AvailableWorkflows() {
-  const workflows = await fs.readdir('./src/workflows/')
+  const workflows = await availableWorkflowsFromDisk()
   const workflowIds = workflows.map((fileName) => fileName.replace('.yaml', ''))
 
   return (

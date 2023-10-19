@@ -3,9 +3,14 @@ import * as yaml from 'yaml'
 import { WorkflowConfiguration } from '@/types'
 import Workflow from './Workflow'
 
+// TODO this should be cached since what's on disk can't change
+async function loadWorkflowFromDisk(workflowId: string): Promise<WorkflowConfiguration> {
+  const fileContents = await fs.readFile(`./src/workflows/${workflowId}.yaml`, 'utf-8')
+  return yaml.parse(fileContents)
+}
+
 async function WorkflowPage({ params }: { params: { id: string }}) {
-  const fileContents = await fs.readFile(`./src/workflows/${params.id}.yaml`, 'utf-8')
-  const workflow: WorkflowConfiguration = yaml.parse(fileContents)
+  const workflow = await loadWorkflowFromDisk(params.id)
 
   return <Workflow workflow={workflow} />
 }
