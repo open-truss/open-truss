@@ -1,4 +1,4 @@
-import { WorkflowConfiguration } from '@/types'
+import { OpenTrussComponentProps, WorkflowConfiguration } from '@/types'
 import displayComponents from '@/display-components'
 
 function Workflow({ workflow }: { workflow: WorkflowConfiguration }) {
@@ -15,8 +15,9 @@ function Workflow({ workflow }: { workflow: WorkflowConfiguration }) {
     )
   }
 
-  const { component: componentConfiguration, query: queryConfiguration } = workflow
-  const { component, props = {} } = componentConfiguration
+  const { component: componentConfiguration } = workflow
+  const { component, props: propsConfiguration } = componentConfiguration
+  const props = propsConfiguration || {} as OpenTrussComponentProps
 
   // Render this workflow's component
   const Component = displayComponents[component] || component

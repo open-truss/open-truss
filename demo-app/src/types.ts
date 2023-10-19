@@ -1,4 +1,4 @@
-interface OpenTrussComponentProps {
+export interface OpenTrussComponentProps {
   children?: React.ReactNode
 }
 
