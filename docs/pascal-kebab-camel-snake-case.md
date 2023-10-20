@@ -6,15 +6,15 @@ When should I use what case!? One of life's more difficult questions answered fo
 
 - Folder names should be `kebab-case`.
 - File names should be `kebab-case`.
-- Except for React component file names which should be `PascalCase`.
+  - Except for React component file names which should be `PascalCase`.
 
 ## Naming in yaml configs
 
 - Keys should be `snake_case`.
-- Except for component props which should be `camelCase`.
+  - Except for component props which should be `camelCase`.
 
 ## Naming in code
 
 - Variables should be `camelCase`.
 - Functions should be `camelCase`.
-- Except for component functions which should be `PascalCase`.
+  - Except for component functions which should be `PascalCase`.
