@@ -6,7 +6,7 @@ When should I use what case!? One of life's more difficult questions answered fo
 
 - Folder names should be `kebab-case`.
 - File names should be `kebab-case`.
-- Except for React component file names should be `PascalCase`.
+- Except for React component file names which should be `PascalCase`.
 
 ## Naming in yaml configs
 
