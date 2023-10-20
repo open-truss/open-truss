@@ -58,8 +58,7 @@ workflow:
               view:
                 component: DataTable
                 props:
-                  style:
-                    color: red
+                  showTooltips: false
           - frame:
               view:
                 component: TotalCount
