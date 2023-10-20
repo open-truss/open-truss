@@ -49,7 +49,7 @@ workflows:
     query:
       query: select account_id, account_login from accounts where date(created_at) = '2023-10-16' order by id desc;
       type: MYSQL
-      host: some-server
+      datasource: &some_reference_to_datasource_configs_or_client
     workflows:
       - component:
           component: DataTable
