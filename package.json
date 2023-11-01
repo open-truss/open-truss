@@ -2,7 +2,6 @@
   "name": "@open-truss/open-truss",
   "version": "0.0.1",
   "description": "Framework for building internal tools",
-  "main": "index.js",
   "directories": {
     "doc": "docs"
   },

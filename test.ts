@@ -1,5 +1,5 @@
 #!/usr/bin/env ts-node
 
-import helloWorld from './index';
+import helloWorld from './packages/open-truss/index';
 
 console.log(helloWorld());
