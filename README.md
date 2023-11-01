@@ -23,3 +23,7 @@ The Open Truss project is built by people with years of experience developing in
 - **Collaboration by default** - When collaboration and finding information are easy it builds trust, facilitates knowledge sharing, and provides people what they need to be effective.
 - **Asynchronous** - When humans are free from systems that control and interrupt them, they do their best work and live more balanced lives.
 - **Delightful** - Tools should be delightful to use. Not only does toil lead to less happiness, but when tools inspire joy they lead to more creativity and better outcomes.
+
+## Documentation
+
+- See [docs](docs) for documentation on the Open Truss framework and development guidelines and processes.
