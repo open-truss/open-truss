@@ -41,27 +41,27 @@ workflow:
   frames:
     # This frame has no query. Its PageTitle component has its props set in the configuration.
     - frame:
-        view:
-          component: PageTitle
-          props:
-            title: Accounts created on 2023-10-16
+      view:
+        component: PageTitle
+        props:
+          title: Accounts created on 2023-10-16
 
     # This frame will execute a query and render its results in a DataTable
     # component and summarize those same results in a TotalCount component.
     - frame:
-        data:
-          query: select account_id, account_login from accounts where date(created_at) = '2023-10-16' order by id desc;
-          type: MYSQL
-          source: &some_reference_to_datasource_configs_or_client
-        frames:
-          - frame:
-              view:
-                component: DataTable
-                props:
-                  showTooltips: false
-          - frame:
-              view:
-                component: TotalCount
-                # Components each get the query's results automatically.
-                # TotalCount doesn't need any additional configuration, so we pass nothing in.
+      data:
+        query: select account_id, account_login from accounts where date(created_at) = '2023-10-16' order by id desc;
+        type: MYSQL
+        source: &some_reference_to_datasource_configs_or_client
+      frames:
+        - frame:
+          view:
+            component: DataTable
+            props:
+              showTooltips: false
+        - frame:
+          view:
+            component: TotalCount
+            # Components each get the query's results automatically.
+            # TotalCount doesn't need any additional configuration, so we pass nothing in.
 ```
