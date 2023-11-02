@@ -1,0 +1,24 @@
+{
+  "name": "@open-truss/open-truss",
+  "version": "0.0.1",
+  "description": "Framework for building internal tools",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "ts-node test.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/open-truss/open-truss.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/open-truss/open-truss/issues"
+  },
+  "homepage": "https://github.com/open-truss/open-truss#readme",
+  "dependencies": {
+    "ts-node": "^10.9.1"
+  }
+}
