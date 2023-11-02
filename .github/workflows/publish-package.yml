@@ -13,14 +13,11 @@ jobs:
         with:
           node-version: '20.x'
           registry-url: 'https://registry.npmjs.org'
-      - name: Change directory
-        working-directory: ./packages/open-truss
-        run: ls -al
       - name: Run CI
+        working-directory: ./packages/open-truss
         run: npm ci
       - name: Publish Package
         working-directory: ./packages/open-truss
-        run: ls -al
-        # run: npm publish --access public
-        # env:
-        #   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
