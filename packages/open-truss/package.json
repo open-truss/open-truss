@@ -20,5 +20,8 @@
   "homepage": "https://github.com/open-truss/open-truss#readme",
   "dependencies": {
     "ts-node": "^10.9.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
   }
 }
