@@ -15,22 +15,10 @@ jobs:
         with:
           node-version: '20.x'
           registry-url: 'https://registry.npmjs.org'
-      - name: Skip if package.json version unchanged
-        run: |
-          if git diff ${{ github.event.before }} ${{ github.sha }} -- packages/open-truss/package.json | grep "[[:space:]][[:space:]]\"version"; then
-              echo "package.json version changed. Continuting with package publishing"
-          else
-              echo "package.json version has not changed. Skipping package publishing"
-              gh run cancel ${{ github.run_id }}
-              gh run watch ${{ github.run_id }}
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run CI
         working-directory: ./packages/open-truss
         run: npm ci
-      - name: Publish Package
-        working-directory: ./packages/open-truss
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - uses: JS-DevTools/npm-publish@v3
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: ./packages/open-truss
