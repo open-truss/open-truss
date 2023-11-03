@@ -2,7 +2,7 @@ name: Publish Package to npmjs
 on:
   push:
     branches:
-      - fix-package-publishing
+      - main
 permissions:
   actions: 'write'
 jobs:
