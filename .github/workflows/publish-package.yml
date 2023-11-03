@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - fix-package-publishing
+permissions:
+  actions: 'write'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,8 +21,11 @@ jobs:
               echo "package.json version changed. Continuting with package publishing"
           else
               echo "package.json version has not changed. Skipping package publishing"
-              exit 0
+              gh run cancel ${{ github.run_id }}
+              gh run watch ${{ github.run_id }}
           fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run CI
         working-directory: ./packages/open-truss
         run: npm ci
