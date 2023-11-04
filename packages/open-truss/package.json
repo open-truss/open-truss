@@ -12,6 +12,14 @@
     "build:esm": "tsc --project tsconfig.esm.json",
     "test": "ts-node test.ts"
   },
+  "files": [
+    "lib",
+    "lib-esm",
+    "package.json",
+    "tsconfig.json",
+    "tsconfig.esm.json",
+    "src"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/open-truss/open-truss.git"
