@@ -1,5 +1,5 @@
-function helloKevin() {
-  return "Hello, Kevin!"
+function helloWorld() {
+  return "Hello, World!"
 }
 
-export default helloKevin
+export default helloWorld
