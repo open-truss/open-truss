@@ -6,7 +6,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "ts-node test.ts"
+    "lint": "eslint"
   },
   "repository": {
     "type": "git",
