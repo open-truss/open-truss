@@ -2,11 +2,15 @@
   "name": "@open-truss/open-truss",
   "version": "0.0.1",
   "description": "Framework for building internal tools",
+  "module": "lib-esm/index.js",
+  "main": "lib/index.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "lint": "eslint"
+    "lint": "eslint",
+    "build": "tsc --project tsconfig.json",
+    "build:esm": "tsc --project tsconfig.esm.json"
   },
   "repository": {
     "type": "git",
@@ -18,6 +22,13 @@
     "url": "https://github.com/open-truss/open-truss/issues"
   },
   "homepage": "https://github.com/open-truss/open-truss#readme",
+  "exports": {
+    ".": {
+      "import": "./lib-esm/index.js",
+      "require": "./lib/index.js"
+    }
+  },
+  "typings": "lib/index.d.ts",
   "dependencies": {
     "ts-node": "^10.9.1"
   },
