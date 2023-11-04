@@ -1,2 +1,2 @@
-export { default as hellowWorld } from './hello_world'
+export { default as helloWorld } from './hello_world'
 
