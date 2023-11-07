@@ -18,10 +18,10 @@ jobs:
         run: npm ci
       - name: Build lib
         working-directory: ./packages/open-truss
-        run: npm build
+        run: npm run build
       - name: Build lib-esm
         working-directory: ./packages/open-truss
-        run: npm build:esm
+        run: npm run build:esm
       - uses: JS-DevTools/npm-publish@v3
         with:
           token: ${{ secrets.NPM_TOKEN }}
