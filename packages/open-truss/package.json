@@ -11,7 +11,8 @@
     "build": "tsc --project tsconfig.json",
     "build:esm": "tsc --project tsconfig.esm.json",
     "test": "ts-node test.ts",
-    "lint": "eslint"
+    "lint": "eslint",
+    "tsc:watch": "tsc --watch --project tsconfig.json"
   },
   "files": [
     "lib",
