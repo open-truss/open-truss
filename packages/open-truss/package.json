@@ -20,7 +20,8 @@
     "package.json",
     "tsconfig.json",
     "tsconfig.esm.json",
-    "src"
+    "src",
+    "LICENSE"
   ],
   "repository": {
     "type": "git",
