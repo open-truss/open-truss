@@ -41,7 +41,8 @@
   },
   "typings": "lib/index.d.ts",
   "dependencies": {
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "yaml": "^2.3.4"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.9.1",
