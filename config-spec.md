@@ -27,7 +27,7 @@ Open Truss uses nested composable configurations to define everything in the sys
   - Their **Name** is required.
 - **Global ID**.
   - Everything in Open Truss is automatically assigned a global identifier.
-  - An Open Truss Global ID is a valid URL path.
+  - An Open Truss Global ID is a valid URI path.
 
 ## Sample configuration
 
