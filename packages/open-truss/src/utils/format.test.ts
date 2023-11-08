@@ -1,6 +1,6 @@
 import { formatQuery } from './format'
 
-describe('format', () => {
+describe('formatQuery', () => {
   it('injects named number values', () => {
     const actual = formatQuery(
       'SELECT * FROM users WHERE id = :id',
