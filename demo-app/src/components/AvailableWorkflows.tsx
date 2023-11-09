@@ -2,11 +2,11 @@ import { promises as fs } from 'fs'
 import Link from 'next/link'
 
 // TODO this should be cached since what's on disk can't change
-function availableWorkflowsFromDisk() {
-  return fs.readdir('./src/workflows/')
+async function availableWorkflowsFromDisk(): Promise<string[]> {
+  return await fs.readdir('./src/workflows/')
 }
 
-async function AvailableWorkflows() {
+async function AvailableWorkflows(): Promise<JSX.Element> {
   const workflows = await availableWorkflowsFromDisk()
   const workflowIds = workflows.map((fileName) => fileName.replace('.yaml', ''))
 

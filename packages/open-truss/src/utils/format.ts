@@ -1,4 +1,4 @@
-import { format as sqlFormat, SqlLanguage } from 'sql-formatter'
+import { format as sqlFormat, type SqlLanguage } from 'sql-formatter'
 
 export type Param = string | number | string[] | number[]
 
@@ -27,12 +27,12 @@ function formatParams(params: Record<string, Param>): Record<string, string> {
   return Object.fromEntries(formattedEntries)
 }
 
-export function formatQuery(template: string, config?: Config) {
+export function formatQuery(template: string, config?: Config): string {
   return sqlFormat(template, {
-    language: config?.language || 'sql',
+    language: config?.language ?? 'sql',
     tabWidth: 4,
     linesBetweenQueries: 2,
     paramTypes: { named: [':'] },
-    params: config?.params && formatParams(config.params),
+    params: config?.params != null ? formatParams(config.params) : undefined,
   })
 }
