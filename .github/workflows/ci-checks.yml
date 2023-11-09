@@ -17,7 +17,7 @@ jobs:
         run: npm ci --ignore-scripts
       - name: Run linter
         working-directory: ./packages/open-truss
-        run: npm run lint
+        run: npm run lint:ci
   test:
     runs-on: ubuntu-latest
     steps:

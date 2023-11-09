@@ -13,7 +13,10 @@
     "test": "jest",
     "lint": "npm run lint:prettier && npm run lint:eslint",
     "lint:prettier": "prettier --write \"./**/*.{ts,js,json}\" --log-level error",
-    "lint:eslint": "eslint",
+    "lint:eslint": "eslint --fix",
+    "lint:ci": "npm run lint:prettier:ci && npm run lint:eslint:ci",
+    "lint:prettier:ci": "prettier \"./**/*.{ts,js,json}\" --log-level error",
+    "lint:eslint:ci": "eslint",
     "tsc:watch": "tsc --watch --project tsconfig.json"
   },
   "files": [
