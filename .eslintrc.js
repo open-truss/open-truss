@@ -25,6 +25,14 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint', 'react'],
-  rules: {},
+  plugins: ['@typescript-eslint', 'react', 'check-file'],
+  rules: {
+    'check-file/filename-naming-convention': [
+      'error',
+      {
+        '**/*': 'KEBAB_CASE',
+        '**/*.{tsx}': 'PASCAL_CASE',
+      },
+    ],
+  },
 }
