@@ -12,10 +12,10 @@
     "build:esm": "tsc --project tsconfig.esm.json",
     "test": "jest",
     "lint": "npm run lint:prettier && npm run lint:eslint",
-    "lint:prettier": "prettier --write \"./**/*.{ts,js,json}\" --log-level error",
+    "lint:prettier": "prettier \"./**/*.{ts,js,json}\" --write --log-level error",
     "lint:eslint": "eslint --fix",
     "lint:ci": "npm run lint:prettier:ci && npm run lint:eslint:ci",
-    "lint:prettier:ci": "prettier \"./**/*.{ts,js,json}\" --log-level error",
+    "lint:prettier:ci": "prettier \"./**/*.{ts,js,json}\" --check",
     "lint:eslint:ci": "eslint",
     "tsc:watch": "tsc --watch --project tsconfig.json"
   },
