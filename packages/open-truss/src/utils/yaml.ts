@@ -1,9 +1,9 @@
 import yaml from 'yaml'
 
-interface YamlObject {
+export interface YamlObject {
   [key: string]: YamlType
 }
-type YamlType = null | number | string | boolean | YamlObject | YamlType[]
+export type YamlType = null | number | string | boolean | YamlObject | YamlType[]
 
 export function parseYaml(yamlString: string): YamlType {
   return yaml.parse(yamlString)

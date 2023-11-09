@@ -12,6 +12,7 @@
     "jsx": "preserve",
     "incremental": true,
     "declaration": true,
+    "types": ["node", "jest"],
     "rootDir": "./src",
     "outDir": "./lib",
     "paths": {

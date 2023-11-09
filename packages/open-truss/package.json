@@ -12,7 +12,8 @@
     "build:esm": "tsc --project tsconfig.esm.json",
     "test": "jest",
     "lint": "eslint",
-    "tsc:watch": "tsc --watch --project tsconfig.json"
+    "tsc:watch": "tsc --watch --project tsconfig.json",
+    "tsc:esm:watch": "tsc --watch --project tsconfig.esm.json"
   },
   "files": [
     "lib",
@@ -41,6 +42,8 @@
   },
   "typings": "lib/index.d.ts",
   "dependencies": {
+    "@types/react": "^18.2.37",
+    "react": "^18.2.0",
     "ts-node": "^10.9.1",
     "yaml": "^2.3.4"
   },
