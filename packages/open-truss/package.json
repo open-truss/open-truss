@@ -12,7 +12,7 @@
     "build:esm": "tsc --project tsconfig.esm.json",
     "test": "jest",
     "lint": "npm run lint:prettier && npm run lint:eslint",
-    "lint:prettier": "prettier --write \"./**/*.{ts,js,json},!package-lock.json,!node_modules\" --loglevel error",
+    "lint:prettier": "prettier --write \"./**/*.{ts,js,json}\" --log-level error",
     "lint:eslint": "eslint",
     "tsc:watch": "tsc --watch --project tsconfig.json"
   },

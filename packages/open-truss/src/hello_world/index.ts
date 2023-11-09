@@ -1,5 +1,5 @@
 function helloWorld() {
-  return "Hello, World!"
+  return 'Hello, World!'
 }
 
 export default helloWorld

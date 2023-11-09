@@ -3,14 +3,14 @@ import { format as sqlFormat, SqlLanguage } from 'sql-formatter'
 export type Param = string | number | string[] | number[]
 
 export interface Config {
-  language?: SqlLanguage,
-  params?: Record<string, Param>,
+  language?: SqlLanguage
+  params?: Record<string, Param>
 }
 
 function formatParam(param: Param): string {
   if (typeof param === 'number') {
     return String(param)
-  }else if (typeof param === 'string') {
+  } else if (typeof param === 'string') {
     return `'${param.replaceAll("'", "''")}'`
   } else if (Array.isArray(param)) {
     return param.map(formatParam).join(',')
@@ -20,9 +20,10 @@ function formatParam(param: Param): string {
 }
 
 function formatParams(params: Record<string, Param>): Record<string, string> {
-  const formattedEntries = Object.entries(params).map(
-    ([key, param]) => [key, formatParam(param)]
-  )
+  const formattedEntries = Object.entries(params).map(([key, param]) => [
+    key,
+    formatParam(param),
+  ])
   return Object.fromEntries(formattedEntries)
 }
 
