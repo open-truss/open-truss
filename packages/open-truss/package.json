@@ -11,7 +11,9 @@
     "build": "tsc --project tsconfig.json",
     "build:esm": "tsc --project tsconfig.esm.json",
     "test": "jest",
-    "lint": "eslint",
+    "lint": "npm run lint:prettier && npm run lint:eslint",
+    "lint:prettier": "prettier --write \"./**/*.{ts,js,json},!package-lock.json,!node_modules\" --loglevel error",
+    "lint:eslint": "eslint",
     "tsc:watch": "tsc --watch --project tsconfig.json"
   },
   "files": [
@@ -51,6 +53,7 @@
     "@typescript-eslint/parser": "^6.9.1",
     "eslint": "^8.52.0",
     "eslint-plugin-react": "^7.33.2",
+    "prettier": "^3.0.3",
     "ts-jest": "^29.1.1",
     "typescript": "^5.2.2"
   }
