@@ -1,7 +1,7 @@
 import yaml from 'yaml'
 
-type YamlObject = Record<string, YamlType>
-type YamlType = null | number | string | boolean | YamlObject | YamlType[]
+interface YamlObject extends Record<string, YamlType> {}
+type YamlType = null | number | string | boolean | YamlType[] | YamlObject
 
 export function parseYaml(yamlString: string): YamlType {
   return yaml.parse(yamlString)
