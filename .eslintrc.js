@@ -27,6 +27,7 @@ module.exports = {
   plugins: ['react'],
   rules: {
     '@typescript-eslint/comma-dangle': 'off',
+    '@typescript-eslint/return-await': 'off',
     '@typescript-eslint/space-before-function-paren': 'off',
     'react/react-in-jsx-scope': 'off',
   },
