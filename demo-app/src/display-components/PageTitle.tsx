@@ -1,6 +1,6 @@
-import { OpenTrussComponent } from '@/types'
+import type { OpenTrussComponentProps } from '@/types'
 
-const PageTitle: OpenTrussComponent = ({ children }) => {
+function PageTitle({ children }: OpenTrussComponentProps): JSX.Element {
   return <h1>{children}</h1>
 }
 

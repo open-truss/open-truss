@@ -1,7 +1,7 @@
-import { OpenTrussComponentProps, WorkflowConfiguration } from '@/types'
+import type { WorkflowConfiguration } from '@/types'
 import displayComponents from '@/display-components'
 
-function Workflow({ workflow }: { workflow: WorkflowConfiguration }) {
+function Workflow({ workflow }: { workflow: WorkflowConfiguration }): JSX.Element {
   // If there are any nested workflows, render them recursively.
   // We use `!workflow.component` because we have a contract that workflows either
   // have `workflows` or `component` defined. This trick tells Typescript that
@@ -17,7 +17,7 @@ function Workflow({ workflow }: { workflow: WorkflowConfiguration }) {
 
   const { component: componentConfiguration } = workflow
   const { component, props: propsConfiguration } = componentConfiguration
-  const props = propsConfiguration || {} as OpenTrussComponentProps
+  const props = propsConfiguration || {}
 
   // Render this workflow's component
   const Component = displayComponents[component] || component
