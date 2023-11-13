@@ -25,5 +25,12 @@ module.exports = {
     },
   },
   plugins: ['react'],
-  rules: {},
+  rules: {
+    '@typescript-eslint/comma-dangle': 'off',
+    '@typescript-eslint/return-await': 'off',
+    '@typescript-eslint/space-before-function-paren': 'off',
+    '@typescript-eslint/strict-boolean-expressions': 'off',
+    '@typescript-eslint/prefer-nullish-coalescing': 'off',
+    'react/react-in-jsx-scope': 'off',
+  },
 }
