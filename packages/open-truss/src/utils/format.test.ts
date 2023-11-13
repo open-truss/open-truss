@@ -2,10 +2,9 @@ import { formatQuery } from './format'
 
 describe('formatQuery', () => {
   it('injects named number values', () => {
-    const actual = formatQuery(
-      'SELECT * FROM users WHERE id = :id',
-      { params: { id: 12345 } },
-    )
+    const actual = formatQuery('SELECT * FROM users WHERE id = :id', {
+      params: { id: 12345 },
+    })
     const expected = `
 SELECT
     *
@@ -18,10 +17,9 @@ WHERE
   })
 
   it('injects named string values', () => {
-    const actual = formatQuery(
-      'SELECT * FROM users WHERE login = :login',
-      { params: { login: 'foobar' } },
-    )
+    const actual = formatQuery('SELECT * FROM users WHERE login = :login', {
+      params: { login: 'foobar' },
+    })
     const expected = `
 SELECT
     *
@@ -34,10 +32,9 @@ WHERE
   })
 
   it('injects named array number values', () => {
-    const actual = formatQuery(
-      'SELECT * FROM users WHERE id IN (:ids)',
-      { params: { ids: [12345, 23456, 67890] } },
-    )
+    const actual = formatQuery('SELECT * FROM users WHERE id IN (:ids)', {
+      params: { ids: [12345, 23456, 67890] },
+    })
     const expected = `
 SELECT
     *
@@ -50,10 +47,9 @@ WHERE
   })
 
   it('injects named array string values', () => {
-    const actual = formatQuery(
-      'SELECT * FROM users WHERE login IN (:logins)', 
-      { params: { logins: ['foo', 'bar', 'baz'] } },
-    )
+    const actual = formatQuery('SELECT * FROM users WHERE login IN (:logins)', {
+      params: { logins: ['foo', 'bar', 'baz'] },
+    })
     const expected = `
 SELECT
     *

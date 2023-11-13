@@ -1,6 +1,6 @@
-import AvailableWorkflows from "@/components/AvailableWorkflows";
+import AvailableWorkflows from '@/components/AvailableWorkflows'
 
-export default function Home() {
+export default function Home(): JSX.Element {
   return (
     <AvailableWorkflows />
   )
