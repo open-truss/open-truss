@@ -1,11 +1,10 @@
-import { YamlObject, YamlType } from '../utils/yaml'
+import type { YamlObject, YamlType } from '../utils/yaml'
 import React from 'react'
 
 export interface BaseOpenTrussComponent {
-  data: YamlType,
-  config: WorkflowSpec,
+  data: YamlType
+  config: WorkflowSpec
 }
-
 
 export interface Frame {
   view: {
@@ -21,8 +20,10 @@ export interface WorkflowSpec {
   }
 }
 
-export function applyConfiguration(COMPONENTS: Record<string, React.FC<BaseOpenTrussComponent>>) {
-  const configurationFunction = (yaml: WorkflowSpec) => {
+type ConfigurationFunction = (yaml: WorkflowSpec) => React.JSX.Element[]
+
+export function applyConfiguration(COMPONENTS: Record<string, React.FC<BaseOpenTrussComponent>>): ConfigurationFunction {
+  const configurationFunction: ConfigurationFunction = (yaml: WorkflowSpec) => {
     const renderedComponents = yaml.workflow.frames.map(({ view, data }, i) => {
       const { component: componentName, props } = view
       const Component = COMPONENTS[componentName]
