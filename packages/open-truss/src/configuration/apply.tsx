@@ -1,28 +1,32 @@
-import { YamlObject, YamlType } from '../utils/yaml'
+import { YamlObject, Yaml } from '../utils/yaml'
 import React from 'react'
+import { z } from 'zod'
 
-export interface BaseOpenTrussComponent {
-  data: YamlType,
+export const Frame = z.object({
+  view: z.object({
+    component: z.string(),
+    props: YamlObject,
+  }),
+  frame: z.null(),
+  data: z.string(),
+})
+
+export const WorkflowSpec = z.object({
+  workflow: z.object({
+    frames: z.array(Frame),
+  }),
+})
+
+export const BaseOpenTrussComponent = z.object({
+  data: Yaml,
   config: WorkflowSpec,
-}
+})
 
+export type BaseOpenTrussComponentProps = z.infer<typeof BaseOpenTrussComponent>
+type Components = Record<string, React.FC<BaseOpenTrussComponentProps>>
 
-export interface Frame {
-  view: {
-    component: string
-    props: YamlObject
-  }
-  frame: null
-  data: string
-}
-export interface WorkflowSpec {
-  workflow: {
-    frames: Frame[]
-  }
-}
-
-export function applyConfiguration(COMPONENTS: Record<string, React.FC<BaseOpenTrussComponent>>) {
-  const configurationFunction = (yaml: WorkflowSpec) => {
+export function applyConfiguration(COMPONENTS: Components) {
+  const configurationFunction = (yaml: z.infer<typeof WorkflowSpec>) => {
     const renderedComponents = yaml.workflow.frames.map(({ view, data }, i) => {
       const { component: componentName, props } = view
       const Component = COMPONENTS[componentName]
