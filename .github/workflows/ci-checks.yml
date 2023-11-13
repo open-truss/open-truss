@@ -13,11 +13,11 @@ jobs:
           node-version: '20.x'
           registry-url: 'https://registry.npmjs.org'
       - name: Install client dependencies
-        working-directory: ./packages/open-truss
+        working-directory: ./
         run: npm ci --ignore-scripts
       - name: Run linter
-        working-directory: ./packages/open-truss
-        run: npm run lint
+        working-directory: ./
+        run: npm run lint:ci
   test:
     runs-on: ubuntu-latest
     steps:

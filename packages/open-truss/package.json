@@ -1,6 +1,6 @@
 {
   "name": "@open-truss/open-truss",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "description": "Framework for building internal tools",
   "module": "lib-esm/index.js",
   "main": "lib/index.js",
@@ -42,6 +42,7 @@
   },
   "typings": "lib/index.d.ts",
   "dependencies": {
+    "sql-formatter": "^13.0.4",
     "ts-node": "^10.9.1",
     "yaml": "^2.3.4"
   },
