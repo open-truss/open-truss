@@ -2,10 +2,10 @@
   "scripts": {
     "lint": "npm run lint:prettier && npm run lint:eslint",
     "lint:prettier": "prettier \"./**/*.{js,ts,json}\" --write --log-level error",
-    "lint:eslint": "eslint \"./**/*.{js,ts,tsx}\" --fix",
+    "lint:eslint": "eslint \"./**/*.{ts,tsx}\" --fix",
     "lint:ci": "npm run lint:prettier:ci && npm run lint:eslint:ci",
     "lint:prettier:ci": "prettier \"./**/*.{js,ts,json}\" --check",
-    "lint:eslint:ci": "eslint \"./**/*.{js,ts,tsx}\""
+    "lint:eslint:ci": "eslint \"./**/*.{ts,tsx}\""
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.10.0",
