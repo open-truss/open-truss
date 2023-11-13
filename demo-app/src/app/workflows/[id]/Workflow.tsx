@@ -6,8 +6,8 @@ function Workflow({ workflow }: { workflow: WorkflowConfiguration }): JSX.Elemen
   // We use `!workflow.component` because we have a contract that workflows either
   // have `workflows` or `component` defined. This trick tells Typescript that
   // `workflow.component` is defined, which we use to our advantage below.
-  if (workflow.component == null) {
-    const workflows = workflow.workflows ?? []
+  if (!workflow.component) {
+    const workflows = workflow.workflows || []
     return (
       <>
         {workflows.map((workflow, i) => <Workflow key={i} workflow={workflow} />)}
@@ -17,10 +17,10 @@ function Workflow({ workflow }: { workflow: WorkflowConfiguration }): JSX.Elemen
 
   const { component: componentConfiguration } = workflow
   const { component, props: propsConfiguration } = componentConfiguration
-  const props = propsConfiguration ?? {}
+  const props = propsConfiguration || {}
 
   // Render this workflow's component
-  const Component = displayComponents[component] ?? component
+  const Component = displayComponents[component] || component
   return <Component {...props} />
 }
 

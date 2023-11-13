@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 // TODO this should be cached since what's on disk can't change
 async function availableWorkflowsFromDisk(): Promise<string[]> {
-  return await fs.readdir('./src/workflows/')
+  return fs.readdir('./src/workflows/')
 }
 
 async function AvailableWorkflows(): Promise<JSX.Element> {
