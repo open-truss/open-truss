@@ -14,6 +14,9 @@
     "lint": "eslint",
     "tsc:watch": "tsc --watch --project tsconfig.json"
   },
+  "bin": {
+    "open-truss": "./bin/open-truss"
+  },
   "files": [
     "lib",
     "lib-esm",
