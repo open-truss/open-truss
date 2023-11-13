@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@open-truss/open-truss": "file:../packages/open-truss/lib",
+    "@open-truss/open-truss": "file:../packages/open-truss",
     "next": "13.5.5",
     "react": "^18",
     "react-dom": "^18",
