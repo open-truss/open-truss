@@ -13,7 +13,7 @@
     "test": "jest",
     "lint": "eslint",
     "tsc:watch": "tsc --watch --project tsconfig.json",
-    "tsc:esm:watch": "tsc --watch --project tsconfig.esm.json"
+    "tsc:watch:esm": "tsc --watch --project tsconfig.esm.json"
   },
   "files": [
     "lib",
