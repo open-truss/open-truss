@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # Directory of open-truss project
-# Escape @ so it is a valid path
-package_dir=$PACKAGE_DIR
+package_dir="${PACKAGE_DIR:-.}"
 cd $package_dir
 
 # Function to terminate both tsc processes
@@ -15,12 +14,12 @@ terminate_tsc_processes() {
 trap 'terminate_tsc_processes' SIGINT SIGTERM
 
 # Run tsc with --watch for tsconfig.json and capture the output
-echo "Running tsc watch using $($package_dir/tsconfig.json)"
-(npm run tsc:watch) &
+echo "Running tsc watch using $(echo $package_dir/tsconfig.json)"
+(tsc --watch --project $package_dir/tsconfig.json) &
 
 # Run tsc with --watch for tsconfig.esm.json and capture the output
-echo "Running tsc watch using $($package_dir/tsconfig.esm.json)"
-(npm run tsc:watch:esm) &
+echo "Running tsc watch using $(echo $package_dir/tsconfig.esm.json)"
+(tsc --watch --project $package_dir/tsconfig.esm.json) &
 
 # Wait for both background processes to complete or for a signal to terminate
 wait

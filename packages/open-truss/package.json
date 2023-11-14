@@ -11,8 +11,7 @@
     "build": "tsc --project tsconfig.json",
     "build:esm": "tsc --project tsconfig.esm.json",
     "test": "jest",
-    "tsc:watch": "tsc --watch --project tsconfig.json",
-    "tsc:watch:esm": "tsc --watch --project tsconfig.esm.json"
+    "tsc:watch": "bin/tsc-watch"
   },
   "bin": {
     "open-truss": "./bin/open-truss"
