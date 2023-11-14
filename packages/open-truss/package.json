@@ -23,6 +23,7 @@
     "tsconfig.json",
     "tsconfig.esm.json",
     "src",
+    "bin",
     "LICENSE"
   ],
   "repository": {
