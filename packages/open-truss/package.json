@@ -8,8 +8,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "build": "tsc --project tsconfig.json",
-    "build:esm": "tsc --project tsconfig.esm.json",
+    "build": "bin/build",
     "test": "jest",
     "tsc:watch": "bin/tsc-watch"
   },
