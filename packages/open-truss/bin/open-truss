@@ -9,15 +9,18 @@ if [ -z "$package_dir" ]; then
 fi
 
 # Specify the directory where scripts are located
-scripts_dir="$package_dir/bin/bin"
+scripts_dir="$package_dir/bin"
 
 # Function to print the list of scripts
 print_script_list() {
   echo "Available commands:"
+  current_script_name=$(basename "$0")
   for script_file in "$scripts_dir"/*; do
     if [ -f "$script_file" ] && [ -x "$script_file" ]; then
       script_name=$(basename "$script_file")
-      echo "open-truss $script_name"
+      if [ "$script_name" != "$current_script_name" ]; then
+        echo "open-truss $script_name"
+      fi
     fi
   done
 }
