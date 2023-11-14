@@ -13,7 +13,7 @@
     "incremental": true,
     "declaration": true,
     "rootDir": "./src",
-    "outDir": "./lib",
+    "outDir": "./dist/cjs",
     "paths": {
       "@/*": ["./src/*"]
     }
