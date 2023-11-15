@@ -1,0 +1,52 @@
+{
+  "name": "@open-truss/open-truss",
+  "version": "0.1.0",
+  "description": "Framework for building internal tools",
+  "module": "lib-esm/index.js",
+  "main": "lib/index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "build:esm": "tsc --project tsconfig.esm.json",
+    "test": "jest",
+    "tsc:watch": "tsc --watch --project tsconfig.json"
+  },
+  "files": [
+    "lib",
+    "lib-esm",
+    "package.json",
+    "tsconfig.json",
+    "tsconfig.esm.json",
+    "src",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/open-truss/open-truss.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/open-truss/open-truss/issues"
+  },
+  "homepage": "https://github.com/open-truss/open-truss#readme",
+  "exports": {
+    ".": {
+      "import": "./lib-esm/index.js",
+      "require": "./lib/index.js"
+    }
+  },
+  "typings": "lib/index.d.ts",
+  "dependencies": {
+    "sql-formatter": "^13.0.4",
+    "ts-node": "^10.9.1",
+    "yaml": "^2.3.4"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.8",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.2.2"
+  }
+}

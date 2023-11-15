@@ -1,0 +1,34 @@
+run-name: CI Checks on ${{ github.head_ref}} by @${{ github.actor }}
+
+on:
+  push:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install client dependencies
+        working-directory: ./
+        run: npm ci --ignore-scripts
+      - name: Run linter
+        working-directory: ./
+        run: npm run lint:ci
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install client dependencies
+        working-directory: ./packages/open-truss
+        run: npm ci --ignore-scripts
+      - name: Run tests
+        working-directory: ./packages/open-truss
+        run: npm run test

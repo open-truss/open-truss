@@ -1,0 +1,21 @@
+{
+  "scripts": {
+    "lint": "npm run lint:prettier && npm run lint:eslint",
+    "lint:prettier": "prettier \"./**/*.{js,ts,json}\" --write --log-level error",
+    "lint:eslint": "eslint \"./**/*.{ts,tsx}\" --fix",
+    "lint:ci": "npm run lint:prettier:ci && npm run lint:eslint:ci",
+    "lint:prettier:ci": "prettier \"./**/*.{js,ts,json}\" --check",
+    "lint:eslint:ci": "eslint \"./**/*.{ts,tsx}\""
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "eslint": "^8.53.0",
+    "eslint-config-standard-with-typescript": "^39.1.1",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-n": "^16.3.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.33.2",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
+  }
+}
