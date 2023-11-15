@@ -1,7 +1,7 @@
 import yaml from 'yaml'
 import { z } from 'zod'
 
-const yamlScalars = z.null().or(z.number()).or(z.string()).or(z.boolean())
+const yamlScalars = z.union([z.null(), z.number(), z.string(), z.boolean()])
 export const Yaml = yamlScalars.or(z.array(yamlScalars))
 export const YamlObject = z.record(z.string(), Yaml)
 

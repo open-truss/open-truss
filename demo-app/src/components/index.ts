@@ -1,1 +1,3 @@
-export { default as Foo } from '@/components/Foo'
+import * as Foo from '@/components/Foo'
+
+export { Foo }

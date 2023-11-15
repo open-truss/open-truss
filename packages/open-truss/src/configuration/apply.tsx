@@ -2,18 +2,25 @@ import { YamlObject, Yaml } from '../utils/yaml'
 import React from 'react'
 import { z } from 'zod'
 
-export const Frame = z.object({
+const FrameBase = z.object({
   view: z.object({
     component: z.string(),
     props: YamlObject,
   }),
-  frame: z.null(),
   data: z.string(),
+})
+
+type FrameType = z.infer<typeof FrameBase> & {
+  frame: FrameType
+}
+
+export const Frame: z.ZodType<FrameType> = FrameBase.extend({
+  frame: z.lazy(() => Frame),
 })
 
 export const WorkflowSpec = z.object({
   workflow: z.object({
-    frames: z.array(Frame),
+    frames: Frame.array(),
   }),
 })
 
@@ -23,13 +30,17 @@ export const BaseOpenTrussComponent = z.object({
 })
 
 export type BaseOpenTrussComponentProps = z.infer<typeof BaseOpenTrussComponent>
-type Components = Record<string, React.FC<BaseOpenTrussComponentProps>>
+interface ComponentModule {
+  default: React.FC<BaseOpenTrussComponentProps>
+  Props: BaseOpenTrussComponentProps
+}
+type Components = Record<string, ComponentModule>
 
 export function applyConfiguration(COMPONENTS: Components) {
   const configurationFunction = (yaml: z.infer<typeof WorkflowSpec>) => {
     const renderedComponents = yaml.workflow.frames.map(({ view, data }, i) => {
       const { component: componentName, props } = view
-      const Component = COMPONENTS[componentName]
+      const Component = COMPONENTS[componentName].default
       return <Component
         key={i}
         data={data}
