@@ -12,12 +12,14 @@
     "jsx": "preserve",
     "incremental": true,
     "declaration": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node", "jest"],
     "rootDir": "./src",
-    "outDir": "./lib",
+    "outDir": "./dist/cjs",
     "paths": {
       "@/*": ["./src/*"]
     }
   },
   "exclude": ["node_modules"],
-  "include": ["./src/**/*.ts"]
+  "include": ["./src/**/*.ts", "./src/**/*.tsx"]
 }
