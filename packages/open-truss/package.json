@@ -2,14 +2,13 @@
   "name": "@open-truss/open-truss",
   "version": "0.1.0",
   "description": "Framework for building internal tools",
-  "module": "lib-esm/index.js",
-  "main": "lib/index.js",
+  "module": "dist/mjs/index.js",
+  "main": "dist/cjs/index.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "build": "tsc --project tsconfig.json",
-    "build:esm": "tsc --project tsconfig.esm.json",
+    "build": "bin/build",
     "test": "jest",
     "tsc:watch": "bin/tsc-watch"
   },
@@ -17,8 +16,7 @@
     "open-truss": "./bin/open-truss"
   },
   "files": [
-    "lib",
-    "lib-esm",
+    "dist",
     "package.json",
     "tsconfig.json",
     "tsconfig.esm.json",
@@ -38,11 +36,11 @@
   "homepage": "https://github.com/open-truss/open-truss#readme",
   "exports": {
     ".": {
-      "import": "./lib-esm/index.js",
-      "require": "./lib/index.js"
+      "import": "./dist/mjs/index.js",
+      "require": "./dist/cjs/index.js"
     }
   },
-  "typings": "lib/index.d.ts",
+  "typings": "dist/mjs/index.d.ts",
   "dependencies": {
     "sql-formatter": "^13.0.4",
     "ts-node": "^10.9.1",

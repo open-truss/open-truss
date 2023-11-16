@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Directory of open-truss project
+package_dir="${PACKAGE_DIR:-.}"
+cd $package_dir
+
+PACKAGE_DIR=$package_dir bin/append-package-json-to-dist
+
+echo "Running $ tsc --project tsconfig.esm.json"
+tsc --project tsconfig.esm.json
+
+echo "Running $ tsc --project tsconfig.json"
+tsc --project tsconfig.json

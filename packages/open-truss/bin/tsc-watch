@@ -4,6 +4,8 @@
 package_dir="${PACKAGE_DIR:-.}"
 cd $package_dir
 
+PACKAGE_DIR=$package_dir bin/append-package-json-to-dist
+
 # Function to terminate both tsc processes
 terminate_tsc_processes() {
   echo "Terminating TypeScript watch processes..."
