@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "tsc:watch": "open-truss tsc-watch",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
