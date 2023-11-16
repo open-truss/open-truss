@@ -24,13 +24,30 @@ module.exports = {
       version: '18.2.0',
     },
   },
-  plugins: ['react'],
+  plugins: ['check-file', 'react'],
   rules: {
     '@typescript-eslint/comma-dangle': 'off',
     '@typescript-eslint/return-await': 'off',
     '@typescript-eslint/space-before-function-paren': 'off',
     '@typescript-eslint/strict-boolean-expressions': 'off',
     '@typescript-eslint/prefer-nullish-coalescing': 'off',
+    'react/react-in-jsx-scope': 'off',
+    'check-file/filename-naming-convention': [
+      'error',
+      {
+        '**/*.{js,ts}': 'KEBAB_CASE',
+        '**/*.{tsx}': 'PASCAL_CASE',
+      },
+      {
+        ignoreMiddleExtensions: true,
+      },
+    ],
+    'check-file/folder-naming-convention': [
+      'error',
+      {
+        '**/*': 'NEXT_JS_APP_ROUTER_CASE',
+      },
+    ],
     'react/react-in-jsx-scope': 'off',
   },
 }
