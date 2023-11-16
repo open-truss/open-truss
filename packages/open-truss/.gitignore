@@ -1,5 +1,4 @@
 # Build folders
-lib/
-lib-esm/
+dist/
 tsconfig.esm.tsbuildinfo
 tsconfig.tsbuildinfo
