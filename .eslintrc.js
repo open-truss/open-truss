@@ -24,10 +24,7 @@ module.exports = {
       version: '18.2.0',
     },
   },
-  plugins: [
-    'check-file',
-    'react',
-  ],
+  plugins: ['check-file', 'react'],
   rules: {
     '@typescript-eslint/comma-dangle': 'off',
     '@typescript-eslint/return-await': 'off',
@@ -42,7 +39,7 @@ module.exports = {
         '**/*.{tsx}': 'PASCAL_CASE',
       },
       {
-        'ignoreMiddleExtensions': true,
+        ignoreMiddleExtensions: true,
       },
     ],
     'check-file/folder-naming-convention': [
