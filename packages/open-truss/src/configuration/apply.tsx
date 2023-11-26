@@ -40,6 +40,7 @@ export function applyConfiguration(COMPONENTS: Components) {
   const configurationFunction = (yaml: z.infer<typeof WorkflowSpec>) => {
     const renderedComponents = yaml.workflow.frames.map(({ view, data }, i) => {
       const { component: componentName, props } = view
+      console.log(componentName)
       const Component = COMPONENTS[componentName].default
       return <Component
         key={i}

@@ -22,7 +22,7 @@ workflow:
     - frame:
       data: foo
       view:
-        component: Foo
+        component: FlexBox
         props:
           color: blue
 `

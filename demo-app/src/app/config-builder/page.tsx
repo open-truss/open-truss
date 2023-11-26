@@ -1,6 +1,5 @@
-import {Foo} from '@/components'
+import {FlexBox} from '@/components'
 
 export default function() {
-  console.log(Foo.Props.shape.color)
-  return <>hi</>
+  return <FlexBox.default />
 }
