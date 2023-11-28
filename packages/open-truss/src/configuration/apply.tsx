@@ -1,39 +1,31 @@
 import type { YamlObject, YamlType } from '../utils/yaml'
 import React from 'react'
+import { BaseOpenTrussComponentV1, WorkflowV1, engineV1 } from './engine-v1'
 
-export interface BaseOpenTrussComponent {
-  data: YamlType
-  config: WorkflowSpec
-}
-
-export interface Frame {
-  view: {
-    component: string
-    props: YamlObject
-  }
-  frame: null
-  data: string
-}
 export interface WorkflowSpec {
-  workflow: {
-    frames: Frame[]
-  }
+  workflow: WorkflowV1 // | WorkflowV2
 }
 
-type ConfigurationFunction = (yaml: WorkflowSpec) => React.JSX.Element[]
+export type COMPONENTS = Record<string, React.FC<
+  BaseOpenTrussComponentV1 // | BaseOpenTrussComponentV2
+>>
 
-export function applyConfiguration(COMPONENTS: Record<string, React.FC<BaseOpenTrussComponent>>): ConfigurationFunction {
-  const configurationFunction: ConfigurationFunction = (yaml: WorkflowSpec) => {
-    const renderedComponents = yaml.workflow.frames.map(({ view, data }, i) => {
-      const { component: componentName, props } = view
-      const Component = COMPONENTS[componentName]
-      return <Component
-        key={i}
-        data={data}
-        config={yaml}
-        {...props}
-      />
-    })
+export type ReactTree = (React.JSX.Element | ReactTree)[]
+
+type ConfigurationFunction = (config: YamlObject, data: YamlType) => ReactTree
+export function applyConfiguration(COMPONENTS: COMPONENTS): ConfigurationFunction {
+  const configurationFunction: ConfigurationFunction = (config, data) => {
+    let renderingEngine
+    let renderedComponents
+
+    const workflow = (config as unknown as WorkflowSpec).workflow
+
+    if (workflow.version === 1) {
+      renderingEngine = engineV1(COMPONENTS, workflow)
+      renderedComponents = renderingEngine(workflow.frames)
+    } else {
+      throw new Error(`Unsupported config version: ${config.version}`)
+    }
 
     return renderedComponents
   }
