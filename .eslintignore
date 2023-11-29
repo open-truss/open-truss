@@ -1,2 +1,3 @@
-/packages/open-truss/lib/*
-/packages/open-truss/lib-esm/*
+/packages/open-truss/dist/*
+demo-app/next.config.js
+demo-app/next-env.d.ts
