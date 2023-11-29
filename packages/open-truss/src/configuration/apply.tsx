@@ -2,6 +2,8 @@ import type { YamlObject, YamlType } from '../utils/yaml'
 import React from 'react'
 import { BaseOpenTrussComponentV1, WorkflowV1, engineV1 } from './engine-v1'
 
+export type RenderingEngine = () => ReactTree
+
 export interface WorkflowSpec {
   workflow: WorkflowV1 // | WorkflowV2
 }

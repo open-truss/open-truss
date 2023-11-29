@@ -1,6 +1,6 @@
 import type { YamlObject, YamlType } from '../utils/yaml'
 import React from 'react'
-import { ReactTree, COMPONENTS } from './apply'
+import { RenderingEngine, ReactTree, COMPONENTS } from './apply'
 
 export interface BaseOpenTrussComponentV1 {
   data: YamlType
@@ -21,9 +21,7 @@ export interface WorkflowV1 {
   frames: FrameV1[]
 }
 
-type EngineV1 = () => ReactTree
-
-export function engineV1(COMPONENTS: COMPONENTS, config: WorkflowV1, data: YamlType): EngineV1 {
+export function engineV1(COMPONENTS: COMPONENTS, config: WorkflowV1, data: YamlType): RenderingEngine {
   const renderFrames = (frames: FrameV1[]): ReactTree => {
     return frames.map(({ view, data, frames: subFrame }, i) => {
       const { component, props } = view
