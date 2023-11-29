@@ -1,6 +1,6 @@
 import type { YamlObject, YamlType } from '../utils/yaml'
 import React from 'react'
-import { RenderingEngine, ReactTree, COMPONENTS } from './apply'
+import { type RenderingEngine, type ReactTree, type COMPONENTS } from './apply'
 
 export interface BaseOpenTrussComponentV1 {
   data: YamlType
@@ -9,7 +9,7 @@ export interface BaseOpenTrussComponentV1 {
 
 export interface FrameV1 {
   view: {
-   component: string
+    component: string
     props: YamlObject
   }
   frames?: FrameV1[]

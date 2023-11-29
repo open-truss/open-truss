@@ -1,6 +1,7 @@
 import type { YamlObject, YamlType } from '../utils/yaml'
-import React from 'react'
-import { BaseOpenTrussComponentV1, WorkflowV1, engineV1 } from './engine-v1'
+import type React from 'react'
+import type { BaseOpenTrussComponentV1, WorkflowV1 } from './engine-v1'
+import { engineV1 } from './engine-v1'
 
 export type RenderingEngine = () => ReactTree
 
@@ -9,10 +10,10 @@ export interface WorkflowSpec {
 }
 
 export type COMPONENTS = Record<string, React.FC<
-  BaseOpenTrussComponentV1 // | BaseOpenTrussComponentV2
+BaseOpenTrussComponentV1 // | BaseOpenTrussComponentV2
 >>
 
-export type ReactTree = (React.JSX.Element | ReactTree)[]
+export type ReactTree = Array<React.JSX.Element | ReactTree>
 
 type ConfigurationFunction = (config: YamlObject, data: YamlType) => ReactTree
 export function applyConfiguration(COMPONENTS: COMPONENTS): ConfigurationFunction {
@@ -25,7 +26,7 @@ export function applyConfiguration(COMPONENTS: COMPONENTS): ConfigurationFunctio
     if (workflow.version === 1) {
       renderingEngine = engineV1(COMPONENTS, workflow, data)
     } else {
-      throw new Error(`Unsupported config version: ${config.version}`)
+      throw new Error(`Unsupported config version: ${workflow.version}`)
     }
 
     return renderingEngine()

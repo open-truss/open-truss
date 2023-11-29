@@ -2,7 +2,7 @@ import { parseYaml, applyConfiguration } from '@open-truss/open-truss'
 import * as COMPONENTS from '@/open-truss-components'
 const configurationFunction = applyConfiguration(COMPONENTS)
 
-async function PlaygroundPage() {
+async function PlaygroundPage(): Promise<JSX.Element> {
   const parsedConfig = parseYaml(config)
   const renderedComponents = configurationFunction(parsedConfig, {})
 
@@ -12,7 +12,6 @@ async function PlaygroundPage() {
 }
 
 export default PlaygroundPage
-
 
 const config = `
 workflow:
