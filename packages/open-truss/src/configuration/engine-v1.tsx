@@ -1,4 +1,4 @@
-import type { YamlObject, YamlType } from '../utils/yaml'
+import type { YamlObject, YamlType } from '@/utils/yaml'
 import React from 'react'
 import { type RenderingEngine, type ReactTree, type COMPONENTS } from './apply'
 

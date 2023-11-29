@@ -27,7 +27,7 @@ workflow:
         - frame:
           data: bar
           view:
-            component: Foo
+            component: OTBar
             props:
               color: blue
 `
