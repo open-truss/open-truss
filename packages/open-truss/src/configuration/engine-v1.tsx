@@ -21,15 +21,16 @@ export interface WorkflowV1 {
   frames: FrameV1[]
 }
 
-type EngineV1 = (frame: FrameV1[]) => ReactTree
+type EngineV1 = () => ReactTree
 
-export function engineV1(COMPONENTS: COMPONENTS, config: WorkflowV1): EngineV1 {
+export function engineV1(COMPONENTS: COMPONENTS, config: WorkflowV1, data: YamlType): EngineV1 {
   const renderFrames = (frames: FrameV1[]): ReactTree => {
     return frames.map(({ view, data, frames: subFrame }, i) => {
       const { component, props } = view
       const Component = COMPONENTS[component]
-      // TODO getting the following error which is probably coming from this
+      // Getting the following error which is probably coming from this
       // Warning: Each child in a list should have a unique "key" prop. See https://reactjs.org/link/warning-keys for more information.
+      // Probably not worth fixing since this engine is a POC
       return subFrame === undefined
         ? <Component
             key={i}
@@ -51,5 +52,7 @@ export function engineV1(COMPONENTS: COMPONENTS, config: WorkflowV1): EngineV1 {
     })
   }
 
-  return renderFrames
+  return () => {
+    return renderFrames(config.frames)
+  }
 }

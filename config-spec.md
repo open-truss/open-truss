@@ -32,6 +32,7 @@ Open Truss uses nested composable configurations to define everything in the sys
 ## Sample configuration
 
 ```md
+---
 workflow:
   name: Accounts created on 2023-10-16
   description: Renders PageTitle, DataTable, and TotalCount components.

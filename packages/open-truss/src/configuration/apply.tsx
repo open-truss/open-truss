@@ -16,18 +16,17 @@ type ConfigurationFunction = (config: YamlObject, data: YamlType) => ReactTree
 export function applyConfiguration(COMPONENTS: COMPONENTS): ConfigurationFunction {
   const configurationFunction: ConfigurationFunction = (config, data) => {
     let renderingEngine
-    let renderedComponents
 
     const workflow = (config as unknown as WorkflowSpec).workflow
 
+    // TODO this version check should be using zod and runtime validation
     if (workflow.version === 1) {
-      renderingEngine = engineV1(COMPONENTS, workflow)
-      renderedComponents = renderingEngine(workflow.frames)
+      renderingEngine = engineV1(COMPONENTS, workflow, data)
     } else {
       throw new Error(`Unsupported config version: ${config.version}`)
     }
 
-    return renderedComponents
+    return renderingEngine()
   }
 
   return configurationFunction
