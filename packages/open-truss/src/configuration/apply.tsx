@@ -10,7 +10,7 @@ export interface WorkflowSpec {
 }
 
 type BaseOpenTrussComponents = BaseOpenTrussComponentV1 // |BaseOpenTrussComponentV2
-type COMPONENT = (props: BaseOpenTrussComponents) => Promise<JSX.Element>
+type COMPONENT = React.FC<BaseOpenTrussComponents>
 export type COMPONENTS = Record<string, COMPONENT>
 
 export type ReactTree = Array<React.JSX.Element | ReactTree>
