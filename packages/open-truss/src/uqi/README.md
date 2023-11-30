@@ -6,7 +6,30 @@ _pronounced: yoo-kee_
 
 It is a query interface with pluggable adapters that makes it simple to query different data sources from a single interface.
 
-## Examples
+## Implemented
+
+### Type transformations
+
+OpenTruss will support a number of query engine backends and data sources. Each of these will have their own type system. OpenTruss will provide a way to transform these types to javascript types so that workflows can be built on top of the simpler javascript types.
+
+```typescript
+otType('mysql', 'int')
+// => 'Number'
+
+otType('cassandra', 'text')
+// => 'String'
+
+otType('flink', 'boolean')
+// => 'Boolean'
+
+otType('kusto', 'datetime')
+// => 'Date'
+
+otType('trino', 'row(foo int, bar varchar)')
+// => 'JSON'
+```
+
+## Not Implemented
 
 ### Querying a CSV file
 

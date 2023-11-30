@@ -1,6 +1,11 @@
 type TypeMappingInterface = Record<string, Record<string, string>>
 
-export default function mapToJsType(engine: string, type: string): string {
+export default function otType(engine: string, type: string): string {
+  // Check if the type is 'row' and remove nested types inside parentheses
+  if (type.startsWith('row(')) {
+    type = 'row'
+  }
+
   // Remove length parameter if present, example: varchar(255)
   type = type.toLowerCase().replace(/\(\d+\)$/, '')
 
@@ -33,7 +38,7 @@ export default function mapToJsType(engine: string, type: string): string {
       tinyblob: 'ArrayBuffer',
       blob: 'ArrayBuffer',
       mediumblob: 'ArrayBuffer',
-      longblob: 'ArrayBuffer'
+      longblob: 'ArrayBuffer',
     },
     trino: {
       integer: 'Number',
@@ -46,7 +51,8 @@ export default function mapToJsType(engine: string, type: string): string {
       date: 'Date',
       time: 'Date',
       timestamp: 'Date',
-      varbinary: 'ArrayBuffer'
+      varbinary: 'ArrayBuffer',
+      row: 'JSON',
     },
     kusto: {
       int: 'Number',
@@ -56,7 +62,7 @@ export default function mapToJsType(engine: string, type: string): string {
       string: 'String',
       guid: 'String',
       datetime: 'Date',
-      dynamic: 'Object'
+      dynamic: 'JSON',
     },
     cassandra: {
       int: 'Number',
@@ -76,7 +82,7 @@ export default function mapToJsType(engine: string, type: string): string {
       blob: 'ArrayBuffer',
       boolean: 'Boolean',
       uuid: 'String',
-      timeuuid: 'String'
+      timeuuid: 'String',
     },
     flinksql: {
       tinyint: 'Number',
@@ -91,8 +97,8 @@ export default function mapToJsType(engine: string, type: string): string {
       date: 'Date',
       time: 'Date',
       timestamp: 'Date',
-      boolean: 'Boolean'
-    }
+      boolean: 'Boolean',
+    },
   }
 
   const engineMapping = typeMapping[engine.toLowerCase()]

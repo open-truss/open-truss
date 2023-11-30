@@ -1,5 +1,5 @@
 export { default as helloWorld } from './hello-world'
-export * from './uqi/map-to-js-type'
+export * from './uqi/ot-type'
 export * from './utils/yaml'
 export * from './utils/format'
 export * from './components'
