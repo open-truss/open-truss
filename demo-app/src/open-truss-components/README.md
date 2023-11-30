@@ -1,4 +1,4 @@
-Components in this folder must adhere to the open truss component interface. e.g.
+Open Truss applications can define their own Open Truss Components. They must adhere to the open truss component interface. e.g.
 
 ```
 import { BaseOpenTrussComponentV1 } from '@open-truss/open-truss'
