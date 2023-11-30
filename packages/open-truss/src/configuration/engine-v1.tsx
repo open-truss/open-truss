@@ -3,6 +3,7 @@ import React from 'react'
 import { type RenderingEngine, type ReactTree, type COMPONENTS } from './apply'
 
 export interface BaseOpenTrussComponentV1 {
+  children?: React.ReactNode
   data: YamlType
   config: WorkflowV1
 }
@@ -26,9 +27,6 @@ export function engineV1(COMPONENTS: COMPONENTS, config: WorkflowV1, data: YamlT
     return frames.map(({ view, data, frames: subFrame }, i) => {
       const { component, props } = view
       const Component = COMPONENTS[component]
-      // Getting the following error which is probably coming from this
-      // Warning: Each child in a list should have a unique "key" prop. See https://reactjs.org/link/warning-keys for more information.
-      // Probably not worth fixing since this engine is a POC
       return subFrame === undefined
         ? <Component
             key={i}
@@ -37,15 +35,14 @@ export function engineV1(COMPONENTS: COMPONENTS, config: WorkflowV1, data: YamlT
             {...props}
           />
         : (
-            <>
-              <Component
-                key={i}
-                data={data}
-                config={config}
-                {...props}
-              />
+            <Component
+              key={i}
+              data={data}
+              config={config}
+              {...props}
+            >
               {renderFrames(subFrame)}
-            </>
+            </Component>
           )
     })
   }
