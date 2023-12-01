@@ -19,11 +19,14 @@ otType('mysql', 'int')
 otType('cassandra', 'text')
 // => 'String'
 
-otType('flink', 'boolean')
-// => 'Boolean'
+otType('flink', 'bigint')
+// => 'BigInt'
 
 otType('kusto', 'datetime')
 // => 'Date'
+
+otType('trino', 'boolean')
+// => 'Boolean'
 
 otType('trino', 'row(foo int, bar varchar)')
 // => 'JSON'
