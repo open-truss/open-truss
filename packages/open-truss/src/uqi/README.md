@@ -6,83 +6,129 @@ _pronounced: yoo-kee_
 
 It is a query interface with pluggable adapters that makes it simple to query different data sources from a single interface.
 
+## Aspirational Examples
+
+These examples are not yet implemented, but are the goal of this project. See `src/uqi/example/fake-client-uqi.ts` for an example of how to implement a client.
+
 ### Querying a CSV file
 
 ```typescript
-import { uqi } from '@open-truss/uqi'
-const source = uqi.csv({ path: 'path/to/folder' })
-for await (const { row, metadata } of source.query('SELECT first_name FROM users.csv')) {
+import createCsvUqiClient from 'path/to/csv-client-uqi'
+const client = await createCsvUqiClient()
+await csvUqi.setup({ path: 'path/to/folder' })
+const queryIterator = await client.query('SELECT first_name FROM users.csv')
+
+for await (const { row, metadata } of queryIterator) {
   console.log({ metadata })
-  console.log({ first_name: row.first_name })
+  metadata.columns.forEach((column, i) => {
+    console.log({ [column.name]: row[i] })
+  })
 }
+
+await client.teardown()
 ```
 
 ### Querying a JSON file
 
 ```typescript
-import { uqi } from '@open-truss/uqi'
-const source = uqi.json({ path: 'path/to/users.json', queryLanguage: 'jq' })
-for await (const { row, metadata } of source.query('.[] | select(.first_name | startswith("J")) | .first_name')) {
+import createJsonUqiClient from 'path/to/json-client-uqi'
+const client = await createJsonUqiClient()
+await client.setup({ path: 'path/to/users.json', queryLanguage: 'jq' })
+const queryIterator = await client.query('.[] | select(.first_name | startswith("J")) | .first_name')
+
+for await (const { row, metadata } of queryIterator) {
   console.log({ metadata })
-  console.log({ first_name: row.first_name })
+  metadata.columns.forEach((column, i) => {
+    console.log({ [column.name]: row[i] })
+  })
 }
+
+await client.teardown()
 ```
 
 ### Querying a MySQL database
 
 ```typescript
-import { uqi } from '@open-truss/uqi'
-const source = uqi.mysql({
+import createMysqlUqiClient from 'path/to/mysql-client-uqi'
+const client = await createMysqlUqiClient()
+await client.setup({
   hostname: process.env.MYSQL_HOSTNAME,
   username: process.env.MYSQL_USERNAME,
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE,
 })
-for await (const { row, metadata } of source.query('SELECT first_name FROM users')) {
+const queryIterator = await client.query('SELECT first_name FROM users')
+
+for await (const { row, metadata } of queryIterator) {
   console.log({ metadata })
-  console.log({ first_name: row.first_name })
+  metadata.columns.forEach((column, i) => {
+    console.log({ [column.name]: row[i] })
+  })
 }
+
+await client.teardown()
 ```
 
 ### Querying a Trino database
 
 ```typescript
-import { uqi } from '@open-truss/uqi'
-const source = uqi.trino({
-  hostname: process.env.TRINO_HOSTNAME,
-  username: process.env.TRINO_USERNAME,
-  password: process.env.TRINO_PASSWORD,
+import createTrinoUqiClient from 'path/to/trino-client-uqi'
+const client = await createTrinoUqiClient()
+await trinoUqiClient.setup({
+  server: process.env.TRINO_URI,
+  auth: new BasicAuth(process.env.TRINO_USER_IDENTIFIER, ),
+  source: 'acme/production',
 })
-for await (const { row, metadata } of source.query('SELECT first_name FROM foo.bar.users')) {
+const queryIterator = await client.query('SELECT first_name FROM acme.production.users')
+
+for await (const { row, metadata } of queryIterator) {
   console.log({ metadata })
-  console.log({ first_name: row.first_name })
+  metadata.columns.forEach((column, i) => {
+    console.log({ [column.name]: row[i] })
+  })
 }
+
+await client.teardown()
 ```
 
 ### Querying a Kusto database
 
 ```typescript
-import { uqi } from '@open-truss/uqi'
-const source = uqi.kusto({
+import createKustoUqiClient from 'path/to/kusto-client-uqi'
+const client = await createKustoUqiClient()
+await client.setup({
   hostname: process.env.KUSTO_HOSTNAME,
   username: process.env.KUSTO_USERNAME,
   password: process.env.KUSTO_PASSWORD,
 })
-for await (const { row, metadata } of source.query('foo.bar.users | project first_name')) {
+const queryIterator = await client.query('acme.production.users | project first_name')
+
+for await (const { row, metadata } of queryIterator) {
   console.log({ metadata })
-  console.log({ first_name: row.first_name })
+  metadata.columns.forEach((column, i) => {
+    console.log({ [column.name]: row[i] })
+  })
 }
+
+await client.teardown()
 ```
 
 ### Querying a Rest API
 
 ```typescript
-import { uqi } from '@open-truss/uqi'
-const source = uqi.rest({
+import createRestUqiClient from 'path/to/rest-client-uqi'
+const client = await createRestUqiClient()
+await client.setup({
   url: 'http://localhost:3000',
 })
-for await (const { row, metadata } of source.query('GET /users')) {
+const queryIterator = await client.query('GET /users')
+
+for await (const { row, metadata } of queryIterator) {
   console.log({ metadata })
-  console.log({ first_name: row.first_name })
+  metadata.columns.forEach((column, i) => {
+    console.log({ [column.name]: row[i] })
+  })
 }
+
+await client.teardown()
 ```
