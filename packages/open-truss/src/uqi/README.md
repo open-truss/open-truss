@@ -8,7 +8,7 @@ It is a query client and client builder that can be used to wrap any data source
 
 ## Aspirational Examples
 
-These examples are not yet implemented, but are the goal of this project. See `src/uqi/example/fake-client-uqi.ts` for an example of how to implement a client.
+These examples are not yet implemented, but are the goal of this project. See the [example](./example) folder for an example implementation.
 
 ### Querying a CSV file
 
