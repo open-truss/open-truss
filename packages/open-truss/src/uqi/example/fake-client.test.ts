@@ -6,7 +6,7 @@ describe('createFakeClient', () => {
       values: [18, 42, 33],
       sleep: 1000,
     }
-    const client = createFakeClient(config)
+    const client = await createFakeClient(config)
 
     const results = []
     const query = await client.query('SELECT * FROM patients')
@@ -41,7 +41,7 @@ describe('createFakeClient', () => {
       values: [],
       sleep: 1000
     }
-    const client = createFakeClient(config)
+    const client = await createFakeClient(config)
 
     const results = []
     const query = await client.query('SELECT * FROM things')
@@ -67,7 +67,7 @@ describe('createFakeClient', () => {
       values: [],
       sleep: 1000
     }
-    const client = createFakeClient(config)
+    const client = await createFakeClient(config)
 
     expect(await client.isOpen()).toBe(true)
     await client.close()

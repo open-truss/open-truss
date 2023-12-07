@@ -41,7 +41,7 @@ class ExtendedIterator<T> extends Iterator<T> {
   }
 }
 
-function createFakeClient(config: FakeClientConfig): FakeClient {
+async function createFakeClient(config: FakeClientConfig): Promise<FakeClient> {
   let closed = false
   let stats: Record<string, Stat> = {}
   const columns = [
