@@ -12,11 +12,16 @@ export interface FakeClientConfig {
   sleep?: number
 }
 
-interface QueryResult {
+interface Column {
+  name: string
+  type: string
+}
+
+export interface QueryResult {
   data: Array<Array<string | number>> | undefined
   metadata: {
     id: string
-    columns: Array<Record<string, string>>
+    columns: Column[]
     query: string
   }
 }

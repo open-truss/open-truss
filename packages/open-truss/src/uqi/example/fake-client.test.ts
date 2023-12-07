@@ -9,10 +9,10 @@ describe('createFakeClient', () => {
     const client = await createFakeClient(config)
 
     const results = []
-    const query = await client.query('SELECT * FROM patients')
-    const queryId = query.id
+    const queryIterator = await client.query('SELECT * FROM patients')
+    const queryId = queryIterator.id
     let qr
-    for await (const queryResult of query) {
+    for await (const queryResult of queryIterator) {
       if (queryResult.data !== undefined) {
         qr = queryResult
         for (const row of queryResult.data) {
@@ -44,9 +44,9 @@ describe('createFakeClient', () => {
     const client = await createFakeClient(config)
 
     const results = []
-    const query = await client.query('SELECT * FROM things')
-    const queryId = query.id
-    for await (const queryResult of query) {
+    const queryIterator = await client.query('SELECT * FROM things')
+    const queryId = queryIterator.id
+    for await (const queryResult of queryIterator) {
       if (queryResult.data !== undefined) {
         for (const row of queryResult.data) {
           results.push(row)
