@@ -1,4 +1,4 @@
-export type IteratorResultUqi<T> = Promise<{ value: T, done?: boolean | undefined }>
+export type IteratorResult<T> = Promise<{ value: T, done?: boolean | undefined }>
 
 class Iterator<T> {
   public iter: AsyncIterableIterator<T>
@@ -11,7 +11,7 @@ class Iterator<T> {
     return this
   }
 
-  async next(): IteratorResultUqi<T> {
+  async next(): IteratorResult<T> {
     return this.iter.next()
   }
 
@@ -21,7 +21,7 @@ class Iterator<T> {
       [Symbol.asyncIterator]() {
         return this
       },
-      async next(): IteratorResultUqi<U> {
+      async next(): IteratorResult<U> {
         return that.next().then((result) => {
           return {
             value: fn(result.value),
