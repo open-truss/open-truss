@@ -4,7 +4,7 @@ _pronounced: yoo-kee_
 
 ## What is uqi?
 
-It is a query interface with pluggable adapters that makes it simple to query different data sources from a single interface.
+It is a query client and client builder that can be used to wrap any data source client and present a unified query interface.
 
 ## Aspirational Examples
 
