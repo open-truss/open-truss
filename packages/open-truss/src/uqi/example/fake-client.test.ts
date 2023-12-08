@@ -62,6 +62,27 @@ describe('createFakeClient', () => {
     expect(queryInfo.closed).toBe(false)
   })
 
+  it('throws an error when a value is divisible by 8', async () => {
+    const config: FakeClientConfig = {
+      values: [18, 42, 33, 64],
+      sleep: 10,
+    }
+    const client = await createFakeClient(config)
+
+    const queryIterator = await client.query('SELECT * FROM patients')
+    const results = []
+
+    await expect(async () => {
+      for await (const queryResult of queryIterator) {
+        if (queryResult.data !== undefined) {
+          for (const row of queryResult.data) {
+            results.push(row)
+          }
+        }
+      }
+    }).rejects.toThrow('Value 64 is divisible by 8')
+  })
+
   it('should close the client', async () => {
     const config = {
       values: [],

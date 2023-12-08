@@ -69,6 +69,9 @@ async function createFakeClient(config: FakeClientConfig): Promise<FakeClient> {
       async function * asyncGenerator(): AsyncGenerator<QueryResult> {
         for (const value of config.values) {
           await new Promise((resolve) => setTimeout(resolve, config.sleep || 0))
+          if (value % 8 === 0) {
+            throw new Error(`Value ${value} is divisible by 8`)
+          }
           yield {
             data: [[`Sam ${value}`, value]],
             metadata,
