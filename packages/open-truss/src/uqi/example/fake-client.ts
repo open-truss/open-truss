@@ -56,7 +56,9 @@ async function createFakeClient(config: FakeClientConfig): Promise<FakeClient> {
 
   return {
     async query(query: string): Promise<ExtendedIterator<QueryResult>> {
-      if (closed) { throw new Error('Client is closed') }
+      if (closed) {
+        throw new Error('Client is closed')
+      }
 
       const id = Math.random().toString(36).substring(7)
       const metadata = { id, columns, query, stats }
@@ -66,11 +68,9 @@ async function createFakeClient(config: FakeClientConfig): Promise<FakeClient> {
       }
       async function * asyncGenerator(): AsyncGenerator<QueryResult> {
         for (const value of config.values) {
-          await new Promise(resolve => setTimeout(resolve, config.sleep || 0))
+          await new Promise((resolve) => setTimeout(resolve, config.sleep || 0))
           yield {
-            data: [
-              [`Sam ${value}`, value],
-            ],
+            data: [[`Sam ${value}`, value]],
             metadata,
           }
           stats[id].rowsReturned++

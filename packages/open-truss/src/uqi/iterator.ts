@@ -1,4 +1,7 @@
-export type IteratorResult<T> = Promise<{ value: T, done?: boolean | undefined }>
+export type IteratorResult<T> = Promise<{
+  value: T
+  done?: boolean | undefined
+}>
 
 class Iterator<T> {
   public iter: AsyncIterableIterator<T>
@@ -25,10 +28,10 @@ class Iterator<T> {
         return that.next().then((result) => {
           return {
             value: fn(result.value),
-            done: result.done
+            done: result.done,
           }
         })
-      }
+      },
     }
     return new Iterator<U>(asyncIterableIterator)
   }
@@ -51,7 +54,9 @@ class Iterator<T> {
   }
 
   async fold<U>(acc: U, fn: (value: T, acc: U) => U): Promise<U> {
-    await this.forEach(value => { acc = fn(value, acc) })
+    await this.forEach((value) => {
+      acc = fn(value, acc)
+    })
     return acc
   }
 }

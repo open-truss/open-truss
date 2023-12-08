@@ -10,7 +10,9 @@ import createFakeClient, {
   type FakeClientConfig,
 } from './fake-client'
 
-export default async function createFakeUqiClient(): Promise<UqiClient<FakeClientConfig>> {
+export default async function createFakeUqiClient(): Promise<
+UqiClient<FakeClientConfig>
+> {
   const typeMappings: Record<string, UqiMappedType> = {
     int: 'Number',
     varchar: 'String',
@@ -20,7 +22,10 @@ export default async function createFakeUqiClient(): Promise<UqiClient<FakeClien
     return createFakeClient(config)
   }
 
-  async function query(context: UqiContext<FakeClientConfig, FakeClient>, query: string): Promise<AsyncIterableIterator<UqiResult>> {
+  async function query(
+    context: UqiContext<FakeClientConfig, FakeClient>,
+    query: string,
+  ): Promise<AsyncIterableIterator<UqiResult>> {
     const queryIterator = await context.client.query(query)
 
     async function * asyncGenerator(): AsyncGenerator<UqiResult> {
@@ -28,9 +33,7 @@ export default async function createFakeUqiClient(): Promise<UqiClient<FakeClien
         if (result.data) {
           for await (const row of result.data) {
             yield {
-              row: [
-                [`Sam ${row[1]}`, row[1]],
-              ],
+              row: [[`Sam ${row[1]}`, row[1]]],
               metadata: result.metadata,
             }
           }
@@ -41,7 +44,9 @@ export default async function createFakeUqiClient(): Promise<UqiClient<FakeClien
     return new Iterator(asyncGenerator())
   }
 
-  async function teardown(context: UqiContext<FakeClientConfig, FakeClient>): Promise<void> {
+  async function teardown(
+    context: UqiContext<FakeClientConfig, FakeClient>,
+  ): Promise<void> {
     await context.client.close()
   }
 

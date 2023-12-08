@@ -39,7 +39,7 @@ describe('createFakeClient', () => {
   it('should handle empty config values', async () => {
     const config: FakeClientConfig = {
       values: [],
-      sleep: 1000
+      sleep: 1000,
     }
     const client = await createFakeClient(config)
 
@@ -65,7 +65,7 @@ describe('createFakeClient', () => {
   it('should close the client', async () => {
     const config = {
       values: [],
-      sleep: 1000
+      sleep: 1000,
     }
     const client = await createFakeClient(config)
 
