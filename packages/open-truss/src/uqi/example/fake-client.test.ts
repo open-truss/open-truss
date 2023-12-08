@@ -4,7 +4,7 @@ describe('createFakeClient', () => {
   it('should create a fake client with the provided config', async () => {
     const config: FakeClientConfig = {
       values: [18, 42, 33],
-      sleep: 1000,
+      sleep: 10,
     }
     const client = await createFakeClient(config)
 

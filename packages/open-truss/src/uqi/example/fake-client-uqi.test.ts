@@ -1,4 +1,4 @@
-import createFakeUqiClient from './fake-client-uqi'
+import createClient from './fake-client-uqi'
 
 interface Metadata {
   columns: Array<{ name: string, type: string }>
@@ -6,9 +6,7 @@ interface Metadata {
 
 describe('fake-client-uqi', () => {
   it('should work', async () => {
-    const client = await createFakeUqiClient()
-
-    await client.setup({
+    const client = await createClient({
       values: [12, 99, 51],
       sleep: 10,
     })

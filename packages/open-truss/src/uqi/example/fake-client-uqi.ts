@@ -10,16 +10,10 @@ import createFakeClient, {
   type FakeClientConfig,
 } from './fake-client'
 
-export default async function createFakeUqiClient(): Promise<
-UqiClient<FakeClientConfig>
-> {
+export default async function (config: FakeClientConfig): Promise<UqiClient> {
   const typeMappings: Record<string, UqiMappedType> = {
     int: 'Number',
     varchar: 'String',
-  }
-
-  async function setup(config: FakeClientConfig): Promise<FakeClient> {
-    return createFakeClient(config)
   }
 
   async function query(
@@ -50,9 +44,12 @@ UqiClient<FakeClientConfig>
     await context.client.close()
   }
 
-  return uqi.createClient({
+  const client = await createFakeClient(config)
+
+  return uqi({
     typeMappings,
-    setup,
+    config,
+    client,
     query,
     teardown,
   })

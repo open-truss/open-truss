@@ -13,9 +13,8 @@ These examples are not yet implemented, but are the goal of this project. See th
 ### Querying a CSV file
 
 ```typescript
-import createCsvUqiClient from 'path/to/csv-client-uqi'
-const client = await createCsvUqiClient()
-await csvUqi.setup({ path: 'path/to/folder' })
+import createClient from 'path/to/csv-client-uqi'
+const client = await createClient({ path: 'path/to/folder' })
 const queryIterator = await client.query('SELECT first_name FROM users.csv')
 
 for await (const { row, metadata } of queryIterator) {
@@ -31,9 +30,8 @@ await client.teardown()
 ### Querying a JSON file
 
 ```typescript
-import createJsonUqiClient from 'path/to/json-client-uqi'
-const client = await createJsonUqiClient()
-await client.setup({ path: 'path/to/users.json', queryLanguage: 'jq' })
+import createClient from 'path/to/json-client-uqi'
+const client = await createClient({ path: 'path/to/users.json', queryLanguage: 'jq' })
 const queryIterator = await client.query('.[] | select(.first_name | startswith("J")) | .first_name')
 
 for await (const { row, metadata } of queryIterator) {
@@ -49,9 +47,8 @@ await client.teardown()
 ### Querying a MySQL database
 
 ```typescript
-import createMysqlUqiClient from 'path/to/mysql-client-uqi'
-const client = await createMysqlUqiClient()
-await client.setup({
+import createClient from 'path/to/mysql-client-uqi'
+const client = await createClient({
   hostname: process.env.MYSQL_HOSTNAME,
   username: process.env.MYSQL_USERNAME,
   password: process.env.MYSQL_PASSWORD,
@@ -72,9 +69,8 @@ await client.teardown()
 ### Querying a Trino database
 
 ```typescript
-import createTrinoUqiClient from 'path/to/trino-client-uqi'
-const client = await createTrinoUqiClient()
-await trinoUqiClient.setup({
+import createClient from 'path/to/trino-client-uqi'
+const client = await createClient({
   server: process.env.TRINO_URI,
   auth: new BasicAuth(process.env.TRINO_USER_IDENTIFIER, ),
   source: 'acme/production',
@@ -94,9 +90,8 @@ await client.teardown()
 ### Querying a Kusto database
 
 ```typescript
-import createKustoUqiClient from 'path/to/kusto-client-uqi'
-const client = await createKustoUqiClient()
-await client.setup({
+import createClient from 'path/to/kusto-client-uqi'
+const client = await createClient({
   hostname: process.env.KUSTO_HOSTNAME,
   username: process.env.KUSTO_USERNAME,
   password: process.env.KUSTO_PASSWORD,
@@ -116,9 +111,8 @@ await client.teardown()
 ### Querying a Rest API
 
 ```typescript
-import createRestUqiClient from 'path/to/rest-client-uqi'
-const client = await createRestUqiClient()
-await client.setup({
+import createClient from 'path/to/rest-client-uqi'
+const client = await createClient({
   url: 'http://localhost:3000',
 })
 const queryIterator = await client.query('GET /users')
