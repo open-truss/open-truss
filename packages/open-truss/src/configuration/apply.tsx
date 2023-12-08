@@ -1,6 +1,10 @@
 import type { YamlObject, YamlType } from '../utils/yaml'
 import type React from 'react'
-import { type BaseOpenTrussComponentV1, type WorkflowV1, engineV1 } from './engine-v1'
+import {
+  type BaseOpenTrussComponentV1,
+  type WorkflowV1,
+  engineV1,
+} from './engine-v1'
 import * as OTCOMPONENTS from '../components'
 
 export interface WorkflowSpec {
@@ -12,7 +16,9 @@ export type ReactTree = Array<React.JSX.Element | ReactTree>
 export type RenderingEngine = () => ReactTree
 
 type ConfigurationFunction = (config: YamlObject, data: YamlType) => ReactTree
-export function applyConfiguration(COMPONENTS: COMPONENTS): ConfigurationFunction {
+export function applyConfiguration(
+  COMPONENTS: COMPONENTS,
+): ConfigurationFunction {
   const components = Object.assign(COMPONENTS, OTCOMPONENTS)
 
   const configurationFunction: ConfigurationFunction = (config, data) => {

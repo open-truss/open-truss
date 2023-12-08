@@ -22,7 +22,7 @@ export default async function (config: FakeClientConfig): Promise<UqiClient> {
   ): Promise<AsyncIterableIterator<UqiResult>> {
     const queryIterator = await context.client.query(query)
 
-    async function * asyncGenerator(): AsyncGenerator<UqiResult> {
+    async function* asyncGenerator(): AsyncGenerator<UqiResult> {
       for await (const result of queryIterator) {
         if (result.data) {
           for await (const row of result.data) {

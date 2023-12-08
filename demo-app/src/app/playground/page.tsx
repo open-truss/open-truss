@@ -6,9 +6,7 @@ async function PlaygroundPage(): Promise<JSX.Element> {
   const parsedConfig = parseYaml(config)
   const renderedComponents = configurationFunction(parsedConfig, {})
 
-  return <>
-    {renderedComponents}
-  </>
+  return <>{renderedComponents}</>
 }
 
 export default PlaygroundPage

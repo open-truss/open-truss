@@ -136,7 +136,7 @@ export default function uqi<C, T>(og: UqiSettings<C, T>): UqiClient {
         await options.statusCallback(context.status)
       }
 
-      async function * asyncGenerator(): AsyncGenerator<UqiResult> {
+      async function* asyncGenerator(): AsyncGenerator<UqiResult> {
         try {
           for await (const result of queryIterator) {
             const row = buildRow(result)

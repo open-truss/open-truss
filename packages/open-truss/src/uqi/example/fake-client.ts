@@ -66,7 +66,7 @@ async function createFakeClient(config: FakeClientConfig): Promise<FakeClient> {
         rowsReturned: 0,
         totalRows: config.values.length,
       }
-      async function * asyncGenerator(): AsyncGenerator<QueryResult> {
+      async function* asyncGenerator(): AsyncGenerator<QueryResult> {
         for (const value of config.values) {
           await new Promise((resolve) => setTimeout(resolve, config.sleep || 0))
           if (value % 8 === 0) {

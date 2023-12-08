@@ -2,7 +2,10 @@ import { type UqiStatus } from '../uqi'
 import createClient from './fake-client-uqi'
 
 interface Metadata {
-  columns: Array<{ name: string, type: string }>
+  columns: Array<{
+    name: string
+    type: string
+  }>
 }
 
 describe('fake-client-uqi', () => {
