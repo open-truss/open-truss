@@ -1,5 +1,6 @@
 import { parseYaml, applyConfiguration } from '@open-truss/open-truss'
 import * as COMPONENTS from '@/open-truss-components'
+import React from 'react'
 const configurationFunction = applyConfiguration(COMPONENTS)
 
 async function PlaygroundPage(): Promise<JSX.Element> {

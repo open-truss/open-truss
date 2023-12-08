@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "tsc && node  dist/mjs/server.js",
     "tsc:watch": "open-truss tsc-watch",
     "build": "next build",
     "start": "next start",
@@ -14,6 +14,7 @@
     "next": "13.5.5",
     "react": "^18",
     "react-dom": "^18",
+    "ts-node": "^10.9.1",
     "yaml": "^2.3.3"
   },
   "devDependencies": {

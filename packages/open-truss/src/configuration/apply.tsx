@@ -1,7 +1,7 @@
 import type { YamlObject, YamlType } from '../utils/yaml'
 import type React from 'react'
-import { type BaseOpenTrussComponentV1, type WorkflowV1, engineV1 } from './engine-v1'
-import * as OTCOMPONENTS from '../components'
+import { type BaseOpenTrussComponentV1, type WorkflowV1, engineV1 } from './engine-v1.js'
+import * as OTCOMPONENTS from '../components/index.js'
 
 export interface WorkflowSpec {
   workflow: WorkflowV1 // | WorkflowV2
