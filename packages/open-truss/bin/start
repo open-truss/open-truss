@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Directory of open-truss project
+package_dir="${PACKAGE_DIR:-.}"
+cd $package_dir
+
+PACKAGE_DIR=$package_dir bin/append-package-json-to-dist
+app_dir=$package_dir/app
+cd $app_dir
+
+npm run dev

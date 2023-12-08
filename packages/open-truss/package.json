@@ -21,6 +21,7 @@
     "tsconfig.json",
     "tsconfig.esm.json",
     "src",
+    "app",
     "bin",
     "LICENSE"
   ],
