@@ -18,7 +18,10 @@ export interface UqiColumn {
 export type UqiScalar = string | number | boolean | bigint | object | null
 
 export interface UqiClient {
-  query: (query: string) => Promise<AsyncIterableIterator<UqiResult>>
+  query: (
+    query: string,
+    options?: { statusCallback?: (status: UqiStatus) => Promise<void> },
+  ) => Promise<AsyncIterableIterator<UqiResult>>
   teardown: () => Promise<void>
 }
 
@@ -36,6 +39,7 @@ interface UqiSettings<C, T> {
 export interface UqiContext<C, T> {
   config: C
   client: T
+  status: UqiStatus
   typeMappings: UqiTypeMappings
 }
 
@@ -46,10 +50,25 @@ export interface UqiResult {
   }
 }
 
+export interface UqiStatus {
+  completedAt: Date | null
+  failedAt: Date | null
+  failedReason: string | null
+  recordsReturned: number
+  startedAt: Date | null
+}
+
 export default function uqi<C, T>(og: UqiSettings<C, T>): UqiClient {
   const context: UqiContext<C, T> = {
     config: og.config,
     client: og.client,
+    status: {
+      completedAt: null,
+      failedAt: null,
+      failedReason: null,
+      recordsReturned: 0,
+      startedAt: null,
+    },
     typeMappings: og.typeMappings,
   }
 
@@ -98,17 +117,50 @@ export default function uqi<C, T>(og: UqiSettings<C, T>): UqiClient {
   }
 
   return {
-    async query(query: string) {
+    async query(
+      query: string,
+      options?: { statusCallback?: (status: UqiStatus) => Promise<void> },
+    ) {
       if (!context.client) {
+        context.status.failedReason = 'Client is not set up'
+        context.status.failedAt = new Date()
+        if (options?.statusCallback) {
+          await options.statusCallback(context.status)
+        }
         throw new Error('Client is not set up')
       }
       const queryIterator = await og.query(context, query)
 
+      context.status.startedAt = new Date()
+      if (options?.statusCallback) {
+        await options.statusCallback(context.status)
+      }
+
       async function * asyncGenerator(): AsyncGenerator<UqiResult> {
-        for await (const result of queryIterator) {
-          const row = buildRow(result)
-          const metadata = buildMetadata(result.metadata)
-          yield { row, metadata }
+        try {
+          for await (const result of queryIterator) {
+            const row = buildRow(result)
+            const metadata = buildMetadata(result.metadata)
+
+            context.status.recordsReturned += 1
+            if (options?.statusCallback) {
+              await options.statusCallback(context.status)
+            }
+
+            yield { row, metadata }
+          }
+        } catch (e) {
+          context.status.failedReason = (e as Error).message
+          context.status.failedAt = new Date()
+          if (options?.statusCallback) {
+            await options.statusCallback(context.status)
+          }
+          throw e
+        }
+
+        context.status.completedAt = new Date()
+        if (options?.statusCallback) {
+          await options.statusCallback(context.status)
         }
       }
 
