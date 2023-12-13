@@ -22,28 +22,22 @@ export interface WorkflowV1 {
   frames: FrameV1[]
 }
 
-export function engineV1(COMPONENTS: COMPONENTS, config: WorkflowV1, data: YamlType): RenderingEngine {
+export function engineV1(
+  COMPONENTS: COMPONENTS,
+  config: WorkflowV1,
+  data: YamlType,
+): RenderingEngine {
   const renderFrames = (frames: FrameV1[]): ReactTree => {
     return frames.map(({ view, data, frames: subFrame }, i) => {
       const { component, props } = view
       const Component = COMPONENTS[component]
-      return subFrame === undefined
-        ? <Component
-            key={i}
-            data={data}
-            config={config}
-            {...props}
-          />
-        : (
-            <Component
-              key={i}
-              data={data}
-              config={config}
-              {...props}
-            >
-              {renderFrames(subFrame)}
-            </Component>
-          )
+      return subFrame === undefined ? (
+        <Component key={i} data={data} config={config} {...props} />
+      ) : (
+        <Component key={i} data={data} config={config} {...props}>
+          {renderFrames(subFrame)}
+        </Component>
+      )
     })
   }
 

@@ -1,7 +1,11 @@
 import type { WorkflowConfiguration } from '@/types'
 import displayComponents from '@/display-components'
 
-function Workflow({ workflow }: { workflow: WorkflowConfiguration }): JSX.Element {
+function Workflow({
+  workflow,
+}: {
+  workflow: WorkflowConfiguration
+}): JSX.Element {
   // If there are any nested workflows, render them recursively.
   // We use `!workflow.component` because we have a contract that workflows either
   // have `workflows` or `component` defined. This trick tells Typescript that
@@ -10,7 +14,9 @@ function Workflow({ workflow }: { workflow: WorkflowConfiguration }): JSX.Elemen
     const workflows = workflow.workflows || []
     return (
       <>
-        {workflows.map((workflow, i) => <Workflow key={i} workflow={workflow} />)}
+        {workflows.map((workflow, i) => (
+          <Workflow key={i} workflow={workflow} />
+        ))}
       </>
     )
   }
