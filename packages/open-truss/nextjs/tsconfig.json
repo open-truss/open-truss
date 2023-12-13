@@ -20,7 +20,8 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@ot": ["../dist/mjs/index.js"]
+      "@open-truss/open-truss": ["../dist/mjs/index.js"],
+      "@open-truss-components": ["./src/open-truss-components"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

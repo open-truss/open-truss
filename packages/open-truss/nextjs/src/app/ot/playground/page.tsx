@@ -1,5 +1,5 @@
-import { parseYaml, applyConfiguration } from '@ot'
-import * as COMPONENTS from '@/open-truss-components'
+import { parseYaml, applyConfiguration } from '@open-truss/open-truss'
+import * as COMPONENTS from '@open-truss-components'
 const configurationFunction = applyConfiguration(COMPONENTS)
 
 async function PlaygroundPage(): Promise<JSX.Element> {
@@ -18,14 +18,14 @@ workflow:
   version: 1
   frames:
     - frame:
-      data: foo
+      data: Foo (component from application)
       view:
         component: Foo
         props:
           color: blue
       frames:
         - frame:
-          data: bar
+          data: OTBar (component from OT package)
           view:
             component: OTBar
             props:
