@@ -1,0 +1,64 @@
+#!/usr/bin/env node
+
+const fs = require('fs')
+const fsExtra = require('fs-extra')
+const path = require('path')
+const yaml = require('js-yaml')
+
+function getOpenTrussConf() {
+    function getConfig(confPath) {
+        if (!fs.existsSync(confPath)) {
+            throw new Error(`Configuration file does not exist at ${confPath}`)
+        }
+
+        const yamlFile = fs.readFileSync(confPath, 'utf8')
+        const yamlData = yaml.load(yamlFile)
+        return yamlData
+    }
+
+    const openTrussUserConf = getConfig(path.join(process.cwd(), 'open-truss.conf.yaml'))
+    const appType = openTrussUserConf.APP_TYPE === undefined ? 'nextjs' : openTrussUserConf.APP_TYPE
+    const openTrussDefaultConf = getConfig(`${process.env.PACKAGE_DIR}/${appType}/open-truss.conf.default.yaml`)
+    const  openTrussConf = Object.assign({}, openTrussDefaultConf, openTrussUserConf);
+
+    const expectedKeys = ["APP_TYPE"]
+    expectedKeys.forEach(key => {
+        if (!(key in openTrussConf)) {
+            throw new Error(`${key} is missing from open-truss.conf.yaml`);
+        }
+    });
+
+    return openTrussConf
+}
+
+function copyOTFilesToProject(openTrussConf) {
+    function copyFiles(openTrussConf, listOfFilesToCopy) {
+        const otAppDir = `${process.env.PACKAGE_DIR}/${openTrussConf.APP_TYPE}`
+
+        for (const [src, dest, overwrite] of listOfFilesToCopy) {
+            fsExtra.copySync(`${otAppDir}/${src}`, dest, { errorOnExist: false, overwrite })
+        }
+    }
+
+    const NextJSFilesToCopy = [
+        ['src/app/ot', 'src/app/ot', true],
+        ['src/open-truss-components', 'src/open-truss-components', false],
+    ]
+
+    switch (openTrussConf.APP_TYPE) {
+        case 'nextjs':
+            copyFiles(openTrussConf, NextJSFilesToCopy)
+            break;
+        default:
+            throw new Error(`Unsupported APP_TYPE: ${openTrussConf.APP_TYPE}`);
+    }
+}
+
+
+function main() {
+    const openTrussConf = getOpenTrussConf()
+
+    copyOTFilesToProject(openTrussConf)
+}
+
+main()
