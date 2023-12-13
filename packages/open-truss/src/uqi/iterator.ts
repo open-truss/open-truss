@@ -5,8 +5,8 @@ export type IteratorResult<T> = Promise<{
   done?: boolean | undefined
 }>
 
-class Iterator<T> {
-  public iter: AsyncIterableIterator<T>
+class Iterator<T> implements AsyncIterableIterator<T> {
+  private readonly iter: AsyncIterableIterator<T>
 
   constructor(iter: AsyncIterableIterator<T>) {
     this.iter = iter
