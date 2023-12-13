@@ -1,3 +1,5 @@
+// Idea taken from https://github.com/regadas/trino-js-client/blob/48cc8aa78b80b1196133ed39878315400f8035cf/src/index.ts#L299-L350
+
 export type IteratorResult<T> = Promise<{
   value: T
   done?: boolean | undefined
