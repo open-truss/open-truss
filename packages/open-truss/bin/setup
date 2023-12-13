@@ -1,0 +1,49 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const path = require('path');
+const yaml = require('js-yaml');
+
+function getOpenTrussConf() {
+    const openTrussConf = path.join(process.cwd(), 'open-truss.conf.yaml');
+
+    if (!fs.existsSync(openTrussConf)) {
+        throw new Error('open-truss.conf.yaml file does not exist')
+    }
+
+    const yamlFile = fs.readFileSync(openTrussConf, 'utf8')
+    const yamlData = yaml.load(yamlFile)
+    const expectedKeys = ["APP_ROOT", "COMPONENTS_DIR"]
+    expectedKeys.forEach(key => {
+        if (!(key in yamlData)) {
+            throw new Error(`${key} is missing from open-truss.conf.yaml`);
+        }
+    });
+
+    return yamlData
+}
+
+function generateOTAppTsconfig(openTrussConf) {
+    const componentsDir = openTrussConf.COMPONENTS_DIR.startsWith('/')
+        ? (() => { throw new Error('COMPONENTS_DIR should not be an absolute path'); })()
+        : path.join(openTrussConf.APP_ROOT, openTrussConf.COMPONENTS_DIR);
+
+    const baseTsconf = path.join(process.cwd(), 'tsconfig.base.json');
+    const jsonFile = fs.readFileSync(baseTsconf, 'utf8');
+    const jsonData = JSON.parse(jsonFile);
+
+    jsonData.compilerOptions.paths['@app-components'] = [componentsDir]
+
+    const outputFilePath = path.join(process.cwd(), 'tsconfig.json');
+
+    fs.writeFileSync(outputFilePath, JSON.stringify(jsonData, null, 2));
+}
+
+function main() {
+    const openTrussConf = getOpenTrussConf()
+    // CD into open-truss app directory
+    process.chdir(process.env.OT_APP_DIR);
+    generateOTAppTsconfig(openTrussConf)
+}
+
+main()

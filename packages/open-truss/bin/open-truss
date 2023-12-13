@@ -2,6 +2,7 @@
 
 # Directory of open-truss project
 package_dir=$(npm ls -p @open-truss/open-truss)
+app_dir=$package_dir/app
 
 # Check if package_dir is empty. If empty then we are inside of the OT repository
 if [ -z "$package_dir" ]; then
@@ -52,13 +53,8 @@ if [[ "$script_name" != *"/"* ]]; then
     exit 1
   fi
 
-  # Ensure the script file is executable
-  if [ ! -x "$script_path" ]; then
-    chmod +x "$script_path"
-  fi
-
   # Execute the script
-  PACKAGE_DIR=$package_dir "$script_path" "$@"
+  PACKAGE_DIR=$package_dir OT_APP_DIR=$app_dir "$script_path" "$@"
 else
   echo "Error: Invalid script name."
   exit 1

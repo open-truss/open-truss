@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "setup": "open-truss setup",
     "start": "open-truss start --tsc-watch",
     "tsc:watch": "open-truss tsc-watch"
   },

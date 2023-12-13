@@ -1,4 +1,4 @@
-import { type BaseOpenTrussComponentV1 } from '@ot'
+import { type BaseOpenTrussComponentV1 } from '@open-truss/open-truss'
 
 export default function Foo(props: BaseOpenTrussComponentV1): JSX.Element {
   return (

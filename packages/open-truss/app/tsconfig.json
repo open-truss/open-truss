@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -18,11 +22,28 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@ot": ["../dist/mjs/index.js"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@ot": [
+        "../dist/mjs/index.js"
+      ],
+      "@app-components": [
+        "/Users/hktouw/Repos/open-truss/open-truss/model-home/src/components"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "/Users/hktouw/Repos/open-truss/open-truss/model-home/src/components/*.ts",
+    "/Users/hktouw/Repos/open-truss/open-truss/model-home/src/components/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
