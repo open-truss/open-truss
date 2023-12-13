@@ -12,6 +12,8 @@ This assumes a standard NextJS app structure with a `src` directory.
 1. Copy [open-truss.conf.default.yaml](packages/open-truss/nextjs/open-truss.conf.default.yaml) into NextJS root and name `open-truss.conf.yaml`
 1. Add `"ot:setup": "open-truss setup"` to package.json and run
   **Important** - this adds files to your NextJS application, overwriting them if they exist. These are namespaced (e.g. `ot`) and should not conflict with existing files. See [bin/setup](../packages/open-truss/bin/setup) for the full list.
+1. Add `"@open-truss-components": ["./src/open-truss-components"]` to "paths" in your tsconfig.json.
+  - This tells the open-truss library where to find your open-truss-components
 1. Start NextJS dev server (e.g. `npm run dev`)
 1. Visit `/ot/playground` (e.g. localhost:3000/ot/playground)
 

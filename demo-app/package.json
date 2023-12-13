@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "tsc:watch": "open-truss tsc-watch",
+    "ot:setup": "open-truss setup",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
