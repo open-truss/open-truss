@@ -1,4 +1,6 @@
 export { default as helloWorld } from './hello-world'
+export * from './uqi/iterator'
+export * from './uqi/uqi'
 export * from './utils/yaml'
 export * from './utils/format'
 export * from './components'

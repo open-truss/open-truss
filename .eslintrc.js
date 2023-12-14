@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: ['standard-with-typescript', 'plugin:react/recommended'],
+  extends: ['standard-with-typescript', 'plugin:react/recommended', 'prettier'],
   overrides: [
     {
       env: {
@@ -24,7 +24,7 @@ module.exports = {
       version: '18.2.0',
     },
   },
-  plugins: ['check-file', 'react'],
+  plugins: ['check-file', 'prettier', 'react'],
   rules: {
     '@typescript-eslint/comma-dangle': 'off',
     '@typescript-eslint/return-await': 'off',
@@ -49,5 +49,6 @@ module.exports = {
       },
     ],
     'react/react-in-jsx-scope': 'off',
+    'prettier/prettier': 2,
   },
 }
