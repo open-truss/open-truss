@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Function to terminate both tsc processes
+terminate_tsc_processes() {
+  echo "Terminating TypeScript watch processes..."
+  pkill -P $$
+}
+
+# Trap SIGINT and SIGTERM and call the function to terminate tsc processes
+trap 'terminate_tsc_processes' SIGINT SIGTERM
+
+echo "Runing npm run dev"
+(npm run dev) &
+
+echo "Running npm run tsc:watch"
+cd ..
+(npm run tsc:watch) &
+
+wait
