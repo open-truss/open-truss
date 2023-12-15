@@ -4,7 +4,7 @@
 
 Open Truss is a full-stack framework installable into existing applications. Open Truss comes with scripts to generate client and server files, adding them to your application.
 
-OT supports the following applications:
+Open Truss supports installation into applications built with the following frameworks:
 - NextJS
 
 ### NextJS
@@ -14,7 +14,7 @@ This assumes a standard typescript NextJS app structure with a `src` directory.
 1. Run `npm install @open-truss/open-truss`
 1. Copy [open-truss.conf.default.yaml](../packages/open-truss/nextjs/open-truss.conf.default.yaml) into NextJS root and name `open-truss.conf.yaml`
 1. Add `"ot:setup": "open-truss setup"` to package.json and run
-  **Important** - this adds files to your NextJS application, overwriting them if they exist. These are namespaced (e.g. `ot`) and should not conflict with your application-specific files. See [bin/setup](../packages/open-truss/bin/setup) for the full list of files added.
+  **Important** - this adds open-truss namespaced files to your NextJS application, overwriting them if they exist. These are in prefixed with `open-truss` or in directories such as `ot` and should not conflict with your application-specific files. See [bin/setup](../packages/open-truss/bin/setup) for the full list of files added.
 1. Add `"@open-truss-components": ["./src/open-truss-components"]` to "paths" in your tsconfig.json.
   - This tells the open-truss library where to find your open-truss-components
 1. Start NextJS dev server (e.g. `npm run dev`)
@@ -51,8 +51,8 @@ Same as above
 
 Setup:
 
-1. Complete app instillation above
-1. Complete open truss component instillation above
+1. Complete app installation above
+1. Complete open truss component installation above
 1. CD into application you want to develop. e.g. `nextjs`
 1. Run `npm install`
 1. Run `script/server`
@@ -63,7 +63,7 @@ Setup:
 
 ### Notes & FAQs
 
-- **tsc:watch gotchas** - `tsc:watch` watches for source file changes and automatically generates js from typescript. When you rename or delete source files, it _does not_ delete the old compiled js files. This is usually fine, but sometimes can cause bugs. When in doubt, you can delete the `dist` directory and restart `tsc:watch`.
+- **tsc:watch gotchas** - `tsc:watch` watches for source file changes and automatically generates javascript from typescript. When you rename or delete source files, it _does not_ delete the old compiled javascript files. This is usually fine, but sometimes can cause bugs. When in doubt, you can delete the `dist` directory and restart `tsc:watch`.
 - **packages/open-truss directory structure**
   - `bin/` - executables accessible by applications using `open-truss <script_name>`
   - `dist/` - compiled javascript from typescript source
