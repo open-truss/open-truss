@@ -6,13 +6,17 @@ export type UqiMappedType =
   | 'Boolean'
   | 'BigInt'
   | 'Date'
-  | 'Object'
+  | 'JSON'
 
 export type UqiTypeMappings = Record<string, UqiMappedType>
 
 export interface UqiColumn {
   name: string
   type: string
+}
+
+export interface UqiMetadata {
+  columns: UqiColumn[]
 }
 
 export type UqiScalar = string | number | boolean | bigint | object | null
@@ -72,9 +76,19 @@ export function uqi<C, T>(og: UqiSettings<C, T>): UqiClient {
     typeMappings: og.typeMappings,
   }
 
+  function typeMapping(type: string): UqiMappedType {
+    type = type.split('(')[0].trim()
+
+    const mappedType = context.typeMappings[type]
+    if (!mappedType) {
+      throw new Error(`Type ${type} is not mapped`)
+    }
+    return mappedType
+  }
+
   function buildRow(result: UqiResult): UqiScalar[] {
     return result.metadata.columns.map((column: UqiColumn, i: number) => {
-      const type = context.typeMappings[column.type]
+      const type = typeMapping(column.type)
       if (!type) {
         throw new Error(`Type ${column.type} is not mapped`)
       }
@@ -87,6 +101,9 @@ export function uqi<C, T>(og: UqiSettings<C, T>): UqiClient {
       }
       if (typeof value === 'number' && type === 'String') {
         return String(value)
+      }
+      if (typeof value === 'boolean' && type === 'Boolean') {
+        return Boolean(value)
       }
       if (typeof value === 'bigint' && type === 'BigInt') {
         return BigInt(value)
@@ -104,12 +121,12 @@ export function uqi<C, T>(og: UqiSettings<C, T>): UqiClient {
     return {
       ...metadata,
       columns: metadata.columns.map((column: UqiColumn) => {
-        const type = context.typeMappings[column.type]
+        const type = typeMapping(column.type)
         if (!type) {
           throw new Error(`Type ${column.type} is not mapped`)
         }
         return {
-          ...column,
+          name: column.name,
           type,
         }
       }),
