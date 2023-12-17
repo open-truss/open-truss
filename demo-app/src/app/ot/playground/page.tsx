@@ -32,8 +32,17 @@ async function PlaygroundPage(): Promise<JSX.Element> {
   return (
     <>
       {renderedComponents}
-      <p>{JSON.stringify(rows)}</p>
-      <p>{JSON.stringify(metadata)}</p>
+      <h2>Rows</h2>
+      {rows.map((row, i) => (
+        <div key={i}>
+          {Object.entries(row).map(([key, value]) => (
+            <div key={key}>
+              <strong>{key}</strong>: {String(value)}
+            </div>
+          ))}
+          <hr />
+        </div>
+      ))}
     </>
   )
 }
