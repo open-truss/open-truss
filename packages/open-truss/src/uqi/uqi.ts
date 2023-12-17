@@ -33,7 +33,7 @@ interface UqiSettings<C, T> {
     context: UqiContext<C, T>,
     query: string,
   ) => Promise<AsyncIterableIterator<UqiResult>>
-  teardown: (context: UqiContext<C, T>) => Promise<void>
+  teardown?: (context: UqiContext<C, T>) => Promise<void>
 }
 
 export interface UqiContext<C, T> {
@@ -170,7 +170,9 @@ export default function uqi<C, T>(og: UqiSettings<C, T>): UqiClient {
       if (!context.client) {
         throw new Error('Client is not set up')
       }
-      await og.teardown(context)
+      if (og.teardown) {
+        await og.teardown(context)
+      }
     },
   }
 }
