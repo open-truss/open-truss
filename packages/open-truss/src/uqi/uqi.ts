@@ -58,7 +58,7 @@ export interface UqiStatus {
   startedAt: Date | null
 }
 
-export default function uqi<C, T>(og: UqiSettings<C, T>): UqiClient {
+export function uqi<C, T>(og: UqiSettings<C, T>): UqiClient {
   const context: UqiContext<C, T> = {
     config: og.config,
     client: og.client,
@@ -176,3 +176,5 @@ export default function uqi<C, T>(og: UqiSettings<C, T>): UqiClient {
     },
   }
 }
+
+export default uqi
