@@ -42,9 +42,9 @@ describe('fake-client-uqi', () => {
     }
 
     expect(results).toEqual([
-      [['Sam 12', 12]],
-      [['Sam 99', 99]],
-      [['Sam 51', 51]],
+      { full_name: 'Sam 12', age: 12 },
+      { full_name: 'Sam 99', age: 99 },
+      { full_name: 'Sam 51', age: 51 },
     ])
     expect(m.columns).toEqual([
       { name: 'full_name', type: 'String' },
