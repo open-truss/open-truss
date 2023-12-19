@@ -1,9 +1,8 @@
 import type { YamlObject, YamlType } from '@/utils/yaml'
-import React from 'react'
-import { type RenderingEngine, type ReactTree, type COMPONENTS } from './apply'
+import { type COMPONENTS, type ReactTree, type RenderingEngine } from './apply'
 
 export interface BaseOpenTrussComponentV1 {
-  children?: React.ReactNode
+  children?: JSX.Element | Promise<JSX.Element>
   data: YamlType
   config: WorkflowV1
 }
@@ -27,21 +26,27 @@ export function engineV1(
   config: WorkflowV1,
   data: YamlType,
 ): RenderingEngine {
-  const renderFrames = (frames: FrameV1[]): ReactTree => {
-    return frames.map(({ view, data, frames: subFrame }, i) => {
-      const { component, props } = view
-      const Component = COMPONENTS[component]
-      return subFrame === undefined ? (
-        <Component key={i} data={data} config={config} {...props} />
-      ) : (
-        <Component key={i} data={data} config={config} {...props}>
-          {renderFrames(subFrame)}
-        </Component>
-      )
-    })
+  const renderFrames = async (frames: FrameV1[]): Promise<ReactTree> => {
+    return Promise.all(
+      frames.map(async ({ view, data, frames: subFrame }, i) => {
+        const { component, props } = view
+        const Component = await COMPONENTS[component]
+
+        if (subFrame === undefined) {
+          return <Component key={i} data={data} config={config} {...props} />
+        } else {
+          const inner = await renderFrames(subFrame)
+          return (
+            <Component key={i} data={data} config={config} {...props}>
+              {inner}
+            </Component>
+          )
+        }
+      }),
+    )
   }
 
-  return () => {
+  return async () => {
     return renderFrames(config.frames)
   }
 }
