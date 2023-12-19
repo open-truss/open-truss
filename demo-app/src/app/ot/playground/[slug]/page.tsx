@@ -1,6 +1,7 @@
 import * as COMPONENTS from '@/open-truss/components'
 import { applyConfiguration, parseYaml } from '@open-truss/open-truss'
 import { promises as fs } from 'fs'
+import { notFound } from 'next/navigation'
 import path from 'path'
 
 const configurationFunction = applyConfiguration(COMPONENTS)
@@ -23,7 +24,7 @@ export default async function Page({
     )
   } catch (err) {
     if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
-      return <>404 - File Not Found</>
+      notFound()
     } else {
       throw err
     }
