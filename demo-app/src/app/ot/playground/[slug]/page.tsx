@@ -1,6 +1,6 @@
-import { promises as fs } from 'fs'
-import { parseYaml, applyConfiguration } from '@open-truss/open-truss'
 import * as COMPONENTS from '@/open-truss/components'
+import { applyConfiguration, parseYaml } from '@open-truss/open-truss'
+import { promises as fs } from 'fs'
 import path from 'path'
 
 const configurationFunction = applyConfiguration(COMPONENTS)
