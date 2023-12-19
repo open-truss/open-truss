@@ -1,55 +1,14 @@
-import {
-  parseYaml,
-  applyConfiguration,
-  type UqiMetadata,
-} from '@open-truss/open-truss'
-import * as COMPONENTS from '@open-truss-components'
-import createTrinoUqiClient from '@/lib/trino-uqi-client'
-
-const configurationFunction = applyConfiguration(COMPONENTS)
-
 async function PlaygroundPage(): Promise<JSX.Element> {
-  const trinoUqiClient = await createTrinoUqiClient({
-    auth: 'trino',
-    server: 'http://trino.orb.local:8080',
-  })
-  const queryIterator = await trinoUqiClient.query(
-    'select * from  tpch.sf1.customer limit 10',
-  )
-  const rows = []
-  let metadata: UqiMetadata = {
-    columns: [],
-  }
-  for await (const { row, metadata: m } of queryIterator) {
-    rows.push(row)
-    if (metadata.columns.length === 0) {
-      metadata = m
-    }
-  }
-  const parsedConfig = parseYaml(config)
-  const renderedComponents = configurationFunction(parsedConfig, {})
-
-  return (
-    <>
-      {renderedComponents}
-      <h2>Rows</h2>
-      {rows.map((row, i) => (
-        <div key={i}>
-          {Object.entries(row).map(([key, value]) => (
-            <div key={key}>
-              <strong>{key}</strong>: {String(value)}
-            </div>
-          ))}
-          <hr />
-        </div>
-      ))}
-    </>
-  )
+  return <div style={{ whiteSpace: 'pre' }}>{config}</div>
 }
 
 export default PlaygroundPage
 
 const config = `
+To use the playground you can create a new Open Truss configuration at src/open-truss/configs/1-your-config.yaml. For example:
+
+src/open-truss/configs/1-foo-bar.yaml
+---
 workflow:
   version: 1
   frames:
