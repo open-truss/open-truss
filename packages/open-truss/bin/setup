@@ -40,14 +40,31 @@ function copyOTFilesToProject(openTrussConf) {
     }
   }
 
+  function deleteFilesOrDirsIfExists(listOfFiles) {
+    for (const file of listOfFiles) {
+      if (fs.existsSync(file)) {
+        fs.rm(file, { recursive: true }, (err) => {
+          if (err) {
+            throw err
+          }
+        })
+      }
+    }
+  }
+
   const NextJSFilesToCopy = [
     ['src/app/ot', 'src/app/ot', true],
-    ['src/open-truss-components', 'src/open-truss-components', false]
+    ['src/open-truss/components', 'src/open-truss/components', false],
+    ['src/open-truss/configs', 'src/open-truss/configs', false],
+  ]
+  const NextJSFilesToDelete = [
+    'src/open-truss-components',
   ]
 
   switch (openTrussConf.APP_TYPE) {
     case 'nextjs':
       copyFiles(openTrussConf, NextJSFilesToCopy)
+      deleteFilesOrDirsIfExists(NextJSFilesToDelete)
       break
     default:
       throw new Error(`Unsupported APP_TYPE: ${openTrussConf.APP_TYPE}`)

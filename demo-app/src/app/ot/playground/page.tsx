@@ -1,17 +1,14 @@
-import { parseYaml, applyConfiguration } from '@open-truss/open-truss'
-import * as COMPONENTS from '@open-truss-components'
-const configurationFunction = applyConfiguration(COMPONENTS)
-
 async function PlaygroundPage(): Promise<JSX.Element> {
-  const parsedConfig = parseYaml(config)
-  const renderedComponents = configurationFunction(parsedConfig, {})
-
-  return <>{renderedComponents}</>
+  return <div style={{ whiteSpace: 'pre' }}>{config}</div>
 }
 
 export default PlaygroundPage
 
 const config = `
+To use the playground you can create a new Open Truss configuration at src/open-truss/configs/1-your-config.yaml. For example:
+
+src/open-truss/configs/1-foo-bar.yaml
+---
 workflow:
   version: 1
   frames:
