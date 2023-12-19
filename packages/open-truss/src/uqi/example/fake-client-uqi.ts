@@ -27,7 +27,7 @@ export default async function (config: FakeClientConfig): Promise<UqiClient> {
         if (result.data) {
           for await (const row of result.data) {
             yield {
-              row: [[`Sam ${row[1]}`, row[1]]],
+              row: [`Sam ${row[1]}`, row[1]],
               metadata: result.metadata,
             }
           }

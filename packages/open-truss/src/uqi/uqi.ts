@@ -6,7 +6,7 @@ export type UqiMappedType =
   | 'Boolean'
   | 'BigInt'
   | 'Date'
-  | 'Object'
+  | 'JSON'
 
 export type UqiTypeMappings = Record<string, UqiMappedType>
 
@@ -15,13 +15,22 @@ export interface UqiColumn {
   type: string
 }
 
+export interface UqiMetadata {
+  columns: UqiColumn[]
+}
+
 export type UqiScalar = string | number | boolean | bigint | object | null
+
+export type UqiNamedFieldsRow = Record<string, UqiScalar>
 
 export interface UqiClient {
   query: (
     query: string,
-    options?: { statusCallback?: (status: UqiStatus) => Promise<void> },
-  ) => Promise<AsyncIterableIterator<UqiResult>>
+    options?: {
+      namedFields?: boolean
+      statusCallback?: (status: UqiStatus) => Promise<void>
+    },
+  ) => Promise<AsyncIterableIterator<UqiYieldResult>>
   teardown: () => Promise<void>
 }
 
@@ -33,7 +42,7 @@ interface UqiSettings<C, T> {
     context: UqiContext<C, T>,
     query: string,
   ) => Promise<AsyncIterableIterator<UqiResult>>
-  teardown: (context: UqiContext<C, T>) => Promise<void>
+  teardown?: (context: UqiContext<C, T>) => Promise<void>
 }
 
 export interface UqiContext<C, T> {
@@ -50,6 +59,10 @@ export interface UqiResult {
   }
 }
 
+export type UqiYieldResult = Omit<UqiResult, 'row'> & {
+  row: UqiScalar[] | UqiNamedFieldsRow
+}
+
 export interface UqiStatus {
   completedAt: Date | null
   failedAt: Date | null
@@ -58,7 +71,7 @@ export interface UqiStatus {
   startedAt: Date | null
 }
 
-export default function uqi<C, T>(og: UqiSettings<C, T>): UqiClient {
+export function uqi<C, T>(og: UqiSettings<C, T>): UqiClient {
   const context: UqiContext<C, T> = {
     config: og.config,
     client: og.client,
@@ -72,30 +85,57 @@ export default function uqi<C, T>(og: UqiSettings<C, T>): UqiClient {
     typeMappings: og.typeMappings,
   }
 
-  function buildRow(result: UqiResult): UqiScalar[] {
-    return result.metadata.columns.map((column: UqiColumn, i: number) => {
-      const type = context.typeMappings[column.type]
-      if (!type) {
-        throw new Error(`Type ${column.type} is not mapped`)
-      }
-      const value = result.row[i]
-      if (value === null) {
-        return null
-      }
-      if (typeof value === 'string' && type === 'Number') {
-        return Number(value)
-      }
-      if (typeof value === 'number' && type === 'String') {
-        return String(value)
-      }
-      if (typeof value === 'bigint' && type === 'BigInt') {
-        return BigInt(value)
-      }
-      if (typeof value === 'string' && type === 'Date') {
-        return new Date(value)
-      }
-      return value
-    })
+  function typeMapping(type: string): UqiMappedType {
+    type = type.split('(')[0].trim()
+
+    const mappedType = context.typeMappings[type]
+    if (!mappedType) {
+      throw new Error(`Type ${type} is not mapped`)
+    }
+    return mappedType
+  }
+
+  function buildField(columnType: string, value: UqiScalar): UqiScalar {
+    const type = typeMapping(columnType)
+    if (!type) {
+      throw new Error(`Type ${columnType} is not mapped`)
+    }
+    if (value === null) {
+      return null
+    }
+    if (typeof value === 'string' && type === 'Number') {
+      return Number(value)
+    }
+    if (typeof value === 'number' && type === 'String') {
+      return String(value)
+    }
+    if (typeof value === 'boolean' && type === 'Boolean') {
+      return Boolean(value)
+    }
+    if (typeof value === 'bigint' && type === 'BigInt') {
+      return BigInt(value)
+    }
+    if (typeof value === 'string' && type === 'Date') {
+      return new Date(value)
+    }
+    return value
+  }
+
+  function buildRow(
+    result: UqiResult,
+    namedFields: boolean,
+  ): UqiScalar[] | UqiNamedFieldsRow {
+    if (namedFields) {
+      const row: UqiNamedFieldsRow = {}
+      result.metadata.columns.forEach((column: UqiColumn, i: number) => {
+        row[column.name] = buildField(column.type, result.row[i])
+      })
+      return row
+    } else {
+      return result.metadata.columns.map((column: UqiColumn, i: number) => {
+        return buildField(column.type, result.row[i])
+      })
+    }
   }
 
   function buildMetadata(metadata: { columns: UqiColumn[] }): {
@@ -104,12 +144,12 @@ export default function uqi<C, T>(og: UqiSettings<C, T>): UqiClient {
     return {
       ...metadata,
       columns: metadata.columns.map((column: UqiColumn) => {
-        const type = context.typeMappings[column.type]
+        const type = typeMapping(column.type)
         if (!type) {
           throw new Error(`Type ${column.type} is not mapped`)
         }
         return {
-          ...column,
+          name: column.name,
           type,
         }
       }),
@@ -119,8 +159,13 @@ export default function uqi<C, T>(og: UqiSettings<C, T>): UqiClient {
   return {
     async query(
       query: string,
-      options?: { statusCallback?: (status: UqiStatus) => Promise<void> },
+      options?: {
+        namedFields?: boolean
+        statusCallback?: (status: UqiStatus) => Promise<void>
+      },
     ) {
+      const namedFields =
+        options?.namedFields === undefined ? true : options?.namedFields
       if (!context.client) {
         context.status.failedReason = 'Client is not set up'
         context.status.failedAt = new Date()
@@ -136,10 +181,10 @@ export default function uqi<C, T>(og: UqiSettings<C, T>): UqiClient {
         await options.statusCallback(context.status)
       }
 
-      async function* asyncGenerator(): AsyncGenerator<UqiResult> {
+      async function* asyncGenerator(): AsyncGenerator<UqiYieldResult> {
         try {
           for await (const result of queryIterator) {
-            const row = buildRow(result)
+            const row = buildRow(result, namedFields)
             const metadata = buildMetadata(result.metadata)
 
             context.status.recordsReturned += 1
@@ -170,7 +215,11 @@ export default function uqi<C, T>(og: UqiSettings<C, T>): UqiClient {
       if (!context.client) {
         throw new Error('Client is not set up')
       }
-      await og.teardown(context)
+      if (og.teardown) {
+        await og.teardown(context)
+      }
     },
   }
 }
+
+export default uqi
