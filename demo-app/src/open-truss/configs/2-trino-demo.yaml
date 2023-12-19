@@ -1,0 +1,8 @@
+workflow:
+  version: 1
+  frames:
+    - frame:
+      data:
+        query: SELECT * FROM  tpch.sf1.customer LIMIT 10
+      view:
+        component: TrinoDemo
