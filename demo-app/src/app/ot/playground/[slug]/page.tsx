@@ -23,7 +23,7 @@ export default function Page({
       <h1>{sanitizedSlug}</h1>
       <RenderFromFile
         components={COMPONENTS}
-        path={`${CONFIG_DIR}${sanitizedSlug}`}
+        path={`${CONFIG_DIR}${sanitizedSlug}.yaml`}
       />
     </>
   )
