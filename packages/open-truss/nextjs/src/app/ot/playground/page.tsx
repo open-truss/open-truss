@@ -13,16 +13,10 @@ workflow:
   version: 1
   frames:
     - frame:
-      data: Foo (component from application)
       view:
-        component: Foo
-        props:
-          color: blue
+        component: YourAppExampleComponent
       frames:
         - frame:
-          data: OTBar (component from OT package)
           view:
-            component: OTBar
-            props:
-              color: blue
+            component: OTExampleComponent
 `

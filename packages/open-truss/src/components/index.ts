@@ -1,1 +1,1 @@
-export { default as OTBar } from './OTBar'
+export { default as OTExampleComponent } from './OTExampleComponent'
