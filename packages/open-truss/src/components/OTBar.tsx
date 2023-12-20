@@ -1,5 +1,7 @@
-import { type BaseOpenTrussComponentV1 } from '@/configuration'
+import { type BaseOpenTrussComponentV1Props } from '@/configuration'
 
-export default function OTBar(props: BaseOpenTrussComponentV1): JSX.Element {
+export default function OTBar(
+  props: BaseOpenTrussComponentV1Props,
+): JSX.Element {
   return <>{JSON.stringify(props.data)}</>
 }
