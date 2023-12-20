@@ -6,7 +6,7 @@ import type React from 'react'
 import { promises as fs } from 'fs'
 
 import * as OTCOMPONENTS from '../components'
-import { parseYaml, YamlObject, YamlType } from '../utils/yaml'
+import { parseYaml, type YamlObject, type YamlType } from '../utils/yaml'
 import {
   type BaseOpenTrussComponentV1,
   type WorkflowV1,
@@ -48,18 +48,15 @@ export function applyConfiguration(
   return configurationFunction
 }
 
-interface RenderFromFile {
-  components?: COMPONENTS,
+export async function RenderFromFile({
+  components = {},
+  path,
+}: {
+  components?: COMPONENTS
   path: string
-}
-
-export async function RenderFromFile({ components = {}, path }: RenderFromFile): Promise<JSX.Element> {
-  let config
-  try {
-    config = await fs.readFile(path, 'utf-8')
-  } catch (err) {
-    throw err
-  }
+}): Promise<JSX.Element> {
+  const config = await fs.readFile(path, 'utf-8')
+  // TODO: Render 404 if no file
 
   const parsedConfig = parseYaml(config)
   const renderedComponents = applyConfiguration(components)(parsedConfig, {})

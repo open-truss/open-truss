@@ -1,14 +1,14 @@
 import path from 'path'
 import { RenderFromFile } from '@open-truss/open-truss'
 
+// TODO: Set COMPONENT_INDEX in application config and OT loads it?
+import * as COMPONENTS from '@/open-truss/components'
+
 interface PlaygroundPage {
   params: {
     slug: string
   }
 }
-
-// TODO: Set COMPONENT_INDEX in application config and OT loads it?
-import * as COMPONENTS from '@/open-truss/components'
 
 // TODO: Get this path from application config and only need to pass in filename?
 const CONFIG_DIR = './src/open-truss/configs/'
