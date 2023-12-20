@@ -1,15 +1,15 @@
 import {
-  type BaseOpenTrussComponentV1,
+  type BaseOpenTrussComponentV1Props,
   type UqiMetadata,
 } from '@open-truss/open-truss'
 import createTrinoUqiClient from '@/lib/trino-uqi-client'
 
 export default async function TrinoDemo(
-  props: BaseOpenTrussComponentV1,
+  props: BaseOpenTrussComponentV1Props,
 ): Promise<JSX.Element> {
   const trinoUqiClient = await createTrinoUqiClient({
     auth: 'trino',
-    server: 'http://trino.orb.local:8080',
+    server: 'http://localhost:8080',
   })
   const queryIterator = await trinoUqiClient.query(props.data.query)
   const rows = []
