@@ -16,7 +16,7 @@ export interface WorkflowSpec {
 }
 type BaseOpenTrussComponents = BaseOpenTrussComponentV1 // |BaseOpenTrussComponentV2
 export type COMPONENTS = Record<string, BaseOpenTrussComponents>
-export type ReactTree = Array<Promise<ReactTree | JSX.Element>>
+export type ReactTree = Array<ReactTree | JSX.Element>
 export type RenderingEngine = () => Promise<ReactTree>
 type ConfigurationFunction = (
   config: YamlObject,
