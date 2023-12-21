@@ -35,7 +35,7 @@ export function applyConfiguration(
 
     // TODO this version check should be using zod and runtime validation
     if (workflow.version === 1) {
-      renderingEngine = engineV1(components, workflow, data)
+      renderingEngine = engineV1(components, workflow)
     } else {
       throw new Error(`Unsupported config version: ${workflow.version}`)
     }
