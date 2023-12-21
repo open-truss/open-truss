@@ -1,12 +1,16 @@
 import type { YamlObject, YamlType } from '@/utils/yaml'
-import React from 'react'
 import { type RenderingEngine, type ReactTree, type COMPONENTS } from './apply'
 
-export interface BaseOpenTrussComponentV1 {
-  children?: React.ReactNode
+export interface BaseOpenTrussComponentV1Props {
+  key?: number
+  children?: JSX.Element | Promise<JSX.Element>
   data: YamlType
   config: WorkflowV1
 }
+
+export type BaseOpenTrussComponentV1 = (
+  props: BaseOpenTrussComponentV1Props,
+) => JSX.Element | Promise<JSX.Element>
 
 export interface FrameV1 {
   view: {
@@ -25,23 +29,35 @@ export interface WorkflowV1 {
 export function engineV1(
   COMPONENTS: COMPONENTS,
   config: WorkflowV1,
-  data: YamlType,
 ): RenderingEngine {
-  const renderFrames = (frames: FrameV1[]): ReactTree => {
-    return frames.map(({ view, data, frames: subFrame }, i) => {
-      const { component, props } = view
-      const Component = COMPONENTS[component]
-      return subFrame === undefined ? (
-        <Component key={i} data={data} config={config} {...props} />
-      ) : (
-        <Component key={i} data={data} config={config} {...props}>
-          {renderFrames(subFrame)}
-        </Component>
+  const renderFrames = async (frames: FrameV1[]): Promise<ReactTree> => {
+    return (async () => {
+      return Promise.all(
+        frames.map(async ({ view, data, frames: subFrame }, i) => {
+          const { component, props: viewProps } = view
+          const Component = COMPONENTS[component]
+          const props = {
+            key: i,
+            data,
+            config,
+            ...viewProps,
+          }
+
+          if (subFrame === undefined) {
+            return await Component({ ...props })
+          } else {
+            const subFrames = (await renderFrames(subFrame)).map((child, k) => {
+              return <div key={k}>{child}</div>
+            })
+            const children = <>{subFrames}</>
+            return await Component({ ...props, children })
+          }
+        }),
       )
-    })
+    })()
   }
 
-  return () => {
+  return async () => {
     return renderFrames(config.frames)
   }
 }
