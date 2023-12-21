@@ -29,7 +29,6 @@ export interface WorkflowV1 {
 export function engineV1(
   COMPONENTS: COMPONENTS,
   config: WorkflowV1,
-  data: YamlType,
 ): RenderingEngine {
   const renderFrames = async (frames: FrameV1[]): Promise<ReactTree> => {
     return (() => {
