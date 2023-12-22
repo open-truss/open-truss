@@ -10,19 +10,10 @@ Install packages:
 npm install
 ```
 
-Run the development server
+Run the development server and build the OT library:
 
 ```bash
-npm run dev
-```
-
-And, if developing the OT library:
-```bash
-# In the OT package (../packages/open-truss/)
-npm install
-
-# Here (./demo-app)
-npm run tsc:watch
+script/server
 ```
 
 The application will be available at [http://localhost:3000](http://localhost:3000).
