@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Model Home
+
+Model Home is Open Truss's demo application to help showcase how to use OT and help develop the OT libraries. It is a [Next.js](https://nextjs.org/) project originally bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) and `npm run ot:setup`.
 
 ## Getting Started
 
-First, run the development server:
+Install packages:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Run the development server and build the OT library:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+script/server
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+The application will be available at [http://localhost:3000](http://localhost:3000).
 
-## Learn More
+## Development
 
-To learn more about Next.js, take a look at the following resources:
+### `src/app/ot/`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Development to Model Home's [`src/app/ot/`](./src/app/ot/) directory is done by editing the files in [OT's `nextjs` directory](../packages/open-truss/nextjs/) and then running `npm run ot:setup` in this project to update those files. While OT applications can modify these files after running this script, for this project we want it to be an example of a fresh project.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Everything else
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+For everything else, like creating new components in `src/open-truss/components` or configs in `src/open-truss/configs`, we directly edit this project to provide examples of common use cases and show off unique displays of OT's features.

@@ -1,10 +1,8 @@
-import * as COMPONENTS from '@/open-truss/components'
-import { applyConfiguration, parseYaml } from '@open-truss/open-truss'
-import { promises as fs } from 'fs'
-import { notFound } from 'next/navigation'
 import path from 'path'
+import { RenderFromFile } from '@open-truss/open-truss'
 
-const configurationFunction = applyConfiguration(COMPONENTS)
+// TODO: Set COMPONENT_INDEX in application config and OT loads it?
+import * as COMPONENTS from '@/open-truss/components'
 
 interface PlaygroundPage {
   params: {
@@ -12,26 +10,21 @@ interface PlaygroundPage {
   }
 }
 
-export default async function Page({
+// TODO: Get this path from application config and only need to pass in filename?
+const CONFIG_DIR = './src/open-truss/configs/'
+
+export default function Page({
   params: { slug },
-}: PlaygroundPage): Promise<JSX.Element> {
-  let config
-  try {
-    const sanitizedSlug = path.basename(slug)
-    config = await fs.readFile(
-      `./src/open-truss/configs/${sanitizedSlug}.yaml`,
-      'utf-8',
-    )
-  } catch (err) {
-    if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
-      notFound()
-    } else {
-      throw err
-    }
-  }
+}: PlaygroundPage): JSX.Element {
+  const sanitizedSlug = path.basename(slug)
 
-  const parsedConfig = parseYaml(config)
-  const renderedComponents = configurationFunction(parsedConfig, {})
-
-  return <>{renderedComponents}</>
+  return (
+    <>
+      <h1>{sanitizedSlug}</h1>
+      <RenderFromFile
+        components={COMPONENTS}
+        path={`${CONFIG_DIR}${sanitizedSlug}.yaml`}
+      />
+    </>
+  )
 }

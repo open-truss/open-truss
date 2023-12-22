@@ -1,15 +1,17 @@
-import type { YamlObject, YamlType } from '../utils/yaml'
 // React types (e.g. JSX) are used by imports
 // such as OT components, so we need to keep this even if not
 // used by this file
 // eslint-disable-next-line
 import type React from 'react'
+import { promises as fs } from 'fs'
+
+import * as OTCOMPONENTS from '../components'
+import { parseYaml, type YamlObject, type YamlType } from '../utils/yaml'
 import {
   type BaseOpenTrussComponentV1,
   type WorkflowV1,
   engineV1,
 } from './engine-v1'
-import * as OTCOMPONENTS from '../components'
 
 export interface WorkflowSpec {
   workflow: WorkflowV1 // | WorkflowV2
@@ -44,4 +46,20 @@ export function applyConfiguration(
   }
 
   return configurationFunction
+}
+
+export async function RenderFromFile({
+  components = {},
+  path,
+}: {
+  components?: COMPONENTS
+  path: string
+}): Promise<JSX.Element> {
+  const config = await fs.readFile(path, 'utf-8')
+  // TODO: Render 404 if no file
+
+  const parsedConfig = parseYaml(config)
+  const renderedComponents = applyConfiguration(components)(parsedConfig, {})
+
+  return <>{renderedComponents}</>
 }
