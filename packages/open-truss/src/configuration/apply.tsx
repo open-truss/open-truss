@@ -17,20 +17,20 @@ export interface WorkflowSpec {
 }
 type BaseOpenTrussComponents = BaseOpenTrussComponentV1 // |BaseOpenTrussComponentV2
 export type COMPONENTS = Record<string, BaseOpenTrussComponents>
-export type ReactTree = Array<ReactTree | JSX.Element>
-export type RenderingEngine = () => Promise<ReactTree>
+export type ReactTree = Array<ReactTree | JSX.Element | Promise<JSX.Element>>
+export type RenderingEngine = () => ReactTree | Promise<ReactTree>
 type ConfigurationFunction = (
   config: YamlObject,
   data: YamlType,
-) => Promise<ReactTree>
+) => ReturnType<RenderingEngine>
 
 export function applyConfiguration(
   COMPONENTS: COMPONENTS,
 ): ConfigurationFunction {
   const components = Object.assign(COMPONENTS, OTCOMPONENTS)
 
-  const configurationFunction: ConfigurationFunction = async (config, data) => {
-    let renderingEngine
+  const configurationFunction: ConfigurationFunction = (config, data) => {
+    let renderingEngine: RenderingEngine
 
     const workflow = (config as unknown as WorkflowSpec).workflow
 
