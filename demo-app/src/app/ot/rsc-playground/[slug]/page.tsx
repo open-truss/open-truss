@@ -1,12 +1,11 @@
-'use client'
 import path from 'path'
-import RenderFromEndpoint from '@/components/RenderFromEndpoint'
+import RenderFromFile from '@/components/RenderFromFile'
 
 // TODO: Set COMPONENT_INDEX in application config and OT loads it?
 import * as COMPONENTS from '@/open-truss/components'
 
 // TODO: Get this path from application config and only need to pass in filename?
-const CONFIG_API = '/ot/api/configs/'
+const CONFIG_DIR = './src/open-truss/configs/'
 
 export default function Page({
   params: { slug },
@@ -20,11 +19,10 @@ export default function Page({
   return (
     <>
       <h1>{sanitizedSlug}</h1>
-      <RenderFromEndpoint
+      <RenderFromFile
         components={COMPONENTS}
-        url={`${CONFIG_API}${sanitizedSlug}`}
+        path={`${CONFIG_DIR}${sanitizedSlug}.yaml`}
       />
     </>
   )
 }
-

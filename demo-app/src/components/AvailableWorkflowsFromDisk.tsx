@@ -3,10 +3,10 @@ import Link from 'next/link'
 
 // TODO this should be cached since what's on disk can't change
 async function availableWorkflowsFromDisk(): Promise<string[]> {
-  return fs.readdir('./src/workflows/')
+  return fs.readdir('./src/open-truss/configs/')
 }
 
-async function AvailableWorkflows(): Promise<JSX.Element> {
+async function AvailableWorkflowsFromDisk(): Promise<JSX.Element> {
   const workflows = await availableWorkflowsFromDisk()
   const workflowIds = workflows.map((fileName) => fileName.replace('.yaml', ''))
 
@@ -16,7 +16,10 @@ async function AvailableWorkflows(): Promise<JSX.Element> {
       <ul>
         {workflowIds.map((workflowId) => (
           <li key={workflowId}>
-            <Link href={`workflows/${workflowId}`}>{workflowId}</Link>
+            {workflowId}:{' '}
+            <Link href={`/ot/rsc-playground/${workflowId}`}>Server rendered</Link>
+            &nbsp;
+            <Link href={`/ot/playground/${workflowId}`}>Client rendered</Link>
           </li>
         ))}
       </ul>
@@ -24,4 +27,4 @@ async function AvailableWorkflows(): Promise<JSX.Element> {
   )
 }
 
-export default AvailableWorkflows
+export default AvailableWorkflowsFromDisk

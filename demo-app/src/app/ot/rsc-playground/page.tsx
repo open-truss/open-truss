@@ -1,4 +1,4 @@
-import AvailableWorkflows from '@/components/AvailableWorkflowsFromEndpoint'
+import AvailableWorkflows from '@/components/AvailableWorkflowsFromDisk'
 
 async function PlaygroundPage() {
   return <AvailableWorkflows />
