@@ -1,6 +1,6 @@
-import { type BaseOpenTrussComponentV1 } from '@open-truss/open-truss'
+import { type BaseOpenTrussComponentV1Props } from '@open-truss/open-truss'
 
-function PageTitle({ children }: BaseOpenTrussComponentV1): JSX.Element {
+function PageTitle({ children }: BaseOpenTrussComponentV1Props): JSX.Element {
   return <h1>{children}</h1>
 }
 
