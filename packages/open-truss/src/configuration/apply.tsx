@@ -3,7 +3,6 @@
 // used by this file
 // eslint-disable-next-line
 import type React from 'react'
-import { promises as fs } from 'fs'
 
 import * as OTCOMPONENTS from '../components'
 import { parseYaml, type YamlObject, type YamlType } from '../utils/yaml'
@@ -46,20 +45,4 @@ export function applyConfiguration(
   }
 
   return configurationFunction
-}
-
-export async function RenderFromFile({
-  components = {},
-  path,
-}: {
-  components?: COMPONENTS
-  path: string
-}): Promise<JSX.Element> {
-  const config = await fs.readFile(path, 'utf-8')
-  // TODO: Render 404 if no file
-
-  const parsedConfig = parseYaml(config)
-  const renderedComponents = applyConfiguration(components)(parsedConfig, {})
-
-  return <>{renderedComponents}</>
 }
