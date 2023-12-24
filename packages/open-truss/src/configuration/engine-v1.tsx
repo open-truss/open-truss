@@ -1,16 +1,19 @@
+import React from 'react'
 import type { YamlObject, YamlType } from '@/utils/yaml'
 import { type RenderingEngine, type ReactTree, type COMPONENTS } from './apply'
 
+type Components = JSX.Element
+
 export interface BaseOpenTrussComponentV1Props {
   key?: number
-  children?: JSX.Element | Promise<JSX.Element>
+  children?: Components
   data: YamlType
   config: WorkflowV1
 }
 
 export type BaseOpenTrussComponentV1 = (
   props: BaseOpenTrussComponentV1Props,
-) => JSX.Element | Promise<JSX.Element>
+) => Components
 
 export interface FrameV1 {
   view: {
@@ -30,34 +33,36 @@ export function engineV1(
   COMPONENTS: COMPONENTS,
   config: WorkflowV1,
 ): RenderingEngine {
-  const renderFrames = async (frames: FrameV1[]): Promise<ReactTree> => {
-    return (async () => {
-      return Promise.all(
-        frames.map(async ({ view, data, frames: subFrame }, i) => {
-          const { component, props: viewProps } = view
-          const Component = COMPONENTS[component]
-          const props = {
-            key: i,
-            data,
-            config,
-            ...viewProps,
-          }
+  const renderFrames = (frames: FrameV1[]): ReactTree => {
+    return frames.map(({ view, data, frames: subFrame }, i) => {
+      const { component, props: viewProps } = view
+      const Component = COMPONENTS[component]
+      const props = {
+        key: i,
+        data,
+        config,
+        ...viewProps,
+      }
 
-          if (subFrame === undefined) {
-            return await Component({ ...props })
-          } else {
-            const subFrames = (await renderFrames(subFrame)).map((child, k) => {
-              return <div key={k}>{child}</div>
-            })
-            const children = <>{subFrames}</>
-            return await Component({ ...props, children })
-          }
-        }),
-      )
-    })()
+      if (!Component) {
+        throw new Error(`No component '${component}' configured.`)
+      }
+
+      if (subFrame === undefined) {
+        return Component({ ...props })
+      } else {
+        const subFrames = renderFrames(subFrame).map((child, k) => {
+          return (
+            <React.Fragment key={k}>{child as React.ReactNode}</React.Fragment>
+          )
+        })
+        const children = <>{subFrames}</>
+        return Component({ ...props, children })
+      }
+    })
   }
 
-  return async () => {
+  return () => {
     return renderFrames(config.frames)
   }
 }

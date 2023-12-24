@@ -1,4 +1,4 @@
-import AvailableWorkflows from '@/components/AvailableWorkflowsFromEndpoint'
+import AvailableWorkflows from '@/components/AvailableWorkflowsFromDisk'
 
 function PlaygroundPage(): JSX.Element {
   return <AvailableWorkflows />

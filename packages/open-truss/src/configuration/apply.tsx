@@ -3,10 +3,9 @@
 // used by this file
 // eslint-disable-next-line
 import type React from 'react'
-import { promises as fs } from 'fs'
 
 import * as OTCOMPONENTS from '../components'
-import { parseYaml, type YamlObject, type YamlType } from '../utils/yaml'
+import { type YamlObject, type YamlType } from '../utils/yaml'
 import {
   type BaseOpenTrussComponentV1,
   type WorkflowV1,
@@ -19,19 +18,19 @@ export interface WorkflowSpec {
 type BaseOpenTrussComponents = BaseOpenTrussComponentV1 // |BaseOpenTrussComponentV2
 export type COMPONENTS = Record<string, BaseOpenTrussComponents>
 export type ReactTree = Array<ReactTree | JSX.Element>
-export type RenderingEngine = () => Promise<ReactTree>
+export type RenderingEngine = () => ReactTree
 type ConfigurationFunction = (
   config: YamlObject,
   data: YamlType,
-) => Promise<ReactTree>
+) => ReturnType<RenderingEngine>
 
 export function applyConfiguration(
   COMPONENTS: COMPONENTS,
 ): ConfigurationFunction {
   const components = Object.assign(COMPONENTS, OTCOMPONENTS)
 
-  const configurationFunction: ConfigurationFunction = async (config, data) => {
-    let renderingEngine
+  const configurationFunction: ConfigurationFunction = (config, data) => {
+    let renderingEngine: RenderingEngine
 
     const workflow = (config as unknown as WorkflowSpec).workflow
 
@@ -46,20 +45,4 @@ export function applyConfiguration(
   }
 
   return configurationFunction
-}
-
-export async function RenderFromFile({
-  components = {},
-  path,
-}: {
-  components?: COMPONENTS
-  path: string
-}): Promise<JSX.Element> {
-  const config = await fs.readFile(path, 'utf-8')
-  // TODO: Render 404 if no file
-
-  const parsedConfig = parseYaml(config)
-  const renderedComponents = applyConfiguration(components)(parsedConfig, {})
-
-  return <>{renderedComponents}</>
 }
