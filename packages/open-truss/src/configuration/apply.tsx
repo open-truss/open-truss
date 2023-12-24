@@ -1,9 +1,3 @@
-// React types (e.g. JSX) are used by imports
-// such as OT components, so we need to keep this even if not
-// used by this file
-// eslint-disable-next-line
-import type React from 'react'
-
 import * as OTCOMPONENTS from '../components'
 import { type YamlObject, type YamlType } from '../utils/yaml'
 import {

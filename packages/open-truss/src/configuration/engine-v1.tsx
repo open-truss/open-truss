@@ -2,7 +2,7 @@ import React from 'react'
 import type { YamlObject, YamlType } from '@/utils/yaml'
 import { type RenderingEngine, type ReactTree, type COMPONENTS } from './apply'
 
-type Components = JSX.Element
+type Components = React.JSX.Element
 
 export interface BaseOpenTrussComponentV1Props {
   key?: number
