@@ -1,38 +1,32 @@
 import React from 'react'
-import { applyConfiguration, parseYaml, COMPONENTS } from '@open-truss/open-truss'
+import {
+  applyConfiguration,
+  parseYaml,
+  type COMPONENTS,
+} from '@open-truss/open-truss'
 
-interface fetchConfig {
+export default function RenderFromEndpoint({
+  components = {},
+  url,
+}: {
+  components?: COMPONENTS
   url: string
-  setConfig: (config: string) => void
-  setLoading: (loading: boolean) => void
-  setError: (error: Error) => void
-}
-
-async function fetchConfig({ url, setConfig, setLoading, setError }: fetchConfig) {
-  setLoading(true)
-  try {
-    const response = await fetch(url)
-    const json = await response.json()
-    setConfig(json.config)
-    setLoading(false)
-  } catch (e) {
-    setError(e as Error)
-    setLoading(false)
-  }
-}
-
-interface RenderFromEndpoint {
-  components?: COMPONENTS,
-  url: string
-}
-
-export default function RenderFromEndpoint({ components = {}, url }: RenderFromEndpoint): JSX.Element {
+}): JSX.Element {
   // TODO: Use UQI's REST client once that exists?
   const [config, setConfig] = React.useState<string | null>(null)
   const [loading, setLoading] = React.useState<boolean>(false)
   const [error, setError] = React.useState<Error | null>(null)
   React.useEffect(() => {
-    fetchConfig({ url, setConfig, setLoading, setError })
+    const fetchConfig = async (): Promise<void> => {
+      const response = await fetch(url)
+      const json = await response.json()
+      setConfig(json.config)
+    }
+    setLoading(true)
+    fetchConfig().catch((e) => {
+      setError(e as Error)
+    })
+    setLoading(false)
   }, [url])
 
   const configurationFunction = React.useMemo(

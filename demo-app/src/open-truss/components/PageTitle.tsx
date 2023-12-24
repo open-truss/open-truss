@@ -1,6 +1,8 @@
 import { type BaseOpenTrussComponentV1Props } from '@open-truss/open-truss'
 
-function PageTitle({ children }: BaseOpenTrussComponentV1Props): JSX.Element {
+async function PageTitle({
+  children,
+}: BaseOpenTrussComponentV1Props): Promise<JSX.Element> {
   return <h1>{children}</h1>
 }
 

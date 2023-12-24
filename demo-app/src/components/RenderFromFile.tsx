@@ -1,4 +1,8 @@
-import { applyConfiguration, parseYaml, type COMPONENTS } from '@open-truss/open-truss'
+import {
+  applyConfiguration,
+  parseYaml,
+  type COMPONENTS,
+} from '@open-truss/open-truss'
 import { promises as fs } from 'fs'
 import { notFound } from 'next/navigation'
 

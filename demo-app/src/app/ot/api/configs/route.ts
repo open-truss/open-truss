@@ -2,7 +2,7 @@ import { promises as fs } from 'fs'
 
 const CONFIG_DIR = './src/open-truss/configs/'
 
-export async function GET() {
+export async function GET(): Promise<Response> {
   try {
     let configs = await fs.readdir(CONFIG_DIR)
     configs = configs.map((config) => config.replace('.yaml', ''))

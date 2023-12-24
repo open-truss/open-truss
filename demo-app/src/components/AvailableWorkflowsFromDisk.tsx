@@ -17,7 +17,9 @@ async function AvailableWorkflowsFromDisk(): Promise<JSX.Element> {
         {workflowIds.map((workflowId) => (
           <li key={workflowId}>
             {workflowId}:{' '}
-            <Link href={`/ot/rsc-playground/${workflowId}`}>Server rendered</Link>
+            <Link href={`/ot/rsc-playground/${workflowId}`}>
+              Server rendered
+            </Link>
             &nbsp;
             <Link href={`/ot/playground/${workflowId}`}>Client rendered</Link>
           </li>

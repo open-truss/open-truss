@@ -5,7 +5,7 @@
 import type React from 'react'
 
 import * as OTCOMPONENTS from '../components'
-import { parseYaml, type YamlObject, type YamlType } from '../utils/yaml'
+import { type YamlObject, type YamlType } from '../utils/yaml'
 import {
   type BaseOpenTrussComponentV1,
   type WorkflowV1,
@@ -17,8 +17,8 @@ export interface WorkflowSpec {
 }
 type BaseOpenTrussComponents = BaseOpenTrussComponentV1 // |BaseOpenTrussComponentV2
 export type COMPONENTS = Record<string, BaseOpenTrussComponents>
-export type ReactTree = Array<ReactTree | JSX.Element | Promise<JSX.Element>>
-export type RenderingEngine = () => ReactTree | Promise<ReactTree>
+export type ReactTree = Array<ReactTree | JSX.Element>
+export type RenderingEngine = () => ReactTree
 type ConfigurationFunction = (
   config: YamlObject,
   data: YamlType,

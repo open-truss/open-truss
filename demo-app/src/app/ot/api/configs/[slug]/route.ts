@@ -4,8 +4,8 @@ const CONFIG_DIR = './src/open-truss/configs/'
 
 export async function GET(
   _request: Request,
-  { params: { slug } }: { params: { slug: string } }
-) {
+  { params: { slug } }: { params: { slug: string } },
+): Promise<Response> {
   const path = `${CONFIG_DIR}${slug}.yaml`
   try {
     const config = await fs.readFile(path, 'utf-8')

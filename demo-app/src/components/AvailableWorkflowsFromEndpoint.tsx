@@ -1,33 +1,22 @@
 'use client'
-import path from 'path'
 import React from 'react'
 import Link from 'next/link'
 
-interface fetchConfigs {
-  setConfigs: (configs: Array<string>) => void
-  setLoading: (loading: boolean) => void
-  setError: (error: Error) => void
-}
-
-async function fetchConfigs({ setConfigs, setLoading, setError }: fetchConfigs) {
-  setLoading(true)
-  try {
-    const response = await fetch(`/ot/api/configs/`)
-    const json = await response.json()
-    setConfigs(json.configs)
-    setLoading(false)
-  } catch (e) {
-    setError(e as Error)
-    setLoading(false)
-  }
-}
-
-function AvailableWorkflowsFromEndpoint() {
-  const [workflowIds, setConfigs] = React.useState<Array<string>>([])
+function AvailableWorkflowsFromEndpoint(): JSX.Element {
+  const [workflowIds, setConfigs] = React.useState<string[]>([])
   const [loading, setLoading] = React.useState<boolean>(false)
   const [error, setError] = React.useState<Error | null>(null)
   React.useEffect(() => {
-    fetchConfigs({ setConfigs, setLoading, setError })
+    const fetchConfigs = async (): Promise<void> => {
+      const response = await fetch(`/ot/api/configs/`)
+      const json = await response.json()
+      setConfigs(json.config)
+    }
+    setLoading(true)
+    fetchConfigs().catch((e) => {
+      setError(e as Error)
+    })
+    setLoading(false)
   }, [])
 
   if (error) {
@@ -43,7 +32,9 @@ function AvailableWorkflowsFromEndpoint() {
         {workflowIds.map((workflowId) => (
           <li key={workflowId}>
             {workflowId}:{' '}
-            <Link href={`/ot/rsc-playground/${workflowId}`}>Server rendered</Link>
+            <Link href={`/ot/rsc-playground/${workflowId}`}>
+              Server rendered
+            </Link>
             &nbsp;
             <Link href={`/ot/playground/${workflowId}`}>Client rendered</Link>
           </li>

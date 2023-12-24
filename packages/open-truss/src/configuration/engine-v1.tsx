@@ -2,7 +2,7 @@ import React from 'react'
 import type { YamlObject, YamlType } from '@/utils/yaml'
 import { type RenderingEngine, type ReactTree, type COMPONENTS } from './apply'
 
-type Components = JSX.Element | Promise<JSX.Element>
+type Components = JSX.Element
 
 export interface BaseOpenTrussComponentV1Props {
   key?: number
@@ -52,7 +52,9 @@ export function engineV1(
         return Component({ ...props })
       } else {
         const subFrames = renderFrames(subFrame).map((child, k) => {
-          return <React.Fragment key={k}>{child as React.ReactNode}</React.Fragment>
+          return (
+            <React.Fragment key={k}>{child as React.ReactNode}</React.Fragment>
+          )
         })
         const children = <>{subFrames}</>
         return Component({ ...props, children })

@@ -1,6 +1,6 @@
 import AvailableWorkflows from '@/components/AvailableWorkflowsFromEndpoint'
 
-async function PlaygroundPage() {
+function PlaygroundPage(): JSX.Element {
   return <AvailableWorkflows />
 }
 
