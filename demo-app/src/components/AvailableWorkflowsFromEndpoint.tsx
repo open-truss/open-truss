@@ -10,7 +10,7 @@ function AvailableWorkflowsFromEndpoint(): JSX.Element {
     const fetchConfigs = async (): Promise<void> => {
       const response = await fetch(`/ot/api/configs/`)
       const json = await response.json()
-      setConfigs(json.config)
+      setConfigs(json.configs)
     }
     setLoading(true)
     fetchConfigs().catch((e) => {
