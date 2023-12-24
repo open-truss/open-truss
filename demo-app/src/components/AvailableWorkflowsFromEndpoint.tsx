@@ -28,15 +28,13 @@ function AvailableWorkflowsFromEndpoint(): JSX.Element {
   return (
     <div>
       <h1>Available Workflows:</h1>
+      <div>
+        <Link href="/ot/rsc-playground">Switch to RSC</Link>
+      </div>
       <ul>
         {workflowIds.map((workflowId) => (
           <li key={workflowId}>
-            {workflowId}:{' '}
-            <Link href={`/ot/rsc-playground/${workflowId}`}>
-              Server rendered
-            </Link>
-            &nbsp;
-            <Link href={`/ot/playground/${workflowId}`}>Client rendered</Link>
+            <Link href={`/ot/playground/${workflowId}`}>{workflowId}</Link>
           </li>
         ))}
       </ul>

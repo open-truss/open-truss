@@ -13,15 +13,13 @@ async function AvailableWorkflowsFromDisk(): Promise<JSX.Element> {
   return (
     <div>
       <h1>Available Workflows:</h1>
+      <div>
+        <Link href="/ot/playground">Switch to Client Components</Link>
+      </div>
       <ul>
         {workflowIds.map((workflowId) => (
           <li key={workflowId}>
-            {workflowId}:{' '}
-            <Link href={`/ot/rsc-playground/${workflowId}`}>
-              Server rendered
-            </Link>
-            &nbsp;
-            <Link href={`/ot/playground/${workflowId}`}>Client rendered</Link>
+            <Link href={`/ot/rsc-playground/${workflowId}`}>{workflowId}</Link>
           </li>
         ))}
       </ul>
