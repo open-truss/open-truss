@@ -3,6 +3,6 @@ workflow:
   frames:
     - frame:
       view:
-        component: PageTitle
+        component: AsyncPageTitle
         props:
           children: This title is from an async component
