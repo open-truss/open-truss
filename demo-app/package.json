@@ -11,7 +11,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@apollo/server": "^4.9.5",
+    "@as-integrations/next": "^3.0.0",
     "@open-truss/open-truss": "file:../packages/open-truss",
+    "graphql-tag": "^2.12.6",
     "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18",
