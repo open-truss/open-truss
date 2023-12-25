@@ -10,7 +10,7 @@ const FrameBase = z.object({
     component: z.string(),
     props: YamlObjectShape,
   }),
-  data: z.string(),
+  data: YamlShape,
 })
 
 type FrameType = z.infer<typeof FrameBase> & {
