@@ -1,5 +1,5 @@
 import React from 'react'
-import { YamlObjectShape, YamlShape } from '@/utils/yaml'
+import { YamlObjectShape, YamlShape } from '../utils/yaml'
 import { type RenderingEngine, type ReactTree, type COMPONENTS } from './apply'
 import { z } from 'zod'
 

@@ -1,5 +1,5 @@
-import * as OTCOMPONENTS from '@/components'
-import { type YamlObject, type YamlType } from '@/utils/yaml'
+import * as OTCOMPONENTS from '../components'
+import { type YamlObject, type YamlType } from '../utils/yaml'
 import {
   type BaseOpenTrussComponentV1,
   type WorkflowV1,
