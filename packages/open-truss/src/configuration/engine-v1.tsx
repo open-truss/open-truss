@@ -34,7 +34,9 @@ export const BaseOpenTrussComponentV1PropsShape = z.object({
   config: WorkflowV1Shape,
 })
 
-export type BaseOpenTrussComponentV1Props = z.infer<typeof BaseOpenTrussComponentV1PropsShape>
+export type BaseOpenTrussComponentV1Props = z.infer<
+  typeof BaseOpenTrussComponentV1PropsShape
+>
 
 export type BaseOpenTrussComponentV1 = (
   props: z.infer<typeof BaseOpenTrussComponentV1PropsShape>,
