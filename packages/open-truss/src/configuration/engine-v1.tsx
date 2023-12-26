@@ -41,9 +41,16 @@ export const BaseOpenTrussComponentV1PropsShape = z.object({
   data: DataShape,
   config: WorkflowV1Shape,
 })
+export const withChildren = (shape: z.AnyZodObject): z.AnyZodObject =>
+  shape.extend({ children: z.any().optional() })
+const ComponentWithChildrenShape = withChildren(
+  BaseOpenTrussComponentV1PropsShape,
+)
+type ComponentWithChildren = z.infer<typeof ComponentWithChildrenShape>
 
 export type BaseOpenTrussComponentV1Props =
   | z.infer<typeof BaseOpenTrussComponentV1PropsShape>
+  | ComponentWithChildren
 
 export type BaseOpenTrussComponentV1 = (
   props: BaseOpenTrussComponentV1Props,
@@ -53,6 +60,20 @@ function hasDefaultExport(
   component: any,
 ): component is OpenTrussComponentExports {
   return 'default' in component
+}
+
+function hasPropsExport(
+  component: any,
+): component is OpenTrussComponentExports {
+  return 'Props' in component
+}
+
+function hasChildren(component: any): component is ComponentWithChildren {
+  if (hasPropsExport(component)) {
+    return 'children' in component.Props.shape
+  }
+  // Default to true for legacy component definitions
+  return true
 }
 
 export function engineV1(
@@ -79,19 +100,25 @@ export function engineV1(
 
       if (subFrame === undefined) {
         return <Component key={i} {...props} />
-      } else {
-        const subFrames = renderFrames(subFrame).map((child, k) => {
-          return (
-            <React.Fragment key={k}>{child as React.ReactNode}</React.Fragment>
-          )
-        })
-        const children = <>{subFrames}</>
-        return (
-          <Component key={i} {...props}>
-            {children}
-          </Component>
+      }
+
+      if (!hasChildren(COMPONENTS[component])) {
+        throw new Error(
+          `${component} given \`frames\` but doesn't support \`children\``,
         )
       }
+
+      const subFrames = renderFrames(subFrame).map((child, k) => {
+        return (
+          <React.Fragment key={k}>{child as React.ReactNode}</React.Fragment>
+        )
+      })
+      const children = <>{subFrames}</>
+      return (
+        <Component key={i} {...props}>
+          {children}
+        </Component>
+      )
     })
   }
 
