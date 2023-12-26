@@ -1,0 +1,75 @@
+#!/bin/sh
+# Usage: script/bootstrap
+# Ensures all dependencies are installed locally.
+
+script_dir=$(dirname "$(readlink -f "$0")")
+demo_app_dir=$(dirname "$script_dir")
+root_dir=$(dirname "$demo_app_dir")
+open_truss_package_dir="$root_dir/packages/open-truss"
+
+set -e
+
+# md5sum function used for calculating the checksum.
+if ! which md5sum >/dev/null 2>/dev/null; then
+  md5sum() {
+    md5
+  }
+fi
+
+# checksum function returns checksum of current configuration.
+checksum() {
+  (
+    cat $0
+    echo "$(which brew)"
+    echo "$(which nodejs)"
+    cat .tool-versions 2>/dev/null
+    cat Brewfile 2>/dev/null
+    cat package.json package-lock.json 2>/dev/null
+    cat $open_truss_package_dir/package.json $open_truss_package_dir/package-lock.json 2>/dev/null
+    cat script/* 2>/dev/null
+    echo "$@"
+  ) | md5sum
+}
+
+# Check if the checksum matches the current configuration and exit early if it does.
+checksum_path=".checksum"
+if [ "$1" != "--force" ] && [ "$1" != "-f" ]; then
+  if [ -f $checksum_path ] && [ "$(cat $checksum_path)" = "$(checksum)" ]; then
+    echo "All dependencies are up to date."
+    exit 0
+  fi
+fi
+
+echo "Dependencies are out of date."
+
+# Do not run this code if NO_HOMEBREW is set.
+if [ "$NO_HOMEBREW" = "true" ]; then
+  # Warn if homebrew isn't installed
+  if ! which brew >/dev/null 2>/dev/null; then
+    echo "Please install homebrew or set NO_HOMEBREW environment variable."
+    exit 1
+  fi
+fi
+
+# Install Homebrew dependencies.
+echo "Installing Homebrew dependencies..."
+brew bundle --file=$demo_app_dir/Brewfile
+
+# Check if node.js is installed and raise error if it is not.
+if ! which node >/dev/null 2>/dev/null; then
+  echo "Please install node.js."
+  exit 1
+else
+  # Cat .tool-versions to get nodejs version and check if that version is installed.
+  nodejs_version=$(cat $demo_app_dir/.tool-versions | grep nodejs | cut -d' ' -f2)
+  if ! node --version | grep -q $nodejs_version; then
+    echo "Please install node.js version $nodejs_version."
+    exit 1
+  fi
+fi
+
+# Install Node.js dependencies.
+cd $open_truss_package_dir && npm install && cd $demo_app_dir && npm install
+
+# Update checksum.
+checksum > $checksum_path
