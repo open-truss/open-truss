@@ -1,33 +1,46 @@
 import React from 'react'
-import type { YamlObject, YamlType } from '@/utils/yaml'
-import { type RenderingEngine, type ReactTree, type COMPONENTS } from './apply'
+import { z } from 'zod'
+import { YamlObjectShape, YamlShape } from '../utils/yaml'
+import { type COMPONENTS, type ReactTree, type RenderingEngine } from './apply'
 
-type Components = JSX.Element
+type Components = React.JSX.Element
 
-export interface BaseOpenTrussComponentV1Props {
-  key?: number
-  children?: Components
-  data: YamlType
-  config: WorkflowV1
+const FrameBase = z.object({
+  view: z.object({
+    component: z.string(),
+    props: YamlObjectShape,
+  }),
+  data: YamlShape,
+})
+
+type FrameType = z.infer<typeof FrameBase> & {
+  frames: FrameType[]
 }
+
+const FrameV1Shape: z.ZodType<FrameType> = FrameBase.extend({
+  frames: z.lazy(() => FrameV1Shape).array(),
+})
+type FrameV1 = z.infer<typeof FrameV1Shape>
+
+const WorkflowV1Shape = z.object({
+  version: z.number(),
+  frames: FrameV1Shape.array(),
+})
+export type WorkflowV1 = z.infer<typeof WorkflowV1Shape>
+
+export const BaseOpenTrussComponentV1PropsShape = z.object({
+  data: YamlShape,
+  children: z.any().optional(),
+  config: WorkflowV1Shape,
+})
+
+export type BaseOpenTrussComponentV1Props = z.infer<
+  typeof BaseOpenTrussComponentV1PropsShape
+>
 
 export type BaseOpenTrussComponentV1 = (
-  props: BaseOpenTrussComponentV1Props,
+  props: z.infer<typeof BaseOpenTrussComponentV1PropsShape>,
 ) => Components
-
-export interface FrameV1 {
-  view: {
-    component: string
-    props: YamlObject
-  }
-  frames?: FrameV1[]
-  data: YamlType
-}
-
-export interface WorkflowV1 {
-  version: number
-  frames: FrameV1[]
-}
 
 export function engineV1(
   COMPONENTS: COMPONENTS,
@@ -38,7 +51,6 @@ export function engineV1(
       const { component, props: viewProps } = view
       const Component = COMPONENTS[component]
       const props = {
-        key: i,
         data,
         config,
         ...viewProps,
@@ -49,7 +61,7 @@ export function engineV1(
       }
 
       if (subFrame === undefined) {
-        return Component({ ...props })
+        return <Component key={i} {...props} />
       } else {
         const subFrames = renderFrames(subFrame).map((child, k) => {
           return (
@@ -57,7 +69,11 @@ export function engineV1(
           )
         })
         const children = <>{subFrames}</>
-        return Component({ ...props, children })
+        return (
+          <Component key={i} {...props}>
+            {children}
+          </Component>
+        )
       }
     })
   }

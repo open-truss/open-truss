@@ -1,4 +1,5 @@
 import yaml from 'yaml'
+import { z } from 'zod'
 
 export interface YamlObject extends Record<string, YamlType> {}
 export type YamlType =
@@ -8,6 +9,14 @@ export type YamlType =
   | boolean
   | YamlType[]
   | YamlObject
+
+const yamlScalars = z.union([z.null(), z.number(), z.string(), z.boolean()])
+
+export const YamlShape: z.ZodType<YamlType> = yamlScalars
+  // Use zod's lazy function to recursively add in an array and object of YamlShape
+  .or(z.lazy(() => YamlShape.array()))
+  .or(z.lazy(() => YamlObjectShape))
+export const YamlObjectShape = z.record(z.string(), YamlShape)
 
 export function parseYaml(yamlString: string): YamlObject {
   return yaml.parse(yamlString)
