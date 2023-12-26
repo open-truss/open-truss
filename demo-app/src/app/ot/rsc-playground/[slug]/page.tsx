@@ -1,6 +1,5 @@
-'use client'
 import path from 'path'
-import RenderFromEndpoint from '@/components/RenderFromEndpoint'
+import RenderFromFile from '@/components/RenderFromFile'
 
 export default function Page({
   params: { slug },
@@ -14,7 +13,7 @@ export default function Page({
   return (
     <>
       <h1>{sanitizedSlug}</h1>
-      <RenderFromEndpoint configName={sanitizedSlug} />
+      <RenderFromFile configName={sanitizedSlug} />
     </>
   )
 }

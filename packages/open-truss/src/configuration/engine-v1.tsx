@@ -1,63 +1,81 @@
-import type { YamlObject, YamlType } from '@/utils/yaml'
+import React from 'react'
+import { YamlObjectShape, YamlShape } from '../utils/yaml'
 import { type RenderingEngine, type ReactTree, type COMPONENTS } from './apply'
+import { z } from 'zod'
 
-export interface BaseOpenTrussComponentV1Props {
-  key?: number
-  children?: JSX.Element | Promise<JSX.Element>
-  data: YamlType
-  config: WorkflowV1
+type Components = React.JSX.Element
+
+const FrameBase = z.object({
+  view: z.object({
+    component: z.string(),
+    props: YamlObjectShape,
+  }),
+  data: YamlShape,
+})
+
+type FrameType = z.infer<typeof FrameBase> & {
+  frames: FrameType[]
 }
+
+const FrameV1Shape: z.ZodType<FrameType> = FrameBase.extend({
+  frames: z.lazy(() => FrameV1Shape).array(),
+})
+type FrameV1 = z.infer<typeof FrameV1Shape>
+
+const WorkflowV1Shape = z.object({
+  version: z.number(),
+  frames: FrameV1Shape.array(),
+})
+export type WorkflowV1 = z.infer<typeof WorkflowV1Shape>
+
+export const BaseOpenTrussComponentV1PropsShape = z.object({
+  data: YamlShape,
+  children: z.any().optional(),
+  config: WorkflowV1Shape,
+})
+
+export type BaseOpenTrussComponentV1Props = z.infer<
+  typeof BaseOpenTrussComponentV1PropsShape
+>
 
 export type BaseOpenTrussComponentV1 = (
-  props: BaseOpenTrussComponentV1Props,
-) => JSX.Element | Promise<JSX.Element>
-
-export interface FrameV1 {
-  view: {
-    component: string
-    props: YamlObject
-  }
-  frames?: FrameV1[]
-  data: YamlType
-}
-
-export interface WorkflowV1 {
-  version: number
-  frames: FrameV1[]
-}
+  props: z.infer<typeof BaseOpenTrussComponentV1PropsShape>,
+) => Components
 
 export function engineV1(
   COMPONENTS: COMPONENTS,
   config: WorkflowV1,
 ): RenderingEngine {
-  const renderFrames = async (frames: FrameV1[]): Promise<ReactTree> => {
-    return (async () => {
-      return Promise.all(
-        frames.map(async ({ view, data, frames: subFrame }, i) => {
-          const { component, props: viewProps } = view
-          const Component = COMPONENTS[component]
-          const props = {
-            key: i,
-            data,
-            config,
-            ...viewProps,
-          }
+  const renderFrames = (frames: FrameV1[]): ReactTree => {
+    return frames.map(({ view, data, frames: subFrame }, i) => {
+      const { component, props: viewProps } = view
+      const Component = COMPONENTS[component]
+      const props = {
+        key: i,
+        data,
+        config,
+        ...viewProps,
+      }
 
-          if (subFrame === undefined) {
-            return await Component({ ...props })
-          } else {
-            const subFrames = (await renderFrames(subFrame)).map((child, k) => {
-              return <div key={k}>{child}</div>
-            })
-            const children = <>{subFrames}</>
-            return await Component({ ...props, children })
-          }
-        }),
-      )
-    })()
+      if (!Component) {
+        throw new Error(`No component '${component}' configured.`)
+      }
+
+      if (subFrame === undefined) {
+        return Component({ ...props })
+      } else {
+        const subFrames = renderFrames(subFrame).map((child, k) => {
+          return (
+            <React.Fragment key={k}>{child as React.ReactNode}</React.Fragment>
+          )
+        })
+        const children = <>{subFrames}</>
+        return Component({ ...props, children })
+      }
+    })
   }
 
-  return async () => {
+  return () => {
     return renderFrames(config.frames)
   }
 }
