@@ -1,7 +1,7 @@
 import React from 'react'
-import { YamlObjectShape, YamlShape } from '../utils/yaml'
-import { type RenderingEngine, type ReactTree, type COMPONENTS } from './apply'
 import { z } from 'zod'
+import { YamlObjectShape, YamlShape } from '../utils/yaml'
+import { type COMPONENTS, type ReactTree, type RenderingEngine } from './apply'
 
 type Components = React.JSX.Element
 
@@ -51,7 +51,6 @@ export function engineV1(
       const { component, props: viewProps } = view
       const Component = COMPONENTS[component]
       const props = {
-        key: i,
         data,
         config,
         ...viewProps,
@@ -62,7 +61,7 @@ export function engineV1(
       }
 
       if (subFrame === undefined) {
-        return Component({ ...props })
+        return <Component key={i} {...props} />
       } else {
         const subFrames = renderFrames(subFrame).map((child, k) => {
           return (
@@ -70,7 +69,11 @@ export function engineV1(
           )
         })
         const children = <>{subFrames}</>
-        return Component({ ...props, children })
+        return (
+          <Component key={i} {...props}>
+            {children}
+          </Component>
+        )
       }
     })
   }
