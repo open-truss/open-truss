@@ -4,17 +4,7 @@ Model Home is Open Truss's demo application to help showcase how to use OT and h
 
 ## Getting Started
 
-Install packages:
-
-```bash
-# In here (./demo-app)
-npm install
-
-# In packages/open-truss
-npm install
-```
-
-Run the development server and build the OT library:
+This will ensure you have everything you need installed and boot up the development server:
 
 ```bash
 script/server
