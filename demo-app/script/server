@@ -1,5 +1,7 @@
 #!/bin/bash
 
+script/bootstrap
+
 # Function to terminate both tsc processes
 terminate_tsc_processes() {
   echo "Terminating TypeScript watch processes..."
