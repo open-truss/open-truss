@@ -1,7 +1,7 @@
 import React from 'react'
-import { YamlObjectShape, YamlShape } from '../utils/yaml'
-import { type RenderingEngine, type ReactTree, type COMPONENTS } from './apply'
 import { z } from 'zod'
+import { YamlObjectShape, YamlShape } from '../utils/yaml'
+import { type COMPONENTS, type ReactTree, type RenderingEngine } from './apply'
 
 type Components = React.JSX.Element
 
@@ -69,7 +69,11 @@ export function engineV1(
           )
         })
         const children = <>{subFrames}</>
-        return <Component key={i} {...props}>{children}</Component>
+        return (
+          <Component key={i} {...props}>
+            {children}
+          </Component>
+        )
       }
     })
   }
