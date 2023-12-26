@@ -1,24 +1,33 @@
 import React from 'react'
 import { z } from 'zod'
 import { YamlObjectShape, YamlShape } from '../utils/yaml'
-import { type COMPONENTS, type ReactTree, type RenderingEngine } from './apply'
+import {
+  type OpenTrussComponentExports,
+  type RenderingEngine,
+  type ReactTree,
+  type COMPONENTS,
+} from './apply'
 
-type Components = React.JSX.Element
+const DataShape = YamlShape.optional()
 
 const FrameBase = z.object({
+  frame: z.null(), // used only to make configs more readable
   view: z.object({
     component: z.string(),
-    props: YamlObjectShape,
+    props: YamlObjectShape.optional(),
   }),
-  data: YamlShape,
+  data: DataShape,
 })
 
-type FrameType = z.infer<typeof FrameBase> & {
-  frames: FrameType[]
+export type FrameType = z.infer<typeof FrameBase> & {
+  frames?: FrameType[]
 }
 
 const FrameV1Shape: z.ZodType<FrameType> = FrameBase.extend({
-  frames: z.lazy(() => FrameV1Shape).array(),
+  frames: z
+    .lazy(() => FrameV1Shape)
+    .array()
+    .optional(),
 })
 type FrameV1 = z.infer<typeof FrameV1Shape>
 
@@ -29,18 +38,43 @@ const WorkflowV1Shape = z.object({
 export type WorkflowV1 = z.infer<typeof WorkflowV1Shape>
 
 export const BaseOpenTrussComponentV1PropsShape = z.object({
-  data: YamlShape,
-  children: z.any().optional(),
+  data: DataShape,
   config: WorkflowV1Shape,
 })
+export const withChildren = (shape: z.AnyZodObject): z.AnyZodObject =>
+  shape.extend({ children: z.any().optional() })
+const ComponentWithChildrenShape = withChildren(
+  BaseOpenTrussComponentV1PropsShape,
+)
+type ComponentWithChildren = z.infer<typeof ComponentWithChildrenShape>
 
-export type BaseOpenTrussComponentV1Props = z.infer<
-  typeof BaseOpenTrussComponentV1PropsShape
->
+export type BaseOpenTrussComponentV1Props =
+  | z.infer<typeof BaseOpenTrussComponentV1PropsShape>
+  | ComponentWithChildren
 
 export type BaseOpenTrussComponentV1 = (
-  props: z.infer<typeof BaseOpenTrussComponentV1PropsShape>,
-) => Components
+  props: BaseOpenTrussComponentV1Props,
+) => React.JSX.Element
+
+function hasDefaultExport(
+  component: any,
+): component is OpenTrussComponentExports {
+  return 'default' in component
+}
+
+function hasPropsExport(
+  component: any,
+): component is OpenTrussComponentExports {
+  return 'Props' in component
+}
+
+function hasChildren(component: any): component is ComponentWithChildren {
+  if (hasPropsExport(component)) {
+    return 'children' in component.Props.shape
+  }
+  // Default to true for legacy component definitions
+  return true
+}
 
 export function engineV1(
   COMPONENTS: COMPONENTS,
@@ -49,7 +83,11 @@ export function engineV1(
   const renderFrames = (frames: FrameV1[]): ReactTree => {
     return frames.map(({ view, data, frames: subFrame }, i) => {
       const { component, props: viewProps } = view
-      const Component = COMPONENTS[component]
+      let Component = COMPONENTS[component]
+      if (hasDefaultExport(Component)) {
+        Component = Component.default
+      }
+
       const props = {
         data,
         config,
@@ -62,19 +100,25 @@ export function engineV1(
 
       if (subFrame === undefined) {
         return <Component key={i} {...props} />
-      } else {
-        const subFrames = renderFrames(subFrame).map((child, k) => {
-          return (
-            <React.Fragment key={k}>{child as React.ReactNode}</React.Fragment>
-          )
-        })
-        const children = <>{subFrames}</>
-        return (
-          <Component key={i} {...props}>
-            {children}
-          </Component>
+      }
+
+      if (!hasChildren(COMPONENTS[component])) {
+        throw new Error(
+          `${component} given \`frames\` but doesn't support \`children\``,
         )
       }
+
+      const subFrames = renderFrames(subFrame).map((child, k) => {
+        return (
+          <React.Fragment key={k}>{child as React.ReactNode}</React.Fragment>
+        )
+      })
+      const children = <>{subFrames}</>
+      return (
+        <Component key={i} {...props}>
+          {children}
+        </Component>
+      )
     })
   }
 
