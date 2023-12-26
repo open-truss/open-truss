@@ -71,5 +71,12 @@ fi
 # Install Node.js dependencies.
 cd $open_truss_package_dir && npm install && cd $demo_app_dir && npm install
 
+# Copy .env.local.example to .env.local if .env.local doesn't exist.
+if [ ! -f $demo_app_dir/.env.local ]; then
+  echo "Copying .env.local.example to .env.local..."
+  echo "Please edit .env.local to set environment variables."
+  cp $demo_app_dir/.env.local.example $demo_app_dir/.env.local
+fi
+
 # Update checksum.
 checksum > $checksum_path
