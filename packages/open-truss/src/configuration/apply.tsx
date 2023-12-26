@@ -1,3 +1,4 @@
+import { type z } from 'zod'
 import { OT_COMPONENTS } from '../components'
 import { type YamlObject, type YamlType } from '../utils/yaml'
 import {
@@ -9,8 +10,14 @@ import {
 export interface WorkflowSpec {
   workflow: WorkflowV1 // | WorkflowV2
 }
-type BaseOpenTrussComponents = BaseOpenTrussComponentV1 // |BaseOpenTrussComponentV2
-export type COMPONENTS = Record<string, BaseOpenTrussComponents>
+type OpenTrussComponent = BaseOpenTrussComponentV1 // |BaseOpenTrussComponentV2
+export interface OpenTrussComponentExports {
+  default: OpenTrussComponent
+  Props: z.AnyZodObject
+}
+export type COMPONENTS =
+  | Record<string, OpenTrussComponent>
+  | Record<string, OpenTrussComponentExports>
 export type ReactTree = Array<ReactTree | JSX.Element>
 export type RenderingEngine = () => ReactTree
 type ConfigurationFunction = (

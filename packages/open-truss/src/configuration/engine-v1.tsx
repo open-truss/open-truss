@@ -1,16 +1,21 @@
 import React from 'react'
 import { z } from 'zod'
 import { YamlObjectShape, YamlShape } from '../utils/yaml'
-import { type COMPONENTS, type ReactTree, type RenderingEngine } from './apply'
+import {
+  type OpenTrussComponentExports,
+  type RenderingEngine,
+  type ReactTree,
+  type COMPONENTS,
+} from './apply'
 
-type Components = React.JSX.Element
+const DataShape = YamlShape.optional()
 
 const FrameBase = z.object({
   view: z.object({
     component: z.string(),
     props: YamlObjectShape,
   }),
-  data: YamlShape,
+  data: DataShape,
 })
 
 type FrameType = z.infer<typeof FrameBase> & {
@@ -29,18 +34,22 @@ const WorkflowV1Shape = z.object({
 export type WorkflowV1 = z.infer<typeof WorkflowV1Shape>
 
 export const BaseOpenTrussComponentV1PropsShape = z.object({
-  data: YamlShape,
-  children: z.any().optional(),
+  data: DataShape,
   config: WorkflowV1Shape,
 })
 
-export type BaseOpenTrussComponentV1Props = z.infer<
-  typeof BaseOpenTrussComponentV1PropsShape
->
+export type BaseOpenTrussComponentV1Props =
+  | z.infer<typeof BaseOpenTrussComponentV1PropsShape>
 
 export type BaseOpenTrussComponentV1 = (
-  props: z.infer<typeof BaseOpenTrussComponentV1PropsShape>,
-) => Components
+  props: BaseOpenTrussComponentV1Props,
+) => React.JSX.Element
+
+function hasDefaultExport(
+  component: any,
+): component is OpenTrussComponentExports {
+  return 'default' in component
+}
 
 export function engineV1(
   COMPONENTS: COMPONENTS,
@@ -49,7 +58,11 @@ export function engineV1(
   const renderFrames = (frames: FrameV1[]): ReactTree => {
     return frames.map(({ view, data, frames: subFrame }, i) => {
       const { component, props: viewProps } = view
-      const Component = COMPONENTS[component]
+      let Component = COMPONENTS[component]
+      if (hasDefaultExport(Component)) {
+        Component = Component.default
+      }
+
       const props = {
         data,
         config,
