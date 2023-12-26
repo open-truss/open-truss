@@ -1,4 +1,4 @@
-import * as OTCOMPONENTS from '../components'
+import { OT_COMPONENTS } from '../components'
 import { type YamlObject, type YamlType } from '../utils/yaml'
 import {
   type BaseOpenTrussComponentV1,
@@ -21,7 +21,7 @@ type ConfigurationFunction = (
 export function applyConfiguration(
   COMPONENTS: COMPONENTS,
 ): ConfigurationFunction {
-  const components = Object.assign(COMPONENTS, OTCOMPONENTS)
+  const components = Object.assign(COMPONENTS, OT_COMPONENTS)
 
   const configurationFunction: ConfigurationFunction = (config, data) => {
     let renderingEngine: RenderingEngine
