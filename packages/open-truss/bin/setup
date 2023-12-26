@@ -54,8 +54,8 @@ function copyOTFilesToProject(openTrussConf) {
 
   const NextJSFilesToCopy = [
     ['src/app/ot', 'src/app/ot', true],
-    ['src/open-truss/components', 'src/open-truss/components', false],
-    ['src/open-truss/configs', 'src/open-truss/configs', false],
+    ['src/open-truss/components-scaffold', 'src/open-truss/components', false],
+    ['src/open-truss/configs-scaffold', 'src/open-truss/configs', false],
   ]
   const NextJSFilesToDelete = [
     'src/open-truss-components',
