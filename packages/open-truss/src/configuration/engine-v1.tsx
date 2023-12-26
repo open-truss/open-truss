@@ -11,19 +11,23 @@ import {
 const DataShape = YamlShape.optional()
 
 const FrameBase = z.object({
+  frame: z.null(), // used only to make configs more readable
   view: z.object({
     component: z.string(),
-    props: YamlObjectShape,
+    props: YamlObjectShape.optional(),
   }),
   data: DataShape,
 })
 
-type FrameType = z.infer<typeof FrameBase> & {
-  frames: FrameType[]
+export type FrameType = z.infer<typeof FrameBase> & {
+  frames?: FrameType[]
 }
 
 const FrameV1Shape: z.ZodType<FrameType> = FrameBase.extend({
-  frames: z.lazy(() => FrameV1Shape).array(),
+  frames: z
+    .lazy(() => FrameV1Shape)
+    .array()
+    .optional(),
 })
 type FrameV1 = z.infer<typeof FrameV1Shape>
 
