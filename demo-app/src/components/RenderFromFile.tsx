@@ -1,14 +1,6 @@
-import {
-  applyConfiguration,
-  parseYaml,
-  type COMPONENTS,
-} from '@open-truss/open-truss'
 import { promises as fs } from 'fs'
 import { notFound } from 'next/navigation'
-
-// TODO: Set COMPONENT_INDEX in application config and OT loads it?
-import * as _components from '@/open-truss/components'
-const components = _components as unknown as COMPONENTS
+import RenderConfig from './RenderConfig'
 
 // TODO: Get this path from application config and only need to pass in filename?
 const CONFIG_DIR = './src/open-truss/configs/'
@@ -30,8 +22,9 @@ export default async function RenderFromFile({
     }
   }
 
-  const parsedConfig = parseYaml(config)
-  const renderedComponents = applyConfiguration(components)(parsedConfig, {})
+  if (config) {
+    return <RenderConfig config={config} />
+  }
 
-  return <>{renderedComponents}</>
+  return <div>No config :(</div>
 }
