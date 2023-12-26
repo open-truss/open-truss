@@ -8,12 +8,12 @@ import {
 } from '@open-truss/open-truss'
 import {
   BasicAuth,
-  type QueryResult,
   Trino,
+  type QueryResult,
   type Iterator as TrinoIterator,
 } from 'trino-client'
 
-interface TrinoConfig {
+export interface TrinoConfig {
   auth?: string
   server: string
   source?: string
