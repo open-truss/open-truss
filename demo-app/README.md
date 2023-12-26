@@ -4,13 +4,7 @@ Model Home is Open Truss's demo application to help showcase how to use OT and h
 
 ## Getting Started
 
-Install packages:
-
-```bash
-npm install
-```
-
-Run the development server and build the OT library:
+This will ensure you have everything you need installed and boot up the development server:
 
 ```bash
 script/server
@@ -20,10 +14,4 @@ The application will be available at [http://localhost:3000](http://localhost:30
 
 ## Development
 
-### `src/app/ot/`
-
-Development to Model Home's [`src/app/ot/`](./src/app/ot/) directory is done by editing the files in [OT's `nextjs` directory](../packages/open-truss/nextjs/) and then running `npm run ot:setup` in this project to update those files. While OT applications can modify these files after running this script, for this project we want it to be an example of a fresh project.
-
-### Everything else
-
-For everything else, like creating new components in `src/open-truss/components` or configs in `src/open-truss/configs`, we directly edit this project to provide examples of common use cases and show off unique displays of OT's features.
+Model Home is a mix of Open Truss examples and research we're doing that has not yet been added to an `@open-truss` package.
