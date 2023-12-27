@@ -192,15 +192,19 @@ export default function ConfigBuilderPage(): React.JSX.Element {
 
   return (
     <ConfigBuilderContext.Provider value={{ config, setConfig }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', padding: 10 }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          padding: 10,
+        }}
+      >
         <div>
           <ComponentList />
           <h2>config</h2>
           <pre>{config.replaceAll('frame: null', 'frame:')}</pre>
         </div>
-        <div>
-          {config !== CONFIG_BASE && <RenderConfig config={config} />}
-        </div>
+        <div>{config !== CONFIG_BASE && <RenderConfig config={config} />}</div>
       </div>
     </ConfigBuilderContext.Provider>
   )
