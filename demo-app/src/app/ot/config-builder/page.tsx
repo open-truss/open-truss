@@ -1,4 +1,6 @@
 'use client'
+import get from 'lodash/get'
+import set from 'lodash/set'
 import { useContext, useEffect, useState, createContext } from 'react'
 import {
   describeZod,
@@ -25,14 +27,19 @@ const CONFIG_BASE = `
 workflow:
   version: 1
 `.trim()
+const INITIAL_FRAMES_PATH = 'workflow.frames'
 
 interface ConfigBuilder {
   config: string
   setConfig: (config: string) => void
+  framesPath: string
+  setFramesPath: (path: string) => void
 }
 const ConfigBuilderContext = createContext<ConfigBuilder>({
   config: CONFIG_BASE,
   setConfig: (_c: string) => null,
+  framesPath: INITIAL_FRAMES_PATH,
+  setFramesPath: (_c: string) => null,
 })
 
 function PropInput({
@@ -130,18 +137,14 @@ function PropInput({
 }
 
 function PropInputs({
-  componentName,
+  component,
   onChange,
   props,
 }: {
-  componentName: string
+  component: OpenTrussComponentExports
   onChange: (propName: string) => (value: YamlType) => void
   props: ViewProps
 }): React.JSX.Element | null {
-  const component = ALL_COMPONENTS[componentName]
-  if (!hasPropsExport(component)) {
-    return null
-  }
   const niceProps = describeZod(component.Props.shape)
 
   return (
@@ -172,21 +175,30 @@ function ComponentListItem({
 }: {
   componentName: string
 }): React.JSX.Element {
-  const { config, setConfig } = useContext(ConfigBuilderContext)
+  const component = ALL_COMPONENTS[componentName]
+  const { config, setConfig, framesPath } = useContext(ConfigBuilderContext)
   const [props, setProps] = useState<ViewProps>(undefined)
   const parsedConfig = parseYaml(config) as unknown as WorkflowSpec
 
+  let canHaveChildren = false
+  const hasPropsConfigured = hasPropsExport(component)
+  if (hasPropsConfigured) {
+    canHaveChildren = 'children' in component.Props.shape
+  }
   const frame: FrameType = {
     frame: null, // Makes the config easier to read
     view: { component: componentName, props },
+    frames: canHaveChildren ? [] : undefined,
   }
+
   const addFrame = (): void => {
-    const frames = (parsedConfig.workflow.frames || []).concat(frame)
+    const frames = (get(parsedConfig, framesPath, []) as FrameType[]).concat(
+      frame,
+    )
     setConfig(
-      stringifyYaml({
-        ...parsedConfig,
-        workflow: { ...parsedConfig.workflow, frames },
-      }),
+      stringifyYaml(
+        set(parsedConfig, framesPath, frames) as unknown as YamlType,
+      ),
     )
   }
   const onChange = (propName: string) => (value: YamlType) => {
@@ -197,11 +209,9 @@ function ComponentListItem({
     <div>
       {componentName}
       <button onClick={addFrame}>Add</button>
-      <PropInputs
-        componentName={componentName}
-        onChange={onChange}
-        props={props}
-      />
+      {hasPropsConfigured && (
+        <PropInputs component={component} onChange={onChange} props={props} />
+      )}
       <br />
       <br />
     </div>
@@ -218,11 +228,81 @@ function ComponentList(): React.JSX.Element {
   )
 }
 
-export default function ConfigBuilderPage(): React.JSX.Element {
-  const [config, setConfig] = useState<string>(CONFIG_BASE)
+const FRAMES_PATH_PARTS = ['workflow:', 'frames:', '- frame:']
+
+function ConfigYaml({ config }: { config: string }): React.JSX.Element {
+  const { framesPath, setFramesPath } = useContext(ConfigBuilderContext)
+  const framesPathParts: Array<number | string> = []
 
   return (
-    <ConfigBuilderContext.Provider value={{ config, setConfig }}>
+    <>
+      {config
+        // clean up empty values to make things more readable
+        .replaceAll('frame: null', 'frame: ')
+        .replaceAll('frames: []', 'frames:')
+        .replaceAll('frames:', 'frames: ')
+        // read the config line by line
+        .split('\n')
+        .map((line, i) => {
+          const trimmedLine = line.trim()
+
+          // While iterating over the lines of the config, we construct what
+          // each 'frames:' line's `framePath` is. This will look something like
+          // 'workflow.frames.0.frames' where the integer is the index of the
+          // current frame in the current frames array. This index gets
+          // incremented when we encounter a '- frame:' line.
+
+          // `configLevel` is what indentation level within the YAML we are in.
+          // We divide by 2 because the config is indented 2 spaces per level.
+          // We use `configLevel` to know what `framePath` level we are updating.
+          const configLevel = line.search(/\S|$/) / 2
+          if (FRAMES_PATH_PARTS.includes(trimmedLine)) {
+            if (trimmedLine === '- frame:') {
+              if (framesPathParts[configLevel] === undefined) {
+                framesPathParts[configLevel] = 0
+              } else {
+                framesPathParts[configLevel] =
+                  Number(framesPathParts[configLevel]) + 1
+              }
+            } else {
+              framesPathParts[configLevel] = trimmedLine.replace(/:$/, '')
+            }
+          }
+
+          if (trimmedLine.startsWith('frames:')) {
+            const thisFramesPath = framesPathParts.join('.')
+            const selectedFramesPath = thisFramesPath === framesPath
+            return (
+              <pre
+                key={i}
+                style={{ color: selectedFramesPath ? 'pink' : 'black' }}
+              >
+                {line}
+                <button
+                  onClick={() => {
+                    setFramesPath(thisFramesPath)
+                  }}
+                >
+                  Nest at this level
+                </button>
+              </pre>
+            )
+          } else {
+            return <pre key={i}>{line}</pre>
+          }
+        })}
+    </>
+  )
+}
+
+export default function ConfigBuilderPage(): React.JSX.Element {
+  const [config, setConfig] = useState<string>(CONFIG_BASE)
+  const [framesPath, setFramesPath] = useState<string>('workflow.frames')
+
+  return (
+    <ConfigBuilderContext.Provider
+      value={{ config, setConfig, framesPath, setFramesPath }}
+    >
       <div
         style={{
           display: 'flex',
@@ -233,7 +313,7 @@ export default function ConfigBuilderPage(): React.JSX.Element {
         <div>
           <ComponentList />
           <h2>config</h2>
-          <pre>{config.replaceAll('frame: null', 'frame:')}</pre>
+          <ConfigYaml config={config} />
         </div>
         <div>{config !== CONFIG_BASE && <RenderConfig config={config} />}</div>
       </div>
