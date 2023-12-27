@@ -47,7 +47,7 @@ function PropInput({
   value?: string
 }): React.JSX.Element | null {
   const defaultValue = type.defaultValue as string
-  value = value || defaultValue
+  value = value ?? defaultValue
 
   useEffect(() => {
     onChange(defaultValue)
@@ -58,7 +58,23 @@ function PropInput({
   }
 
   switch (type.type) {
-    case 'ZodString': {
+    case 'ZodUndefined':
+    case 'ZodNull':
+    case 'ZodVoid':
+      return null
+    case 'ZodNumber':
+    case 'ZodBigInt':
+      return (
+        <input
+          name={name}
+          type="number"
+          value={Number(value)}
+          onChange={(e) => {
+            onChange(Number(e.target.value))
+          }}
+        />
+      )
+    case 'ZodString':
       return (
         <input
           name={name}
@@ -69,7 +85,22 @@ function PropInput({
           }}
         />
       )
-    }
+    case 'ZodBoolean':
+      return (
+        <div>
+          <label htmlFor={name}>{name}</label>
+          <input
+            type="checkbox"
+            id={name}
+            name={name}
+            placeholder={name}
+            checked={Boolean(value)}
+            onChange={(e) => {
+              onChange(e.target.checked)
+            }}
+          />
+        </div>
+      )
     case 'ZodEnum':
       if (Array.isArray(type?.shape)) {
         const enumOptions = type.shape.map((option: string) => (
