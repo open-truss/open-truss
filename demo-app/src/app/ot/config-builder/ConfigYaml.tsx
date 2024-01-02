@@ -1,3 +1,5 @@
+import { parseYaml, stringifyYaml } from '@open-truss/open-truss'
+import unset from 'lodash/unset'
 import { useContext } from 'react'
 import { ConfigBuilderContext } from './config-builder-context'
 
@@ -8,7 +10,7 @@ export default function ConfigYaml({
 }: {
   config: string
 }): React.JSX.Element {
-  const { framesPath, setFramesPath } = useContext(ConfigBuilderContext)
+  const { setConfig, framesPath, setFramesPath } = useContext(ConfigBuilderContext)
   const framesPathParts: Array<number | string> = []
 
   return (
@@ -46,7 +48,7 @@ export default function ConfigYaml({
             }
           }
 
-          if (trimmedLine.startsWith('frames:')) {
+          if (trimmedLine === 'frames:') {
             const thisFramesPath = framesPathParts.join('.')
             const selectedFramesPath = thisFramesPath === framesPath
             return (
@@ -61,6 +63,33 @@ export default function ConfigYaml({
                   }}
                 >
                   Nest at this level
+                </button>
+              </pre>
+            )
+          } else if (trimmedLine === '- frame:') {
+            const endsWithDotFrames = framesPathParts.at(-1) === '.frames'
+            const lastFrameIndexIndex = endsWithDotFrames ? -2 : -1
+            const lastFrameIndex = framesPathParts.at(lastFrameIndexIndex)
+            const thisFramesPath = lastFrameIndex === 0 ? framesPathParts.slice(0, lastFrameIndexIndex - 1) : framesPathParts.slice(0, lastFrameIndexIndex)
+            return (
+              <pre
+                key={i}
+              >
+                {line}
+                <button
+                  onClick={() => {
+                    const parsedConfig = parseYaml(config)
+                    console.log({ lastFrameIndex, lastFrameIndexIndex })
+                    console.log(framesPathParts)
+                    console.log({ thisFramesPath })
+                    unset(parsedConfig, thisFramesPath)
+                    console.log({ parsedConfig })
+                    setConfig(
+                      stringifyYaml(parsedConfig)
+                    )
+                  }}
+                >
+                  Delete frame
                 </button>
               </pre>
             )
