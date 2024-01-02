@@ -5,4 +5,4 @@ workflow:
       view:
         component: ClientPageTitle
         props:
-          children: This title is from a client component
+          title: This title is from a client component

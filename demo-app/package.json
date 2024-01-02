@@ -19,7 +19,8 @@
     "react": "^18",
     "react-dom": "^18",
     "trino-client": "^0.2.2",
-    "yaml": "^2.3.3"
+    "yaml": "^2.3.3",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20",

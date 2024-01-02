@@ -1,8 +1,24 @@
 'use client'
-import { type BaseOpenTrussComponentV1Props } from '@open-truss/open-truss'
+import { z } from 'zod'
+import { BaseOpenTrussComponentV1PropsShape } from '@open-truss/open-truss'
 
-function PageTitle({ children }: BaseOpenTrussComponentV1Props): JSX.Element {
-  return <h1>{children}</h1>
+export const Props = BaseOpenTrussComponentV1PropsShape.extend({
+  color: z.string().default('blue'),
+  headerElement: z.enum(['h1', 'h2', 'h3', 'h4', 'h5']).default('h1'),
+  title: z.string().default('Page Title'),
+})
+
+function PageTitle({
+  color,
+  headerElement = 'h1',
+  title,
+}: z.infer<typeof Props>): JSX.Element {
+  const Component = headerElement
+  return (
+    <Component style={{ color }}>
+      {title} (I am an {headerElement})
+    </Component>
+  )
 }
 
 export default PageTitle
