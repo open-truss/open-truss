@@ -1,11 +1,13 @@
 import React from 'react'
 import { z } from 'zod'
 import { YamlObjectShape, YamlShape } from '../utils/yaml'
+import DataProvider from './DataProvider'
 import {
-  type OpenTrussComponentExports,
-  type RenderingEngine,
-  type ReactTree,
   type COMPONENTS,
+  type OpenTrussComponentExports,
+  type ReactTree,
+  type RenderingEngine,
+  type UqiSources,
 } from './apply'
 
 const DataShape = YamlShape.optional()
@@ -78,6 +80,7 @@ function hasChildren(component: any): component is ComponentWithChildren {
 
 export function engineV1(
   COMPONENTS: COMPONENTS,
+  uqiSources: UqiSources,
   config: WorkflowV1,
 ): RenderingEngine {
   const renderFrames = (frames: FrameV1[]): ReactTree => {
@@ -99,7 +102,11 @@ export function engineV1(
       }
 
       if (subFrame === undefined) {
-        return <Component key={i} {...props} />
+        if (data) {
+          return <DataProvider key={i} {...props} component={Component} />
+        } else {
+          return <Component key={i} {...props} />
+        }
       }
 
       if (!hasChildren(COMPONENTS[component])) {
