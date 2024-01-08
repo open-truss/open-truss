@@ -1,8 +1,0 @@
-workflow:
-  version: 1
-  frames:
-    - frame:
-      view:
-        component: AsyncPageTitle
-        props:
-          children: This title is from an async component

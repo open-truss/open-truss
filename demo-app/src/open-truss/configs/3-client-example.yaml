@@ -1,8 +1,0 @@
-workflow:
-  version: 1
-  frames:
-    - frame:
-      view:
-        component: ClientPageTitle
-        props:
-          title: This title is from a client component
