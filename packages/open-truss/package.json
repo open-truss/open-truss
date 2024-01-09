@@ -21,7 +21,6 @@
     "tsconfig.json",
     "tsconfig.esm.json",
     "src",
-    "nextjs",
     "bin",
     "LICENSE"
   ],
