@@ -1,6 +1,7 @@
 import React from 'react'
 import { z } from 'zod'
 import { YamlObjectShape, YamlShape } from '../utils/yaml'
+import { processProps } from './process-props'
 import {
   type OpenTrussComponent,
   type OpenTrussComponentExports,
@@ -87,12 +88,8 @@ export function engineV1(
     return frames.map(({ view, data, frames: subFrame }, i) => {
       const { component, props: viewProps } = view
       const Component = getComponent(component, COMPONENTS)
+      const props = processProps({ data, config, viewProps, COMPONENTS })
 
-      const props = {
-        data,
-        config,
-        ...viewProps,
-      }
       if (subFrame === undefined) {
         return <Component key={i} {...props} />
       }
