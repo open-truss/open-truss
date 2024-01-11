@@ -1,6 +1,5 @@
-'use client'
-import React from 'react'
 import Link from 'next/link'
+import React from 'react'
 
 function AvailableWorkflowsFromEndpoint(): JSX.Element {
   const [workflowIds, setConfigs] = React.useState<string[]>([])

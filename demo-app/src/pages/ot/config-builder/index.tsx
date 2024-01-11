@@ -1,13 +1,12 @@
-'use client'
-import { useState } from 'react'
 import RenderConfig from '@/components/RenderConfig'
-import {
-  CONFIG_BASE,
-  INITIAL_FRAMES_PATH,
-  ConfigBuilderContext,
-} from './config-builder-context'
+import { useState } from 'react'
 import ComponentList from './ComponentList'
 import ConfigYaml from './ConfigYaml'
+import {
+  CONFIG_BASE,
+  ConfigBuilderContext,
+  INITIAL_FRAMES_PATH,
+} from './config-builder-context'
 
 export default function ConfigBuilderPage(): React.JSX.Element {
   const [config, setConfig] = useState<string>(CONFIG_BASE)

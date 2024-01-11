@@ -1,6 +1,5 @@
-'use client'
-import { z } from 'zod'
 import { BaseOpenTrussComponentV1PropsShape } from '@open-truss/open-truss'
+import { z } from 'zod'
 
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   color: z.string().default('blue'),
