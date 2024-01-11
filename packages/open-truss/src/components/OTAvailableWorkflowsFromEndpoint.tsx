@@ -2,7 +2,7 @@ import React from 'react'
 import {
   withChildren,
   BaseOpenTrussComponentV1PropsShape,
-} from '../configuration'
+} from '../configuration/engine-v1'
 import { CSLinkShape } from '../shims'
 import { type z } from 'zod'
 
@@ -13,7 +13,6 @@ export const Props = withChildren(BaseOpenTrussComponentV1PropsShape).extend({
 export default function AvailableWorkflowsFromEndpoint(
   props: z.infer<typeof Props>,
 ): JSX.Element {
-  console.log({React})
   const [workflowIds, setConfigs] = React.useState<string[]>([])
   const [loading, setLoading] = React.useState<boolean>(false)
   const [error, setError] = React.useState<Error | null>(null)
