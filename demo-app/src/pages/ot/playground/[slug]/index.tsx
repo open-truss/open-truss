@@ -1,7 +1,6 @@
-'use client'
-import path from 'path'
-import { useRouter } from 'next/router'
 import RenderFromEndpoint from '@/components/RenderFromEndpoint'
+import { useRouter } from 'next/router'
+import path from 'path'
 
 export default function Page(): JSX.Element {
   const router = useRouter()
