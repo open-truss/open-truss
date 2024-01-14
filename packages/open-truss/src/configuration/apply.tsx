@@ -2,9 +2,9 @@ import { type z } from 'zod'
 import { OT_COMPONENTS } from '../components'
 import { type YamlObject, type YamlType } from '../utils/yaml'
 import {
+  engineV1,
   type BaseOpenTrussComponentV1,
   type WorkflowV1,
-  engineV1,
 } from './engine-v1'
 
 export interface WorkflowSpec {
@@ -18,6 +18,7 @@ export interface OpenTrussComponentExports {
 export type COMPONENTS =
   | Record<string, OpenTrussComponent>
   | Record<string, OpenTrussComponentExports>
+export type UqiSources = Record<string, unknown>
 export type ReactTree = Array<ReactTree | JSX.Element>
 export type RenderingEngine = () => ReactTree
 type ConfigurationFunction = (
@@ -27,6 +28,7 @@ type ConfigurationFunction = (
 
 export function applyConfiguration(
   COMPONENTS: COMPONENTS,
+  uqiSources: UqiSources,
 ): ConfigurationFunction {
   const components = Object.assign(COMPONENTS, OT_COMPONENTS)
 
@@ -37,7 +39,7 @@ export function applyConfiguration(
 
     // TODO this version check should be using zod and runtime validation
     if (workflow.version === 1) {
-      renderingEngine = engineV1(components, workflow)
+      renderingEngine = engineV1(components, uqiSources, workflow)
     } else {
       throw new Error(`Unsupported config version: ${workflow.version}`)
     }
