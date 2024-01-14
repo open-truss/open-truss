@@ -2,7 +2,7 @@ import React from 'react'
 import RenderConfig from './RenderConfig'
 
 // TODO: Get this path from application config and only need to pass in filename?
-const CONFIG_API = '/ot/api/configs/'
+const CONFIG_API = '/api/ot/configs/'
 
 export default function RenderFromEndpoint({
   configName,
@@ -17,8 +17,8 @@ export default function RenderFromEndpoint({
   React.useEffect(() => {
     const fetchConfig = async (): Promise<void> => {
       const response = await fetch(url)
-      const json = await response.json()
-      setConfig(json.config)
+      const config = await response.json()
+      setConfig(config)
     }
     setLoading(true)
     fetchConfig().catch((e) => {

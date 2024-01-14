@@ -7,9 +7,9 @@ function AvailableWorkflowsFromEndpoint(): JSX.Element {
   const [error, setError] = React.useState<Error | null>(null)
   React.useEffect(() => {
     const fetchConfigs = async (): Promise<void> => {
-      const response = await fetch(`/ot/api/configs/`)
-      const json = await response.json()
-      setConfigs(json.configs)
+      const response = await fetch(`/api/ot/configs/`)
+      const configs = await response.json()
+      setConfigs(configs)
     }
     setLoading(true)
     fetchConfigs().catch((e) => {
