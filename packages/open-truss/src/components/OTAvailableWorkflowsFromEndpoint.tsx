@@ -1,7 +1,18 @@
-import Link from 'next/link'
 import React from 'react'
+import {
+  withChildren,
+  BaseOpenTrussComponentV1PropsShape,
+} from '../configuration/engine-v1'
+import { CSLinkShape } from '../shims'
+import { type z } from 'zod'
 
-function AvailableWorkflowsFromEndpoint(): JSX.Element {
+export const Props = withChildren(BaseOpenTrussComponentV1PropsShape).extend({
+  link: CSLinkShape,
+})
+
+export default function AvailableWorkflowsFromEndpoint(
+  props: z.infer<typeof Props>,
+): JSX.Element {
   const [workflowIds, setConfigs] = React.useState<string[]>([])
   const [loading, setLoading] = React.useState<boolean>(false)
   const [error, setError] = React.useState<Error | null>(null)
@@ -24,18 +35,21 @@ function AvailableWorkflowsFromEndpoint(): JSX.Element {
     return <>Loading...</>
   }
 
+  if (props.link === undefined) {
+    return <>OOPS! missing Link component in config</>
+  }
+
+  const Link = props.link
   return (
     <div>
       <h1>Available Workflows:</h1>
       <ul>
         {workflowIds.map((workflowId) => (
           <li key={workflowId}>
-            <Link href={`/ot/playground/${workflowId}`}>{workflowId}</Link>
+            <Link to={`/ot/playground/${workflowId}`}>{workflowId}</Link>
           </li>
         ))}
       </ul>
     </div>
   )
 }
-
-export default AvailableWorkflowsFromEndpoint

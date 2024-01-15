@@ -10,7 +10,7 @@ import {
 export interface WorkflowSpec {
   workflow: WorkflowV1 // | WorkflowV2
 }
-type OpenTrussComponent = BaseOpenTrussComponentV1 // |BaseOpenTrussComponentV2
+export type OpenTrussComponent = BaseOpenTrussComponentV1 // |BaseOpenTrussComponentV2
 export interface OpenTrussComponentExports {
   default: OpenTrussComponent
   Props: z.AnyZodObject

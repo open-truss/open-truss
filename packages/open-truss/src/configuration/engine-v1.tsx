@@ -4,20 +4,24 @@ import { YamlObjectShape, YamlShape } from '../utils/yaml'
 import DataProvider from './DataProvider'
 import {
   type COMPONENTS,
+  type OpenTrussComponent,
   type OpenTrussComponentExports,
   type ReactTree,
   type RenderingEngine,
 } from './apply'
+import { processProps } from './process-props'
 
-const DataShape = YamlShape.optional()
-
+const DataV1Shape = YamlShape.optional()
+export type DataV1 = z.infer<typeof DataV1Shape>
+const ViewPropsV1Shape = YamlObjectShape.optional()
+export type ViewPropsV1 = z.infer<typeof ViewPropsV1Shape>
 const FrameBase = z.object({
   frame: z.null(), // used only to make configs more readable
   view: z.object({
     component: z.string(),
-    props: YamlObjectShape.optional(),
+    props: ViewPropsV1Shape,
   }),
-  data: DataShape,
+  data: DataV1Shape,
 })
 
 export type FrameType = z.infer<typeof FrameBase> & {
@@ -39,7 +43,7 @@ const WorkflowV1Shape = z.object({
 export type WorkflowV1 = z.infer<typeof WorkflowV1Shape>
 
 export const BaseOpenTrussComponentV1PropsShape = z.object({
-  data: DataShape,
+  data: DataV1Shape,
   config: WorkflowV1Shape,
 })
 export const withChildren = (shape: z.AnyZodObject): z.AnyZodObject =>
@@ -84,20 +88,8 @@ export function engineV1(
   const renderFrames = (frames: FrameV1[]): ReactTree => {
     return frames.map(({ view, data, frames: subFrame }, i) => {
       const { component, props: viewProps } = view
-      let Component = COMPONENTS[component]
-      if (hasDefaultExport(Component)) {
-        Component = Component.default
-      }
-
-      const props = {
-        data,
-        config,
-        ...viewProps,
-      }
-
-      if (!Component) {
-        throw new Error(`No component '${component}' configured.`)
-      }
+      const Component = getComponent(component, COMPONENTS)
+      const props = processProps({ data, config, viewProps, COMPONENTS })
 
       if (subFrame === undefined) {
         if (data) {
@@ -107,7 +99,7 @@ export function engineV1(
         }
       }
 
-      if (!hasChildren(COMPONENTS[component])) {
+      if (!hasChildren(Component)) {
         throw new Error(
           `${component} given \`frames\` but doesn't support \`children\``,
         )
@@ -130,4 +122,23 @@ export function engineV1(
   return () => {
     return renderFrames(config.frames)
   }
+}
+
+export function getComponent(
+  component: string,
+  COMPONENTS: COMPONENTS,
+): OpenTrussComponent {
+  let Component = COMPONENTS[component]
+  if (!Component) {
+    throw new Error(`No component '${component}' configured.`)
+  }
+  if (hasDefaultExport(Component)) {
+    Component = Component.default
+  }
+
+  if (!Component) {
+    throw new Error(`No component '${component}' configured.`)
+  }
+
+  return Component
 }
