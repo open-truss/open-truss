@@ -3,7 +3,7 @@ workflow:
   frames:
     - frame:
       view:
-        component: AvailableWorkflowsFromEndpoint
+        component: OTAvailableWorkflowsFromEndpoint
         props:
           link:
             type: component
