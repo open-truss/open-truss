@@ -69,7 +69,15 @@ else
 fi
 
 # Install Node.js dependencies.
-cd $open_truss_package_dir && npm install && cd $demo_app_dir && npm install
+cd $open_truss_package_dir \
+  && npm install \
+  && cd $demo_app_dir \
+  && npm install
+
+# Fix react link
+cd $open_truss_package_dir \
+  && npm link $demo_app_dir/node_modules/react \
+  && cd $demo_app_dir
 
 # Copy .env.local.example to .env.local if .env.local doesn't exist.
 if [ ! -f $demo_app_dir/.env.local ]; then
