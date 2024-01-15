@@ -4,7 +4,7 @@ const sources = {
   'trino-demo': {
     config: {
       auth: 'trino',
-      server: process.env.TRINO_DEMO_SERVER,
+      server: String(process.env.TRINO_DEMO_SERVER),
     },
     createClient: createTrinoUqiClient,
   },

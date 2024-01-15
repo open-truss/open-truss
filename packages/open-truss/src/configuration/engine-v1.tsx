@@ -1,14 +1,15 @@
 import React from 'react'
 import { z } from 'zod'
 import { YamlObjectShape, YamlShape } from '../utils/yaml'
-import { processProps } from './process-props'
+import DataProvider from './DataProvider'
 import {
+  type COMPONENTS,
   type OpenTrussComponent,
   type OpenTrussComponentExports,
-  type RenderingEngine,
   type ReactTree,
-  type COMPONENTS,
+  type RenderingEngine,
 } from './apply'
+import { processProps } from './process-props'
 
 const DataV1Shape = YamlShape.optional()
 export type DataV1 = z.infer<typeof DataV1Shape>
@@ -91,7 +92,11 @@ export function engineV1(
       const props = processProps({ data, config, viewProps, COMPONENTS })
 
       if (subFrame === undefined) {
-        return <Component key={i} {...props} />
+        if (data) {
+          return <DataProvider key={i} {...props} component={Component} />
+        } else {
+          return <Component key={i} {...props} />
+        }
       }
 
       if (!hasChildren(Component)) {
