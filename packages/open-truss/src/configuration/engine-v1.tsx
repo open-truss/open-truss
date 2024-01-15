@@ -1,11 +1,12 @@
 import React from 'react'
 import { z } from 'zod'
 import { YamlObjectShape, YamlShape } from '../utils/yaml'
+import DataProvider from './DataProvider'
 import {
-  type OpenTrussComponentExports,
-  type RenderingEngine,
-  type ReactTree,
   type COMPONENTS,
+  type OpenTrussComponentExports,
+  type ReactTree,
+  type RenderingEngine,
 } from './apply'
 
 const DataShape = YamlShape.optional()
@@ -99,7 +100,11 @@ export function engineV1(
       }
 
       if (subFrame === undefined) {
-        return <Component key={i} {...props} />
+        if (data) {
+          return <DataProvider key={i} {...props} component={Component} />
+        } else {
+          return <Component key={i} {...props} />
+        }
       }
 
       if (!hasChildren(COMPONENTS[component])) {
