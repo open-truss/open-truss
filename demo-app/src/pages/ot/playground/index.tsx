@@ -1,7 +1,18 @@
-import AvailableWorkflows from '@/components/AvailableWorkflowsFromEndpoint'
+import RenderConfig from '@/components/RenderConfig'
 
-function PlaygroundPage(): JSX.Element {
-  return <AvailableWorkflows />
+const config = `
+workflow:
+  version: 1
+  frames:
+    - frame:
+      view:
+        component: OTAvailableWorkflowsFromEndpoint
+        props:
+          link:
+            type: component
+            value: NextLink
+`
+
+export default function PlaygroundPage(): JSX.Element {
+  return <RenderConfig config={config} />
 }
-
-export default PlaygroundPage
