@@ -7,7 +7,6 @@ import {
   type OpenTrussComponentExports,
   type ReactTree,
   type RenderingEngine,
-  type UqiSources,
 } from './apply'
 
 const DataShape = YamlShape.optional()
@@ -80,7 +79,6 @@ function hasChildren(component: any): component is ComponentWithChildren {
 
 export function engineV1(
   COMPONENTS: COMPONENTS,
-  uqiSources: UqiSources,
   config: WorkflowV1,
 ): RenderingEngine {
   const renderFrames = (frames: FrameV1[]): ReactTree => {
