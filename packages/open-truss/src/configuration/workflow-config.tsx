@@ -1,5 +1,7 @@
 import { z } from 'zod'
 import { YamlObjectShape, YamlShape } from '../utils/yaml'
+import { RUNTIME_COMPONENTS } from './engine-v1'
+import { getComponent, hasChildren } from './components'
 
 export const DataV1Shape = YamlShape.optional()
 export type DataV1 = z.infer<typeof DataV1Shape>
@@ -23,6 +25,26 @@ const FrameV1Shape: z.ZodType<FrameType> = FrameBase.extend({
     .lazy(() => FrameV1Shape)
     .array()
     .optional(),
+}).superRefine((val, ctx) => {
+  const COMPONENTS = RUNTIME_COMPONENTS()
+  const Component = COMPONENTS[val.view.component]
+
+  if (Component === undefined) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Did not find ${val.view.component}`,
+      fatal: true,
+    })
+    return z.NEVER
+  }
+
+  if (val.frames && !hasChildren(Component)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `${val.view.component} given \`frames\` but doesn't support \`children\``,
+    })
+    return z.NEVER
+  }
 })
 
 export type FrameV1 = z.infer<typeof FrameV1Shape>

@@ -2,14 +2,23 @@ import React from 'react'
 import DataProvider from './DataProvider'
 import { type COMPONENTS, type ReactTree, type RenderingEngine } from './apply'
 import { processProps } from './process-props'
-import { type WorkflowV1, type FrameV1 } from './workflow-config'
-import { getComponent, hasChildren } from './components'
+import {
+  type WorkflowV1,
+  type FrameV1,
+  WorkflowV1Shape,
+} from './workflow-config'
+import { getComponent } from './components'
 
 export function engineV1(
   COMPONENTS: COMPONENTS,
   config: WorkflowV1,
 ): RenderingEngine {
-  const globalContext = { config, COMPONENTS }
+  _COMPONENTS = COMPONENTS
+  const result = WorkflowV1Shape.safeParse(config)
+  if (!result.success) {
+    throw result.error
+  }
+  const globalContext: GlobalContext = { config: result.data, COMPONENTS }
   const renderFrames = (frames: FrameV1[]): ReactTree => {
     return frames.map((frame, i) => {
       return renderFrame({ frame, globalContext, renderFrames, i })
@@ -21,14 +30,22 @@ export function engineV1(
   }
 }
 
+interface GlobalContext {
+  config: WorkflowV1
+  COMPONENTS: COMPONENTS
+}
+
 interface FrameContext {
   frame: FrameV1
-  globalContext: {
-    config: WorkflowV1
-    COMPONENTS: COMPONENTS
-  }
+  globalContext: GlobalContext
   renderFrames: (frames: FrameV1[]) => ReactTree
   i: number
+}
+
+let _COMPONENTS: COMPONENTS
+
+export function RUNTIME_COMPONENTS(): COMPONENTS {
+  return _COMPONENTS
 }
 
 function renderFrame(frameContext: FrameContext): ReactTree | JSX.Element {
@@ -47,12 +64,6 @@ function renderFrame(frameContext: FrameContext): ReactTree | JSX.Element {
     } else {
       return <Component key={i} {...props} />
     }
-  }
-
-  if (!hasChildren(Component)) {
-    throw new Error(
-      `${component} given \`frames\` but doesn't support \`children\``,
-    )
   }
 
   const subFrames = renderFrames(frames).map((child, k) => {
