@@ -1,5 +1,5 @@
 import React from 'react'
-import { type BaseOpenTrussComponentV1 } from './engine-v1'
+import { type BaseOpenTrussComponentV1 } from './components'
 
 export default function DataProvider({
   data,

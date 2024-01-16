@@ -1,11 +1,9 @@
 import { type z } from 'zod'
 import { OT_COMPONENTS } from '../components'
 import { type YamlObject, type YamlType } from '../utils/yaml'
-import {
-  engineV1,
-  type BaseOpenTrussComponentV1,
-  type WorkflowV1,
-} from './engine-v1'
+import { engineV1 } from './engine-v1'
+import { type WorkflowV1 } from './workflow-config'
+import { type BaseOpenTrussComponentV1 } from './components'
 
 export interface WorkflowSpec {
   workflow: WorkflowV1 // | WorkflowV2
