@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { YamlObjectShape, YamlShape } from '../../utils/yaml'
-import { RUNTIME_COMPONENTS } from './engine-v1'
+import { RUNTIME_COMPONENTS } from './engine'
 import { hasChildren } from './components'
 
 export const DataV1Shape = YamlShape.optional()

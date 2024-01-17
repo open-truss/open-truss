@@ -1,5 +1,7 @@
-// Ensure engine exports are namespaced with version to avoid collisions
-export { engineV1 } from './engine-v1'
+//
+// IMPORTANT: Ensure exports are namespaced with version to avoid collisions
+//
+export { engineV1 } from './engine'
 export {
   BaseOpenTrussComponentV1PropsShape,
   type BaseOpenTrussComponentV1Props,
