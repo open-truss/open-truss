@@ -20,8 +20,11 @@ workflow:
   frames:
     - frame:
       view:
+        component: OTAvailableWorkflowsFromEndpoint
         props:
-          title: My title
+          link:
+            type: component
+            value: NextLink
 */
 
 const ViewPropTypeComponent = z.object({

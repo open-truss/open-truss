@@ -1,11 +1,11 @@
 'use client'
 import {
   BaseOpenTrussComponentV1PropsShape,
-  withChildren,
+  withChildrenV1,
 } from '@open-truss/open-truss'
 import { z } from 'zod'
 
-export const Props = withChildren(BaseOpenTrussComponentV1PropsShape).extend({
+export const Props = withChildrenV1(BaseOpenTrussComponentV1PropsShape).extend({
   data: z.string().default('no data'),
 })
 
