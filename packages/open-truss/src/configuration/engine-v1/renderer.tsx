@@ -1,11 +1,57 @@
 import { type YamlType } from '../../utils/yaml'
 import {
+  type FrameV1,
   type DataV1,
   type ViewPropsV1,
   type WorkflowV1,
 } from './workflow-config'
 import { getComponent } from './components'
-import { type COMPONENTS, type OpenTrussComponent } from '../apply'
+import {
+  type ReactTree,
+  type COMPONENTS,
+  type OpenTrussComponent,
+} from '../apply'
+import React from 'react'
+import DataProvider from './DataProvider'
+import { type GlobalContext } from './engine'
+
+interface FrameContext {
+  frame: FrameV1
+  globalContext: GlobalContext
+  renderFrames: (frames: FrameV1[]) => ReactTree
+  i: number
+}
+
+export function renderFrame(
+  frameContext: FrameContext,
+): ReactTree | JSX.Element {
+  const {
+    frame: { view, data, frames },
+    globalContext: { COMPONENTS, config },
+    renderFrames,
+    i,
+  } = frameContext
+  const { component, props: viewProps } = view
+  const Component = getComponent(component, COMPONENTS)
+  const props = processProps({ data, config, viewProps, COMPONENTS })
+  if (frames === undefined) {
+    if (data) {
+      return <DataProvider key={i} {...props} component={Component} />
+    } else {
+      return <Component key={i} {...props} />
+    }
+  }
+
+  const subFrames = renderFrames(frames).map((child, k) => {
+    return <React.Fragment key={k}>{child as React.ReactNode}</React.Fragment>
+  })
+  const children = <>{subFrames}</>
+  return (
+    <Component key={i} {...props}>
+      {children}
+    </Component>
+  )
+}
 
 interface ComponentPropsShape {
   config: WorkflowV1
@@ -18,7 +64,7 @@ interface ComponentPropsReturnShape {
   data: DataV1
 }
 
-export function processProps({
+function processProps({
   config,
   viewProps,
   data,
