@@ -1,10 +1,6 @@
 import type React from 'react'
 import { z } from 'zod'
-import {
-  type COMPONENTS,
-  type OpenTrussComponent,
-  type OpenTrussComponentExports,
-} from '../apply'
+import { type OpenTrussComponentExports } from '../apply'
 import { DataV1Shape, WorkflowV1Shape } from './config-schemas'
 
 export const BaseOpenTrussComponentV1PropsShape = z.object({
@@ -26,7 +22,7 @@ export type BaseOpenTrussComponentV1 = (
   props: BaseOpenTrussComponentV1Props,
 ) => React.JSX.Element
 
-function hasDefaultExport(
+export function hasDefaultExport(
   component: any,
 ): component is OpenTrussComponentExports {
   return 'default' in component
@@ -46,23 +42,4 @@ export function hasChildren(
   }
   // Default to true for legacy component definitions
   return true
-}
-
-export function getComponent(
-  component: string,
-  COMPONENTS: COMPONENTS,
-): OpenTrussComponent {
-  let Component = COMPONENTS[component]
-  if (!Component) {
-    throw new Error(`No component '${component}' configured.`)
-  }
-  if (hasDefaultExport(Component)) {
-    Component = Component.default
-  }
-
-  if (!Component) {
-    throw new Error(`No component '${component}' configured.`)
-  }
-
-  return Component
 }

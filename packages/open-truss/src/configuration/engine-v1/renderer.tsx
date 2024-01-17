@@ -5,12 +5,12 @@ import {
   type ViewPropsV1,
   type WorkflowV1,
 } from './config-schemas'
-import { getComponent } from './components'
 import {
   type ReactTree,
   type COMPONENTS,
   type OpenTrussComponent,
 } from '../apply'
+import { hasDefaultExport } from './component'
 import React from 'react'
 import DataProvider from './DataProvider'
 import { type GlobalContext } from './engine'
@@ -97,4 +97,24 @@ function processProps({
     ...viewProps,
     ...newProps,
   }
+}
+
+export function getComponent(
+  component: string,
+  COMPONENTS: COMPONENTS,
+): OpenTrussComponent {
+  let Component = COMPONENTS[component]
+  if (!Component) {
+    throw new Error(`No component '${component}' configured.`)
+  }
+
+  if (hasDefaultExport(Component)) {
+    Component = Component.default
+  }
+
+  if (!Component) {
+    throw new Error(`No component '${component}' configured.`)
+  }
+
+  return Component
 }

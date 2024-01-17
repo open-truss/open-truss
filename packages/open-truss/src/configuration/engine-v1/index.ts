@@ -7,5 +7,5 @@ export {
   type BaseOpenTrussComponentV1Props,
   type BaseOpenTrussComponentV1,
   withChildrenV1,
-} from './components'
+} from './component'
 export { type WorkflowV1 } from './config-schemas'

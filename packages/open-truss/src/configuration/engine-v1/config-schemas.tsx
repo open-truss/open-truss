@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { YamlObjectShape, YamlShape } from '../../utils/yaml'
 import { RUNTIME_COMPONENTS } from './engine'
-import { hasChildren } from './components'
+import { hasChildren } from './component'
 
 export const DataV1Shape = YamlShape.optional()
 export type DataV1 = z.infer<typeof DataV1Shape>
