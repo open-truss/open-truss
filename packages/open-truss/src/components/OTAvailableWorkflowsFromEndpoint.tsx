@@ -2,7 +2,7 @@ import React from 'react'
 import {
   withChildrenV1,
   BaseOpenTrussComponentV1PropsShape,
-} from '../configuration'
+} from '../configuration/engine-v1'
 import { CSLinkShape } from '../shims'
 import { type z } from 'zod'
 
