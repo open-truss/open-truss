@@ -4,7 +4,7 @@ import {
   type DataV1,
   type ViewPropsV1,
   type WorkflowV1,
-} from './workflow-config'
+} from './config-schemas'
 import { getComponent } from './components'
 import {
   type ReactTree,

@@ -3,7 +3,7 @@ import {
   type WorkflowV1,
   type FrameV1,
   WorkflowV1Shape,
-} from './workflow-config'
+} from './config-schemas'
 import { renderFrame } from './renderer'
 
 export interface GlobalContext {
@@ -21,6 +21,7 @@ export function engineV1(
   config: WorkflowV1,
 ): RenderingEngine {
   _COMPONENTS = COMPONENTS
+  // Runs validations in config-schemas
   const result = WorkflowV1Shape.safeParse(config)
   if (!result.success) {
     // TODO for now just raise any config validation errors.

@@ -5,7 +5,7 @@ import {
   type OpenTrussComponent,
   type OpenTrussComponentExports,
 } from '../apply'
-import { DataV1Shape, WorkflowV1Shape } from './workflow-config'
+import { DataV1Shape, WorkflowV1Shape } from './config-schemas'
 
 export const BaseOpenTrussComponentV1PropsShape = z.object({
   data: DataV1Shape,

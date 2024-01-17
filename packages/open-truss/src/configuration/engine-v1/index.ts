@@ -8,4 +8,4 @@ export {
   type BaseOpenTrussComponentV1,
   withChildrenV1,
 } from './components'
-export { type WorkflowV1 } from './workflow-config'
+export { type WorkflowV1 } from './config-schemas'
