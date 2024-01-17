@@ -1,6 +1,6 @@
 import React from 'react'
 import DataProvider from './DataProvider'
-import { type COMPONENTS, type ReactTree, type RenderingEngine } from './apply'
+import { type COMPONENTS, type ReactTree, type RenderingEngine } from '../apply'
 import { processProps } from './process-props'
 import {
   type WorkflowV1,

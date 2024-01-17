@@ -1,11 +1,11 @@
-import { type YamlType } from '../utils/yaml'
+import { type YamlType } from '../../utils/yaml'
 import {
   type DataV1,
   type ViewPropsV1,
   type WorkflowV1,
 } from './workflow-config'
 import { getComponent } from './components'
-import { type COMPONENTS, type OpenTrussComponent } from './apply'
+import { type COMPONENTS, type OpenTrussComponent } from '../apply'
 
 interface ComponentPropsShape {
   config: WorkflowV1

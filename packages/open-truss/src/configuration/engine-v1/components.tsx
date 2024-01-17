@@ -4,16 +4,16 @@ import {
   type COMPONENTS,
   type OpenTrussComponent,
   type OpenTrussComponentExports,
-} from './apply'
+} from '../apply'
 import { DataV1Shape, WorkflowV1Shape } from './workflow-config'
 
 export const BaseOpenTrussComponentV1PropsShape = z.object({
   data: DataV1Shape,
   config: WorkflowV1Shape,
 })
-export const withChildren = (shape: z.AnyZodObject): z.AnyZodObject =>
+export const withChildrenV1 = (shape: z.AnyZodObject): z.AnyZodObject =>
   shape.extend({ children: z.any().optional() })
-const ComponentWithChildrenShape = withChildren(
+const ComponentWithChildrenShape = withChildrenV1(
   BaseOpenTrussComponentV1PropsShape,
 )
 type ComponentWithChildren = z.infer<typeof ComponentWithChildrenShape>
