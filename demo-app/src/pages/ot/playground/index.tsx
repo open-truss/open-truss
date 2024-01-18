@@ -1,4 +1,4 @@
-import { PlaygroundPage } from '@open-truss/open-truss'
+import { PlaygroundPage } from '@open-truss/open-truss/client'
 import OT_COMPONENTS from '@/lib/ot-components'
 
 const config = `

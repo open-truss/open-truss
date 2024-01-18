@@ -1,4 +1,4 @@
-import { ConfigBuilderPage } from '@open-truss/open-truss'
+import { ConfigBuilderPage } from '@open-truss/open-truss/client'
 import OT_COMPONENTS from '@/lib/ot-components'
 
 export default function ConfigBuilder(): React.JSX.Element {
