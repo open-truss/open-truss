@@ -44,7 +44,7 @@ const ViewPropShape = z.discriminatedUnion('type', [
   ViewPropTypeString,
   ViewPropTypeNumber,
 ])
-const ViewPropsV1Shape = z.record(z.string(), ViewPropShape)
+const ViewPropsV1Shape = z.record(z.string(), ViewPropShape).optional()
 export type ViewPropsV1 = z.infer<typeof ViewPropsV1Shape>
 
 // Frame Schemas
