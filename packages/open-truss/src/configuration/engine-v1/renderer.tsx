@@ -4,13 +4,13 @@ import {
   type DataV1,
   type ViewPropsV1,
   type WorkflowV1,
+  hasDefaultExport,
 } from './config-schemas'
 import {
   type ReactTree,
   type COMPONENTS,
   type OpenTrussComponent,
 } from '../apply'
-import { hasDefaultExport } from './component'
 import React from 'react'
 import DataProvider from './DataProvider'
 import { type GlobalContext } from './engine'

@@ -109,6 +109,8 @@ export const WorkflowV1Shape = z.object({
 })
 export type WorkflowV1 = z.infer<typeof WorkflowV1Shape>
 
+// Component Schemas
+
 export const BaseOpenTrussComponentV1PropsShape = z.object({
   data: DataV1Shape,
   config: WorkflowV1Shape,
