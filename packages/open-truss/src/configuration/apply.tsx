@@ -1,8 +1,9 @@
+import React from 'react'
 import { type z } from 'zod'
 import { OT_COMPONENTS } from '../components'
-import { type YamlObject, type YamlType } from '../utils/yaml'
+import { type YamlObject } from '../utils/yaml'
 import {
-  engineV1,
+  RenderConfigV1,
   type WorkflowV1,
   type BaseOpenTrussComponentV1,
 } from './engine-v1'
@@ -18,32 +19,19 @@ export interface OpenTrussComponentExports {
 export type COMPONENTS =
   | Record<string, OpenTrussComponent>
   | Record<string, OpenTrussComponentExports>
-export type ReactTree = Array<ReactTree | JSX.Element>
-export type RenderingEngine = () => ReactTree
-type ConfigurationFunction = (
-  config: YamlObject,
-  data: YamlType,
-) => ReturnType<RenderingEngine>
 
-export function applyConfiguration(
-  COMPONENTS: COMPONENTS,
-): ConfigurationFunction {
-  const components = Object.assign(COMPONENTS, OT_COMPONENTS)
-
-  const configurationFunction: ConfigurationFunction = (config, data) => {
-    let renderingEngine: RenderingEngine
-
-    const workflow = (config as unknown as WorkflowSpec).workflow
-
-    // TODO this version check should be using zod and runtime validation
-    if (workflow.version === 1) {
-      renderingEngine = engineV1(components, workflow)
-    } else {
-      throw new Error(`Unsupported config version: ${workflow.version}`)
-    }
-
-    return renderingEngine()
+export function RenderConfig({
+  components: appComponents,
+  config,
+}: {
+  components: COMPONENTS
+  config: YamlObject
+}): React.JSX.Element {
+  const components = Object.assign(appComponents, OT_COMPONENTS)
+  const workflow = (config as unknown as WorkflowSpec).workflow
+  if (workflow.version === 1) {
+    return <RenderConfigV1 COMPONENTS={components} config={workflow} />
+  } else {
+    throw new Error(`Unsupported config version: ${workflow.version}`)
   }
-
-  return configurationFunction
 }

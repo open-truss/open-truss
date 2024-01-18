@@ -6,11 +6,7 @@ import {
   type WorkflowV1,
   hasDefaultExport,
 } from './config-schemas'
-import {
-  type ReactTree,
-  type COMPONENTS,
-  type OpenTrussComponent,
-} from '../apply'
+import { type COMPONENTS, type OpenTrussComponent } from '../apply'
 import React from 'react'
 import DataProvider from './DataProvider'
 import { type GlobalContext } from './engine'
@@ -18,37 +14,29 @@ import { type GlobalContext } from './engine'
 interface FrameContext {
   frame: FrameV1
   globalContext: GlobalContext
-  renderFrames: (frames: FrameV1[]) => ReactTree
-  i: number
 }
 
-export function renderFrame(
-  frameContext: FrameContext,
-): ReactTree | JSX.Element {
+export function Frame(props: FrameContext): React.JSX.Element {
   const {
     frame: { view, data, frames },
     globalContext: { COMPONENTS, config },
-    renderFrames,
-    i,
-  } = frameContext
+  } = props
   const { component, props: viewProps } = view
   const Component = getComponent(component, COMPONENTS)
-  const props = processProps({ data, config, viewProps, COMPONENTS })
+  const processedProps = processProps({ data, config, viewProps, COMPONENTS })
   if (frames === undefined) {
     if (data) {
-      return <DataProvider key={i} {...props} component={Component} />
+      return <DataProvider {...processedProps} component={Component} />
     } else {
-      return <Component key={i} {...props} />
+      return <Component {...processedProps} />
     }
   }
 
-  const subFrames = renderFrames(frames).map((child, k) => {
-    return <React.Fragment key={k}>{child as React.ReactNode}</React.Fragment>
-  })
-  const children = <>{subFrames}</>
   return (
-    <Component key={i} {...props}>
-      {children}
+    <Component {...props}>
+      {frames.map((subFrame, k) => (
+        <Frame key={k} frame={subFrame} globalContext={props.globalContext} />
+      ))}
     </Component>
   )
 }
