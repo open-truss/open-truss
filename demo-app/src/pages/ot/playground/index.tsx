@@ -1,4 +1,5 @@
-import RenderConfig from '@/components/RenderConfig'
+import { PlaygroundPage } from '@open-truss/open-truss'
+import OT_COMPONENTS from '@/lib/ot-components'
 
 const config = `
 workflow:
@@ -13,6 +14,6 @@ workflow:
             value: NextLink
 `
 
-export default function PlaygroundPage(): JSX.Element {
-  return <RenderConfig config={config} />
+export default function Playground(): JSX.Element {
+  return <PlaygroundPage config={config} components={OT_COMPONENTS} />
 }

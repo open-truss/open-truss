@@ -8,4 +8,5 @@ export {
   type BaseOpenTrussComponentV1Props,
   type BaseOpenTrussComponentV1,
   withChildrenV1,
+  type FrameType,
 } from './config-schemas'

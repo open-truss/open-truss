@@ -42,6 +42,7 @@
   },
   "typings": "dist/mjs/index.d.ts",
   "dependencies": {
+    "lodash": "^4.17.21",
     "sql-formatter": "^13.0.4",
     "ts-node": "^10.9.1",
     "yaml": "^2.3.4",
