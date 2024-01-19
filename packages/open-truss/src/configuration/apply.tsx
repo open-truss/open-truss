@@ -3,8 +3,8 @@ import { OT_COMPONENTS } from '../components'
 import { type YamlObject, type YamlType } from '../utils/yaml'
 import {
   engineV1,
-  type BaseOpenTrussComponentV1,
   type WorkflowV1,
+  type BaseOpenTrussComponentV1,
 } from './engine-v1'
 
 export interface WorkflowSpec {
