@@ -6,10 +6,10 @@ import {
   type WorkflowV1,
   hasDefaultExport,
 } from './config-schemas'
-import { type COMPONENTS, type OpenTrussComponent } from '../apply'
+import { type COMPONENTS, type OpenTrussComponent } from '../RenderConfig'
 import React from 'react'
 import DataProvider from './DataProvider'
-import { type GlobalContext } from './engine'
+import { type GlobalContext } from './RenderConfig'
 
 interface FrameContext {
   frame: FrameV1

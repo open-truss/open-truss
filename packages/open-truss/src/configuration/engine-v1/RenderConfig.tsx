@@ -1,7 +1,7 @@
 import React from 'react'
-import { type COMPONENTS } from '../apply'
+import { type COMPONENTS } from '../RenderConfig'
 import { type WorkflowV1, WorkflowV1Shape } from './config-schemas'
-import { Frame } from './renderer'
+import { Frame } from './Frame'
 
 export interface GlobalContext {
   config: WorkflowV1
@@ -13,7 +13,7 @@ export function RUNTIME_COMPONENTS(): COMPONENTS {
   return _COMPONENTS
 }
 
-export function RenderConfigV1({
+export function RenderConfig({
   COMPONENTS,
   config,
 }: {
