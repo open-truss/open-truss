@@ -1,12 +1,12 @@
 import React from 'react'
 import {
-  withChildrenV1,
+  withChildren,
   BaseOpenTrussComponentV1PropsShape,
 } from '../configuration/engine-v1'
 import { CSLinkShape } from '../shims'
 import { type z } from 'zod'
 
-export const Props = withChildrenV1(BaseOpenTrussComponentV1PropsShape).extend({
+export const Props = withChildren(BaseOpenTrussComponentV1PropsShape).extend({
   link: CSLinkShape,
 })
 
