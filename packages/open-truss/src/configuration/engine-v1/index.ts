@@ -1,11 +1,11 @@
 //
 // IMPORTANT: Ensure exports are namespaced with version to avoid collisions
 //
-export { engineV1 } from './engine'
 export {
   type WorkflowV1,
   BaseOpenTrussComponentV1PropsShape,
-  type BaseOpenTrussComponentV1Props,
+  withChildren,
   type BaseOpenTrussComponentV1,
-  withChildrenV1,
+  type BaseOpenTrussComponentV1Props,
 } from './config-schemas'
+export { engineV1 } from './engine'
