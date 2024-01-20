@@ -1,11 +1,11 @@
 import {
-  withChildrenV1,
+  withChildren,
   BaseOpenTrussComponentV1PropsShape,
 } from '@open-truss/open-truss'
 import Link from 'next/link'
 import { z } from 'zod'
 
-export const Props = withChildrenV1(BaseOpenTrussComponentV1PropsShape).extend({
+export const Props = withChildren(BaseOpenTrussComponentV1PropsShape).extend({
   to: z.string(),
 })
 

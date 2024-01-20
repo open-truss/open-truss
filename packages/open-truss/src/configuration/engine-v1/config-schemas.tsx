@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { YamlShape } from '../../utils/yaml'
-import { type OpenTrussComponentExports } from '../apply'
-import { RUNTIME_COMPONENTS } from './engine'
+import { type OpenTrussComponentExports } from '../RenderConfig'
+import { RUNTIME_COMPONENTS } from './RenderConfig'
 
 // Data Schemas
 /*
@@ -115,9 +115,9 @@ export const BaseOpenTrussComponentV1PropsShape = z.object({
   data: DataV1Shape,
   config: WorkflowV1Shape,
 })
-export const withChildrenV1 = (shape: z.AnyZodObject): z.AnyZodObject =>
+export const withChildren = (shape: z.AnyZodObject): z.AnyZodObject =>
   shape.extend({ children: z.any().optional() })
-const ComponentWithChildrenShape = withChildrenV1(
+const ComponentWithChildrenShape = withChildren(
   BaseOpenTrussComponentV1PropsShape,
 )
 type ComponentWithChildren = z.infer<typeof ComponentWithChildrenShape>

@@ -1,10 +1,10 @@
 import {
-  withChildrenV1,
+  withChildren,
   BaseOpenTrussComponentV1PropsShape,
 } from '@open-truss/open-truss'
 import { z } from 'zod'
 
-export const Props = withChildrenV1(BaseOpenTrussComponentV1PropsShape).extend({
+export const Props = withChildren(BaseOpenTrussComponentV1PropsShape).extend({
   count: z.number().default(123),
   iAmABoolProp: z.boolean().default(true),
 })

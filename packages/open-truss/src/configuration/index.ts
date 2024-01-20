@@ -1,2 +1,2 @@
-export * from './apply'
+export * from './RenderConfig'
 export * from './engine-v1'
