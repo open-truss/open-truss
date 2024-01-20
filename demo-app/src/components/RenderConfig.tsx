@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  applyConfiguration,
+  RenderConfig,
   parseYaml,
   type COMPONENTS,
 } from '@open-truss/open-truss'
@@ -9,22 +9,10 @@ import {
 import * as _components from '@/open-truss/components'
 const components = _components as unknown as COMPONENTS
 
-export default function RenderConfig({
+export default function _RenderConfig({
   config,
 }: {
   config: string
 }): JSX.Element {
-  const configurationFunction = React.useMemo(
-    () => applyConfiguration(components),
-    [],
-  )
-
-  const renderedComponents = React.useMemo(() => {
-    if (config) {
-      const parsedConfig = parseYaml(config)
-      return configurationFunction(parsedConfig, {})
-    }
-  }, [config])
-
-  return <>{renderedComponents}</>
+  return <RenderConfig components={components} config={parseYaml(config)} />
 }

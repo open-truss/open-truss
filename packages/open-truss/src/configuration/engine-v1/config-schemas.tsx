@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { YamlShape } from '../../utils/yaml'
-import { type OpenTrussComponentExports } from '../apply'
-import { RUNTIME_COMPONENTS } from './engine'
+import { type OpenTrussComponentExports } from '../RenderConfig'
+import { RUNTIME_COMPONENTS } from './RenderConfig'
 
 // Data Schemas
 /*
