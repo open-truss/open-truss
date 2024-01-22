@@ -38,10 +38,10 @@
       "require": "./dist/cjs/index.js",
       "types": "./dist/mjs/index.d.ts"
     },
-    "./client": {
-      "import": "./dist/mjs/client.js",
-      "require": "./dist/cjs/client.js",
-      "types": "./dist/mjs/client.d.ts"
+    "./pages": {
+      "import": "./dist/mjs/pages.js",
+      "require": "./dist/cjs/pages.js",
+      "types": "./dist/mjs/pages.d.ts"
     }
   },
   "dependencies": {
