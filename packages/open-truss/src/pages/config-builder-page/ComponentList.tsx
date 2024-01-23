@@ -1,24 +1,17 @@
 import get from 'lodash/get'
 import set from 'lodash/set'
-import { useContext, useState } from 'react'
+import React, { useContext, useState } from 'react'
+import { type YamlType, parseYaml, stringifyYaml } from '../../utils/yaml'
 import {
-  describeZod,
-  type COMPONENTS,
-  OT_COMPONENTS,
-  type FrameType,
-  type OpenTrussComponentExports,
-  type YamlType,
   type WorkflowSpec,
-  parseYaml,
-  stringifyYaml,
-} from '@open-truss/open-truss'
-import * as APP_COMPONENTS from '@/open-truss/components'
+  type OpenTrussComponentExports,
+  type FrameType,
+  type COMPONENTS,
+} from '../../configuration'
+import { describeZod } from '../../utils/descibe-zod'
+import * as OT_COMPONENTS from '../../components'
 import { ConfigBuilderContext } from './config-builder-context'
 import PropInput from './PropInput'
-const ALL_COMPONENTS = {
-  ...APP_COMPONENTS,
-  ...OT_COMPONENTS,
-} as unknown as COMPONENTS
 
 type ViewProps = FrameType['view']['props']
 
@@ -58,8 +51,10 @@ function PropInputs({
 
 function ComponentListItem({
   componentName,
+  ALL_COMPONENTS,
 }: {
   componentName: string
+  ALL_COMPONENTS: COMPONENTS
 }): React.JSX.Element {
   const component = ALL_COMPONENTS[componentName]
   const { config, setConfig, framesPath } = useContext(ConfigBuilderContext)
@@ -104,11 +99,28 @@ function ComponentListItem({
   )
 }
 
-export default function ComponentList(): React.JSX.Element {
+interface ComponentListInterface {
+  components: COMPONENTS
+}
+
+export default function ComponentList({
+  components,
+}: ComponentListInterface): React.JSX.Element {
+  const ALL_COMPONENTS = React.useMemo(() => {
+    return {
+      ...components,
+      ...OT_COMPONENTS,
+    } as unknown as COMPONENTS
+  }, [])
+
   return (
     <div>
       {Object.keys(ALL_COMPONENTS).map((componentName) => (
-        <ComponentListItem key={componentName} componentName={componentName} />
+        <ComponentListItem
+          key={componentName}
+          componentName={componentName}
+          ALL_COMPONENTS={ALL_COMPONENTS}
+        />
       ))}
     </div>
   )

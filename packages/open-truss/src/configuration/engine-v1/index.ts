@@ -7,5 +7,6 @@ export {
   BaseOpenTrussComponentV1PropsShape,
   withChildren,
   type BaseOpenTrussComponentV1,
+  type FrameType,
   type BaseOpenTrussComponentV1Props,
 } from './config-schemas'
