@@ -52,6 +52,11 @@ interface ComponentPropsReturnShape {
   data: DataV1
 }
 
+// Checks to see if the prop is a string like "<Component />"
+function isComponent(prop: YamlType): prop is string {
+  return typeof prop === 'string' && prop.startsWith('<') && prop.endsWith('/>')
+}
+
 function processProps({
   config,
   viewProps,
@@ -62,8 +67,8 @@ function processProps({
   if (viewProps !== undefined) {
     for (const propName in viewProps) {
       const prop = viewProps[propName]
-      if (prop.type === 'component') {
-        newProps[propName] = getComponent(prop.value, COMPONENTS)
+      if (isComponent(prop)) {
+        newProps[propName] = getComponent(prop, COMPONENTS)
       }
     }
   }
@@ -80,9 +85,10 @@ export function getComponent(
   component: string,
   COMPONENTS: COMPONENTS,
 ): OpenTrussComponent {
-  let Component = COMPONENTS[component]
+  const componentName = component.replaceAll(/(<|\/>)/g, '').trim()
+  let Component = COMPONENTS[componentName]
   if (!Component) {
-    throw new Error(`No component '${component}' configured.`)
+    throw new Error(`No component '${componentName}' configured.`)
   }
 
   if (hasDefaultExport(Component)) {
@@ -90,7 +96,7 @@ export function getComponent(
   }
 
   if (!Component) {
-    throw new Error(`No component '${component}' configured.`)
+    throw new Error(`No component '${componentName}' configured.`)
   }
 
   return Component
