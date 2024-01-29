@@ -22,29 +22,10 @@ workflow:
       view:
         component: OTAvailableWorkflowsFromEndpoint
         props:
-          link:
-            type: component
-            value: NextLink
+          link: <NextLink />
 */
 
-const ViewPropTypeComponent = z.object({
-  type: z.literal('component'),
-  value: z.string(),
-})
-const ViewPropTypeString = z.object({
-  type: z.literal('string'),
-  value: z.string(),
-})
-const ViewPropTypeNumber = z.object({
-  type: z.literal('number'),
-  value: z.number(),
-})
-const ViewPropShape = z.discriminatedUnion('type', [
-  ViewPropTypeComponent,
-  ViewPropTypeString,
-  ViewPropTypeNumber,
-])
-const ViewPropsV1Shape = z.record(z.string(), ViewPropShape).optional()
+const ViewPropsV1Shape = z.record(z.string(), YamlShape).optional()
 export type ViewPropsV1 = z.infer<typeof ViewPropsV1Shape>
 
 // Frame Schemas

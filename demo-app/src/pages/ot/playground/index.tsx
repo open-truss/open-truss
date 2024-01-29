@@ -9,9 +9,7 @@ workflow:
       view:
         component: OTAvailableWorkflowsFromEndpoint
         props:
-          link:
-            type: component
-            value: NextLink
+          link: <NextLink />
 `
 
 export default function Playground(): JSX.Element {
