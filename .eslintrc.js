@@ -32,6 +32,7 @@ module.exports = {
     '@typescript-eslint/strict-boolean-expressions': 'off',
     '@typescript-eslint/prefer-nullish-coalescing': 'off',
     'react/react-in-jsx-scope': 'off',
+    'react/prop-types': 'off',
     'check-file/filename-naming-convention': [
       'error',
       {
