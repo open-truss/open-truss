@@ -1,4 +1,8 @@
-import { RenderConfig, type COMPONENTS } from '../../configuration'
+import {
+  RenderConfig,
+  type COMPONENTS,
+  type FrameWrapper,
+} from '../../configuration'
 import { useState } from 'react'
 import ComponentList from './ComponentList'
 import ConfigYaml from './ConfigYaml'
@@ -10,6 +14,24 @@ import {
 
 interface ConfigBuilderPageInterface {
   components: COMPONENTS
+}
+
+const Wrapper: FrameWrapper = ({ children, configPath, frame }) => {
+  const [clicked, setClicked] = useState<boolean>(false)
+  const onClick = (e: React.MouseEvent): void => {
+    e.stopPropagation()
+    console.log(configPath)
+    setClicked((previous) => !previous)
+  }
+
+  return (
+    <div
+      onClick={onClick}
+      style={clicked ? { border: '1px solid pink' } : undefined}
+    >
+      {children}
+    </div>
+  )
 }
 
 export function ConfigBuilderPage({
@@ -36,7 +58,11 @@ export function ConfigBuilderPage({
         </div>
         <div>
           {config !== CONFIG_BASE && (
-            <RenderConfig config={config} components={components} />
+            <RenderConfig
+              config={config}
+              components={components}
+              FrameWrapper={Wrapper}
+            />
           )}
         </div>
       </div>
