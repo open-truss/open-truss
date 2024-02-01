@@ -43,7 +43,11 @@ export function RenderConfig({
         const configPath = `workflow.frames.${i}`
         return (
           <FrameWrapper key={i} frame={frame} configPath={configPath}>
-            <Frame frame={frame} configPath={configPath} globalContext={globalContext} />
+            <Frame
+              frame={frame}
+              configPath={configPath}
+              globalContext={globalContext}
+            />
           </FrameWrapper>
         )
       })}
