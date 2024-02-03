@@ -14,10 +14,12 @@ export function RUNTIME_COMPONENTS(): COMPONENTS {
   return _COMPONENTS
 }
 
+const DefaultFrameWrapper: FrameWrapper = ({ children }) => <>{children}</>
+
 export function RenderConfig({
   COMPONENTS,
   config,
-  FrameWrapper = React.Fragment,
+  FrameWrapper = DefaultFrameWrapper,
 }: {
   COMPONENTS: COMPONENTS
   config: WorkflowV1
