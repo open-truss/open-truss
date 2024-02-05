@@ -3,12 +3,8 @@ import { ConfigBuilderContext } from './config-builder-context'
 
 const FRAMES_PATH_PARTS = ['workflow:', 'frames:', '- frame:']
 
-export default function ConfigYaml({
-  config,
-}: {
-  config: string
-}): React.JSX.Element {
-  const { framesPath, setFramesPath } = useContext(ConfigBuilderContext)
+export default function ConfigYaml(): React.JSX.Element {
+  const { config, framesPath, setFramesPath } = useContext(ConfigBuilderContext)
   const framesPathParts: Array<number | string> = []
 
   return (
