@@ -2,10 +2,13 @@ import { type z } from 'zod'
 import { BaseOpenTrussComponentV1PropsShape } from '../configuration'
 import { type YamlType } from '../utils/yaml'
 
-type ZodShape = ZodDescriptionObject | string[]
+type ZodShape =
+  | ZodDescriptionObject
+  | Record<string, ZodDescriptionObject>
+  | string[]
 
 export interface ZodDescriptionObject {
-  type?: string
+  type: string
   defaultValue?: YamlType
   shape?: ZodShape
 }
@@ -41,6 +44,7 @@ export function describeZod(
       } else if (type === 'ZodDefault') {
         const innerType = value._def.innerType
         const desc: ZodDescriptionObject = {
+          type: innerType,
           defaultValue: value._def.defaultValue(),
           ...(describeZod({ innerType }).innerType as object),
         }
