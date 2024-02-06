@@ -85,7 +85,7 @@ export function getComponent(
   component: string,
   COMPONENTS: COMPONENTS,
 ): OpenTrussComponent {
-  const componentName = component.replaceAll(/(<|\/>)/g, '').trim()
+  const componentName = parseComponentName(component)
   let Component = COMPONENTS[componentName]
   if (!Component) {
     throw new Error(`No component '${componentName}' configured.`)
@@ -100,4 +100,8 @@ export function getComponent(
   }
 
   return Component
+}
+
+export function parseComponentName(componentName: string): string {
+  return componentName.replaceAll(/(<|\/>)/g, '').trim()
 }
