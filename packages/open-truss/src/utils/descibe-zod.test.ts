@@ -14,6 +14,7 @@ test('describeZod', () => {
     arrayProp: z.array(z.string()).default(['a', 'b', 'c']),
     enumProp: z.enum(['enum1', 'enum2']).default('enum1'),
     unionProp: z.union([z.number(), z.string()]).default(123),
+    optionalProp: z.string().optional(),
   })
   expect(describeZod(props.shape)).toEqual({
     stringProp: { type: 'ZodString', defaultValue: 'hello world' },
@@ -42,6 +43,12 @@ test('describeZod', () => {
       type: 'ZodUnion',
       shape: [{ type: 'ZodNumber' }, { type: 'ZodString' }],
       defaultValue: 123,
+    },
+    optionalProp: {
+      type: 'ZodOptional',
+      shape: {
+        type: 'ZodString',
+      },
     },
   })
 })
