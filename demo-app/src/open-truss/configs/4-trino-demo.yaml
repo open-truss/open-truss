@@ -3,7 +3,7 @@ workflow:
   frames:
     - frame:
       data:
-        query: select * from  tpch.sf1.customer limit 10
+        query: select * from tpch.sf1.customer limit 10
         source: trino-demo
       view:
         component: TrinoDemo
