@@ -1,15 +1,16 @@
 import { type YamlType } from '../../utils/yaml'
 import {
   type FrameV1,
-  type DataV1,
   type ViewPropsV1,
-  type WorkflowV1,
   hasDefaultExport,
+  hasPropsExport,
 } from './config-schemas'
 import { type COMPONENTS, type OpenTrussComponent } from '../RenderConfig'
 import React from 'react'
 import DataProvider from './DataProvider'
 import { type GlobalContext } from './RenderConfig'
+import { getSignalsType, type Signals, type SignalsZodType } from '../../shims'
+import { type Signal } from '@preact/signals-react'
 
 interface FrameContext {
   frame: FrameV1
@@ -19,14 +20,19 @@ interface FrameContext {
 export function Frame(props: FrameContext): React.JSX.Element {
   const {
     frame: { view, data, frames },
-    globalContext: { COMPONENTS, config },
+    globalContext: { COMPONENTS, signals },
   } = props
-  const { component, props: viewProps } = view
-  const Component = getComponent(component, COMPONENTS)
-  const processedProps = processProps({ data, config, viewProps, COMPONENTS })
+  const { component: componentName, props: viewProps } = view
+  const Component = getComponent(componentName, COMPONENTS)
+  const processedProps = processProps({
+    viewProps,
+    COMPONENTS,
+    componentName,
+    signals,
+  })
   if (frames === undefined) {
     if (data) {
-      return <DataProvider {...processedProps} component={Component} />
+      return <DataProvider {...processedProps} data component={Component} />
     } else {
       return <Component {...processedProps} />
     }
@@ -42,15 +48,16 @@ export function Frame(props: FrameContext): React.JSX.Element {
 }
 
 interface ComponentPropsShape {
-  config: WorkflowV1
   viewProps: ViewPropsV1
-  data: DataV1
   COMPONENTS: COMPONENTS
+  componentName: string
+  signals: Signals
 }
-interface ComponentPropsReturnShape {
-  config: WorkflowV1
-  data: DataV1
-}
+
+type ComponentPropsReturnShape = Record<
+  string,
+  YamlType | OpenTrussComponent | Signal<any>
+>
 
 // Checks to see if the prop is a string like "<Component />"
 function isComponent(prop: YamlType): prop is string {
@@ -58,12 +65,12 @@ function isComponent(prop: YamlType): prop is string {
 }
 
 function processProps({
-  config,
   viewProps,
-  data,
+  componentName,
+  signals,
   COMPONENTS,
 }: ComponentPropsShape): ComponentPropsReturnShape {
-  const newProps: Record<string, OpenTrussComponent | YamlType> = {}
+  const newProps: ComponentPropsReturnShape = {}
   if (viewProps !== undefined) {
     for (const propName in viewProps) {
       const prop = viewProps[propName]
@@ -73,12 +80,46 @@ function processProps({
     }
   }
 
+  // Add signals to props
+  eachComponentSignal(componentName, COMPONENTS, (propName, signalsType) => {
+    const signal = signals[propName]
+    if (signal) {
+      const result = signalsType.safeParse(signal)
+      if (result.success) {
+        newProps[propName] = signal
+      }
+    }
+  })
+
   return {
-    data,
-    config,
     ...viewProps,
     ...newProps,
   }
+}
+
+type EachComponentSignal = (
+  componentName: string,
+  COMPONENTS: COMPONENTS,
+  func: (propName: string, signalType: SignalsZodType) => void,
+) => void
+
+export const eachComponentSignal: EachComponentSignal = (
+  componentName,
+  COMPONENTS,
+  func,
+) => {
+  const props = getComponentProps(componentName, COMPONENTS)
+  if (!props) return
+
+  Object.entries(props).forEach(([propName, propValue]) => {
+    const description = propValue?._def?.description
+    if (description) {
+      const signalsType = getSignalsType(description)
+      if (signalsType !== undefined) {
+        func(propName, signalsType)
+      }
+    }
+  })
 }
 
 export function getComponent(
@@ -100,4 +141,23 @@ export function getComponent(
   }
 
   return Component
+}
+
+export function getComponentProps(
+  component: string,
+  COMPONENTS: COMPONENTS,
+): OpenTrussComponent | undefined {
+  const componentName = parseComponentName(component)
+  const Component = COMPONENTS[componentName]
+  if (!Component) {
+    throw new Error(`No component '${componentName}' configured.`)
+  }
+
+  if (!hasPropsExport(Component)) return
+
+  return Component.Props.shape
+}
+
+export function parseComponentName(componentName: string): string {
+  return componentName.replaceAll(/(<|\/>)/g, '').trim()
 }

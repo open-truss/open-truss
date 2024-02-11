@@ -84,9 +84,12 @@ workflow:
   frames:
 */
 
+export const FramesV1Shape = FrameV1Shape.array()
+export type FramesV1 = z.infer<typeof FramesV1Shape>
+
 export const WorkflowV1Shape = z.object({
   version: z.number().positive(),
-  frames: FrameV1Shape.array(),
+  frames: FramesV1Shape,
 })
 export type WorkflowV1 = z.infer<typeof WorkflowV1Shape>
 
@@ -117,7 +120,7 @@ export function hasDefaultExport(
   return 'default' in component
 }
 
-function hasPropsExport(
+export function hasPropsExport(
   component: any,
 ): component is OpenTrussComponentExports {
   return 'Props' in component
