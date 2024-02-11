@@ -1,0 +1,9 @@
+workflow:
+  version: 1
+  frames:
+    - frame:
+      view:
+        component: IncrementAccountID
+    - frame:
+      view:
+        component: IncrementAccountID
