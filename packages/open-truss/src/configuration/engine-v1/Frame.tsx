@@ -32,7 +32,9 @@ export function Frame(props: FrameContext): React.JSX.Element {
   })
   if (frames === undefined) {
     if (data) {
-      return <DataProvider {...processedProps} data component={Component} />
+      return (
+        <DataProvider {...processedProps} data={data} component={Component} />
+      )
     } else {
       return <Component {...processedProps} />
     }
