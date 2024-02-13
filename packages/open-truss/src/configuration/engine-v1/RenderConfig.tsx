@@ -28,7 +28,6 @@ export function RenderConfig({
 }): React.JSX.Element {
   _COMPONENTS = COMPONENTS
   // Runs validations in config-schemas
-  console.log(COMPONENTS)
   const result = WorkflowV1Shape.safeParse(config)
   if (!result.success) {
     // TODO for now just raise any config validation errors.
