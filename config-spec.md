@@ -97,11 +97,11 @@ workflow:
 ## Sample configuration
 
 ```yaml
-// Worfklow name: Get all issues for a given user
-// This is a multi-stage workflow
-// 1. Show input form to add account_id
-// 2. User inputs account_id
-// 3. Shows list of issues belonging to that account_id
+# Worfklow name: Get all issues for a given user
+# This is a multi-stage workflow
+# 1. Show input form to add account_id
+# 2. User inputs account_id
+# 3. Shows list of issues belonging to that account_id
 workflow:
   version: 1
   signals:
@@ -121,7 +121,7 @@ workflow:
           FROM issues
           WHERE author_id = :account_id
         mapColumns:
-          issue_id: issue_ids // TableOfIssues takes issue_ids
+          issue_id: issue_ids # TableOfIssues takes issue_ids
         type: storedQuery
         pageSize: 50
         source: mysql1
