@@ -104,7 +104,7 @@ workflow:
 // 3. Shows list of issues belonging to that account_id
 workflow:
   version: 1
-  signal:
+  signals:
     - account_id: number
   frameRender: sequence
   frames:
