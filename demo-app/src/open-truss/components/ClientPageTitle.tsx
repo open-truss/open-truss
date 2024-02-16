@@ -1,4 +1,7 @@
-import { BaseOpenTrussComponentV1PropsShape } from '@open-truss/open-truss'
+import {
+  type BaseOpenTrussComponentV1,
+  BaseOpenTrussComponentV1PropsShape,
+} from '@open-truss/open-truss'
 import { z } from 'zod'
 
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
@@ -7,11 +10,11 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   title: z.string().default('Page Title'),
 })
 
-function PageTitle({
+const ClientPageTitle: BaseOpenTrussComponentV1<typeof Props> = ({
   color,
   headerElement = 'h1',
   title,
-}: z.infer<typeof Props>): JSX.Element {
+}) => {
   const Component = headerElement
   return (
     <Component style={{ color }}>
@@ -20,4 +23,4 @@ function PageTitle({
   )
 }
 
-export default PageTitle
+export default ClientPageTitle
