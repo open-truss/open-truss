@@ -52,6 +52,23 @@ export function Frame(props: FrameContext): React.JSX.Element {
   } = props
   const { component, props: viewProps } = view
   try {
+    const subframes = frames?.map((subframe, k) => {
+      const subframePath = `${configPath}.frames.${k}`
+      return (
+        <FrameWrapper key={k} frame={subframe} configPath={subframePath}>
+          <Frame
+            frame={subframe}
+            configPath={subframePath}
+            globalContext={props.globalContext}
+          />
+        </FrameWrapper>
+      )
+    })
+
+    if (component === '__FRAGMENT__') {
+      return <>{subframes}</>
+    }
+
     const Component = getComponent(component, configPath, COMPONENTS)
     const processedProps = processProps({
       data,
@@ -60,6 +77,7 @@ export function Frame(props: FrameContext): React.JSX.Element {
       viewProps,
       COMPONENTS,
     })
+
     if (frames === undefined) {
       if (data) {
         return <DataProvider {...processedProps} component={Component} />
@@ -68,22 +86,7 @@ export function Frame(props: FrameContext): React.JSX.Element {
       }
     }
 
-    return (
-      <Component {...props}>
-        {frames.map((subframe, k) => {
-          const subframePath = `${configPath}.frames.${k}`
-          return (
-            <FrameWrapper key={k} frame={subframe} configPath={subframePath}>
-              <Frame
-                frame={subframe}
-                configPath={subframePath}
-                globalContext={props.globalContext}
-              />
-            </FrameWrapper>
-          )
-        })}
-      </Component>
-    )
+    return <Component {...props}>{subframes}</Component>
   } catch (e: any) {
     return <ShowError error={e} />
   }
