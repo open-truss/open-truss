@@ -61,11 +61,11 @@ export function Frame(props: FrameContext): React.JSX.Element {
       COMPONENTS,
     })
     if (frames === undefined) {
-      return data ? (
-        <DataProvider {...processedProps} component={Component} />
-      ) : (
-        <Component {...processedProps} />
-      )
+      if (data) {
+        return <DataProvider {...processedProps} component={Component} />
+      } else {
+        return <Component {...processedProps} />
+      }
     }
 
     return (
