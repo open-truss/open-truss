@@ -16,6 +16,7 @@
     "@as-integrations/next": "^3.0.0",
     "@open-truss/open-truss": "file:../packages/open-truss",
     "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-tabs": "^1.0.4",
     "azure-kusto-data": "^5.2.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
