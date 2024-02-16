@@ -120,8 +120,11 @@ workflow:
           SELECT id AS issue_id
           FROM issues
           WHERE author_id = :account_id
-        mapColumns:
-          issue_id: issue_ids # TableOfIssues takes issue_ids
+        params:
+          account_id: :account_id
+        transforms:
+          mapColumns:
+            issue_id: issue_ids # TableOfContent
         type: StoredQuery
         pageSize: 50
         source: mysql1
@@ -131,7 +134,9 @@ workflow:
             component: OTStoredQueryToolbar
         - frame:
           view:
-            component: TableOfIssues
+            component: TableOfContent
+              content_ids: :issue_ids # example of argument aliasing
+              content_type: issue
 ```
 
 </details>
