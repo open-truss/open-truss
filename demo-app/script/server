@@ -27,4 +27,7 @@ echo "Running npm run tsc:watch"
 echo "Runing npm run dev"
 (npm run dev) &
 
+echo "Running tailwindcss watch"
+(npx tailwindcss -i ./src/styles.css -o ./src/output.css --watch) &
+
 wait
