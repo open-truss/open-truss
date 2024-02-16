@@ -2,17 +2,19 @@ import React from 'react'
 import {
   withChildren,
   BaseOpenTrussComponentV1PropsShape,
+  type BaseOpenTrussComponentV1,
 } from '../configuration/engine-v1'
 import { CSLinkShape } from '../shims'
 import { type z } from 'zod'
 
-export const Props = withChildren(BaseOpenTrussComponentV1PropsShape).extend({
+export const Props = BaseOpenTrussComponentV1PropsShape.extend({
+  ...withChildren,
   link: CSLinkShape,
 })
 
-export default function AvailableWorkflowsFromEndpoint(
-  props: z.infer<typeof Props>,
-): JSX.Element {
+const AvailableWorkflowsFromEndpoint: BaseOpenTrussComponentV1<
+  z.infer<typeof Props>
+> = (props) => {
   const [workflowIds, setConfigs] = React.useState<string[]>([])
   const [loading, setLoading] = React.useState<boolean>(false)
   const [error, setError] = React.useState<Error | null>(null)
@@ -53,3 +55,5 @@ export default function AvailableWorkflowsFromEndpoint(
     </div>
   )
 }
+
+export default AvailableWorkflowsFromEndpoint

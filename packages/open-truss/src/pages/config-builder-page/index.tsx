@@ -101,7 +101,7 @@ function Output({ components }: ConfigBuilderPageInterface): React.JSX.Element {
       {!showConfig && (
         <RenderConfig
           config={config}
-          components={{ ...components, ConfigBuilderFrameWrapper }}
+          components={Object.assign(components, { ConfigBuilderFrameWrapper })}
           validateConfig={false}
         />
       )}

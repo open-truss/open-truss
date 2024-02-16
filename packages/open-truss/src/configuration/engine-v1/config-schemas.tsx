@@ -95,32 +95,33 @@ export type WorkflowV1 = z.infer<typeof WorkflowV1Shape>
 
 export const BaseOpenTrussComponentV1PropsShape = z.object({
   data: DataV1Shape,
-  config: WorkflowV1Shape,
+  config: WorkflowV1Shape.optional(),
 })
-export const withChildren = (shape: z.AnyZodObject): z.AnyZodObject =>
-  shape.extend({ children: z.any().optional() })
-const ComponentWithChildrenShape = withChildren(
-  BaseOpenTrussComponentV1PropsShape,
-)
+
+export const withChildren = { children: z.any().optional() }
+const ComponentWithChildrenShape =
+  BaseOpenTrussComponentV1PropsShape.extend(withChildren)
 type ComponentWithChildren = z.infer<typeof ComponentWithChildrenShape>
 
-export type BaseOpenTrussComponentV1Props =
-  | z.infer<typeof BaseOpenTrussComponentV1PropsShape>
-  | ComponentWithChildren
-
-export type BaseOpenTrussComponentV1 = (
-  props: BaseOpenTrussComponentV1Props,
-) => React.JSX.Element
-
-const FrameWrapperShape = withChildren(
-  BaseOpenTrussComponentV1PropsShape,
-).extend({
+const FrameWrapperShape = BaseOpenTrussComponentV1PropsShape.extend({
+  ...withChildren,
   configPath: z.string(),
   frame: FrameV1Shape,
 })
-export type FrameWrapper = (
-  props: z.infer<typeof FrameWrapperShape>,
+
+type BaseOpenTrussComponentV1Props = z.infer<
+  typeof BaseOpenTrussComponentV1PropsShape
+>
+
+export type BaseOpenTrussComponentV1<
+  AdditionalProps = Record<string, unknown>,
+> = (
+  props: BaseOpenTrussComponentV1Props & AdditionalProps,
 ) => React.JSX.Element
+
+export type FrameWrapper = BaseOpenTrussComponentV1<
+  z.infer<typeof FrameWrapperShape>
+>
 
 export function hasDefaultExport(
   component: any,

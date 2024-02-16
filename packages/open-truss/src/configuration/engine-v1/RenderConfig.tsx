@@ -29,7 +29,7 @@ export function RenderConfig({
   config: WorkflowV1
   validateConfig?: boolean
 }): React.JSX.Element {
-  _COMPONENTS = COMPONENTS
+  _COMPONENTS = Object.assign(COMPONENTS, { OTDefaultFrameWrapper })
   // Runs validations in config-schemas
   let config = _config
   if (validateConfig) {
@@ -44,8 +44,8 @@ export function RenderConfig({
   const FrameWrapper = getComponent(
     config.frameWrapper ?? 'OTDefaultFrameWrapper',
     'workflow',
-    { ...COMPONENTS, OTDefaultFrameWrapper },
-  )
+    COMPONENTS,
+  ) as FrameWrapper
   const globalContext: GlobalContext = {
     config,
     COMPONENTS,
