@@ -6,7 +6,6 @@ import {
   RenderConfigV1,
   type WorkflowV1,
   type BaseOpenTrussComponentV1,
-  type FrameType,
 } from './engine-v1'
 
 export interface WorkflowSpec {
@@ -20,30 +19,19 @@ export interface OpenTrussComponentExports {
 export type COMPONENTS =
   | Record<string, OpenTrussComponent>
   | Record<string, OpenTrussComponentExports>
-export type FrameWrapper = React.FC<
-  React.PropsWithChildren<{ frame: FrameType; configPath: string }>
->
 
 export function RenderConfig({
   components: appComponents,
   config,
-  FrameWrapper,
 }: {
   components: COMPONENTS
   config: string
-  FrameWrapper?: FrameWrapper
 }): React.JSX.Element {
   const components = Object.assign(appComponents, OT_COMPONENTS)
   const parsedConfig = parseYaml(config)
   const workflow = (parsedConfig as unknown as WorkflowSpec).workflow
   if (workflow.version === 1) {
-    return (
-      <RenderConfigV1
-        COMPONENTS={components}
-        config={workflow}
-        FrameWrapper={FrameWrapper}
-      />
-    )
+    return <RenderConfigV1 COMPONENTS={components} config={workflow} />
   } else {
     throw new Error(`Unsupported config version: ${workflow.version}`)
   }

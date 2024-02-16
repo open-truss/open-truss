@@ -16,14 +16,18 @@ interface ConfigBuilderPageInterface {
   components: COMPONENTS
 }
 
-const Wrapper: FrameWrapper = ({ children, configPath, frame }) => {
+const ConfigBuilderFrameWrapper: FrameWrapper = ({
+  children,
+  configPath,
+  frame,
+}) => {
   const { framesPath, setFramesPath, deleteFrame } =
     useContext(ConfigBuilderContext)
 
   let nestingHere = false
   // When we add a frame we set its `.frames` to an empty array if
   // it supports children, so here we just check if that field is truthy.
-  const canNestFrames = Boolean(frame.frames)
+  const canNestFrames = Boolean(frame?.frames)
   if (canNestFrames) {
     // `framesPath` is the current nesting component's `.frames` so to ask
     // if this component is the nester, we remove `.frames` from the end.
@@ -97,8 +101,7 @@ function Output({ components }: ConfigBuilderPageInterface): React.JSX.Element {
       {!showConfig && (
         <RenderConfig
           config={config}
-          components={components}
-          FrameWrapper={Wrapper}
+          components={{ ...components, ConfigBuilderFrameWrapper }}
         />
       )}
     </>

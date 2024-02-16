@@ -76,6 +76,10 @@ workflow:
 
 ## Key concepts
 
+- **frameWrapper** - A component to wrap each `frame` with.
+  - They are OpenTruss components and thus take in the standard props.
+  - In addition, they also accept props for the frame's configuration and the path to the current frame in the workflow configuration.
+  - This optional and helpful for adding custom behavior to frames. For example, the config builder adds overlays to edit and delete frames.
 - **signals** - This is a global state store that can be accessed by all parts of the workflow.
   - This will allow us to easily share state across workflows, components, and data.
   - Workflows, components, and data declare what signals they need and we can validate at config compile time when the workflow is not configured with the needed signals. If a signal is is missing we can do things like show a warning to the user or auto-suggest adding signals to their config.
@@ -107,6 +111,7 @@ workflow:
   signals:
     - account_id: number
   renderFrames: InSequence
+  frameWrapper: ConfigBuilderFrameWrapper
   frames:
     - frame:
       view:

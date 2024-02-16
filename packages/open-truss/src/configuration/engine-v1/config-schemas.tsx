@@ -86,6 +86,7 @@ workflow:
 
 export const WorkflowV1Shape = z.object({
   version: z.number().positive(),
+  frameWrapper: z.string().optional(),
   frames: FrameV1Shape.array(),
 })
 export type WorkflowV1 = z.infer<typeof WorkflowV1Shape>
@@ -109,6 +110,16 @@ export type BaseOpenTrussComponentV1Props =
 
 export type BaseOpenTrussComponentV1 = (
   props: BaseOpenTrussComponentV1Props,
+) => React.JSX.Element
+
+const FrameWrapperShape = withChildren(
+  BaseOpenTrussComponentV1PropsShape,
+).extend({
+  configPath: z.string(),
+  frame: FrameV1Shape,
+})
+export type FrameWrapper = (
+  props: z.infer<typeof FrameWrapperShape>,
 ) => React.JSX.Element
 
 export function hasDefaultExport(

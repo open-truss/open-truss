@@ -7,6 +7,7 @@ import { type YamlType, parseYaml, stringifyYaml } from '../../utils/yaml'
 export const CONFIG_BASE = `
 workflow:
   version: 1
+  frameWrapper: ConfigBuilderFrameWrapper
   frames: []
 `.trim()
 export const INITIAL_FRAMES_PATH = 'workflow.frames'
@@ -17,7 +18,7 @@ interface ConfigBuilder {
   framesPath: string
   setFramesPath: (path: string) => void
   addFrame: (frame: FrameType) => void
-  deleteFrame: (framePath: string) => void
+  deleteFrame: (framePath?: string) => void
 }
 export const ConfigBuilderContext = createContext<ConfigBuilder>({
   config: CONFIG_BASE,
@@ -25,7 +26,7 @@ export const ConfigBuilderContext = createContext<ConfigBuilder>({
   framesPath: INITIAL_FRAMES_PATH,
   setFramesPath: (_c: string) => null,
   addFrame: (_f: FrameType) => null,
-  deleteFrame: (_c: string) => null,
+  deleteFrame: (_c?: string) => null,
 })
 
 export const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
@@ -44,7 +45,10 @@ export const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
     )
   }
 
-  const deleteFrame = (framePath: string): void => {
+  const deleteFrame = (framePath?: string): void => {
+    if (!framePath) {
+      return
+    }
     const parsedConfig = parseYaml(config) as unknown as WorkflowSpec
     const framePathParts = framePath.split('.')
     const frameToDeleteIndex = Number(framePathParts.pop())

@@ -1,7 +1,11 @@
 import React from 'react'
-import { type COMPONENTS, type FrameWrapper } from '../RenderConfig'
-import { type WorkflowV1, WorkflowV1Shape } from './config-schemas'
-import { Frame } from './Frame'
+import { type COMPONENTS } from '../RenderConfig'
+import {
+  type FrameWrapper,
+  type WorkflowV1,
+  WorkflowV1Shape,
+} from './config-schemas'
+import { getComponent, Frame } from './Frame'
 
 export interface GlobalContext {
   config: WorkflowV1
@@ -14,16 +18,14 @@ export function RUNTIME_COMPONENTS(): COMPONENTS {
   return _COMPONENTS
 }
 
-const DefaultFrameWrapper: FrameWrapper = ({ children }) => <>{children}</>
+const OTDefaultFrameWrapper: FrameWrapper = ({ children }) => <>{children}</>
 
 export function RenderConfig({
   COMPONENTS,
   config,
-  FrameWrapper = DefaultFrameWrapper,
 }: {
   COMPONENTS: COMPONENTS
   config: WorkflowV1
-  FrameWrapper?: FrameWrapper
 }): React.JSX.Element {
   _COMPONENTS = COMPONENTS
   // Runs validations in config-schemas
@@ -33,6 +35,10 @@ export function RenderConfig({
     // We likely want to render something nicer eventually.
     throw result.error
   }
+  const FrameWrapper = getComponent(
+    config.frameWrapper ?? 'OTDefaultFrameWrapper',
+    { ...COMPONENTS, OTDefaultFrameWrapper },
+  )
   const globalContext: GlobalContext = {
     config: result.data,
     COMPONENTS,
