@@ -23,15 +23,23 @@ export type COMPONENTS =
 export function RenderConfig({
   components: appComponents,
   config,
+  validateConfig = true,
 }: {
   components: COMPONENTS
   config: string
+  validateConfig?: boolean
 }): React.JSX.Element {
   const components = Object.assign(appComponents, OT_COMPONENTS)
   const parsedConfig = parseYaml(config)
   const workflow = (parsedConfig as unknown as WorkflowSpec).workflow
   if (workflow.version === 1) {
-    return <RenderConfigV1 COMPONENTS={components} config={workflow} />
+    return (
+      <RenderConfigV1
+        COMPONENTS={components}
+        config={workflow}
+        validateConfig={validateConfig}
+      />
+    )
   } else {
     throw new Error(`Unsupported config version: ${workflow.version}`)
   }
@@ -40,6 +48,7 @@ export function RenderConfig({
 interface RenderFromEndpointInterface {
   components: COMPONENTS
   configName: string
+  validateConfig?: boolean
 }
 
 // TODO: Get this path from application config and only need to pass in filename?
@@ -47,6 +56,7 @@ const CONFIG_API = '/ot/api/configs/'
 export function RenderFromEndpoint({
   configName,
   components,
+  validateConfig = true,
 }: RenderFromEndpointInterface): JSX.Element {
   // TODO: Use UQI's REST client once that exists?
   const url = `${CONFIG_API}${configName}`
@@ -71,7 +81,13 @@ export function RenderFromEndpoint({
   } else if (loading) {
     return <>Loading...</>
   } else if (config) {
-    return <RenderConfig config={config} components={components} />
+    return (
+      <RenderConfig
+        config={config}
+        components={components}
+        validateConfig={validateConfig}
+      />
+    )
   }
 
   return <div>No config :(</div>
