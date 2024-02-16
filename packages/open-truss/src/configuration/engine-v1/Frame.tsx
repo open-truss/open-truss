@@ -14,12 +14,14 @@ import { type GlobalContext } from './RenderConfig'
 interface FrameContext {
   frame: FrameV1
   globalContext: GlobalContext
+  configPath: string
 }
 
 export function Frame(props: FrameContext): React.JSX.Element {
   const {
     frame: { view, data, frames },
-    globalContext: { COMPONENTS, config },
+    globalContext: { COMPONENTS, config, FrameWrapper },
+    configPath,
   } = props
   const { component, props: viewProps } = view
   const Component = getComponent(component, COMPONENTS)
@@ -34,9 +36,18 @@ export function Frame(props: FrameContext): React.JSX.Element {
 
   return (
     <Component {...props}>
-      {frames.map((subFrame, k) => (
-        <Frame key={k} frame={subFrame} globalContext={props.globalContext} />
-      ))}
+      {frames.map((subframe, k) => {
+        const subframePath = `${configPath}.frames.${k}`
+        return (
+          <FrameWrapper key={k} frame={subframe} configPath={subframePath}>
+            <Frame
+              frame={subframe}
+              configPath={subframePath}
+              globalContext={props.globalContext}
+            />
+          </FrameWrapper>
+        )
+      })}
     </Component>
   )
 }

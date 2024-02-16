@@ -1,9 +1,6 @@
-import get from 'lodash/get'
-import set from 'lodash/set'
 import React, { useContext, useState } from 'react'
-import { type YamlType, parseYaml, stringifyYaml } from '../../utils/yaml'
+import { type YamlType } from '../../utils/yaml'
 import {
-  type WorkflowSpec,
   type OpenTrussComponentExports,
   type FrameType,
   type COMPONENTS,
@@ -57,9 +54,8 @@ function ComponentListItem({
   ALL_COMPONENTS: COMPONENTS
 }): React.JSX.Element {
   const component = ALL_COMPONENTS[componentName]
-  const { config, setConfig, framesPath } = useContext(ConfigBuilderContext)
+  const { addFrame } = useContext(ConfigBuilderContext)
   const [props, setProps] = useState<ViewProps>(undefined)
-  const parsedConfig = parseYaml(config) as unknown as WorkflowSpec
 
   let canHaveChildren = false
   const hasPropsConfigured = hasPropsExport(component)
@@ -72,16 +68,6 @@ function ComponentListItem({
     frames: canHaveChildren ? [] : undefined,
   }
 
-  const addFrame = (): void => {
-    const frames = (get(parsedConfig, framesPath, []) as FrameType[]).concat(
-      frame,
-    )
-    setConfig(
-      stringifyYaml(
-        set(parsedConfig, framesPath, frames) as unknown as YamlType,
-      ),
-    )
-  }
   const onChange = (propName: string) => (value: YamlType) => {
     setProps((currentProps) => ({ ...currentProps, [propName]: value }))
   }
@@ -89,7 +75,13 @@ function ComponentListItem({
   return (
     <div>
       {componentName}
-      <button onClick={addFrame}>Add</button>
+      <button
+        onClick={() => {
+          addFrame(frame)
+        }}
+      >
+        Add
+      </button>
       {hasPropsConfigured && (
         <PropInputs component={component} onChange={onChange} props={props} />
       )}
