@@ -106,7 +106,7 @@ workflow:
   version: 1
   signals:
     - account_id: number
-  frameRender: sequence
+  renderFrames: InSequence
   frames:
     - frame:
       view:
@@ -122,7 +122,7 @@ workflow:
           WHERE author_id = :account_id
         mapColumns:
           issue_id: issue_ids # TableOfIssues takes issue_ids
-        type: storedQuery
+        type: StoredQuery
         pageSize: 50
         source: mysql1
       frames:
