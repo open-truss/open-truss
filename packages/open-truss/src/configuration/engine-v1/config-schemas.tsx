@@ -98,6 +98,16 @@ export const BaseOpenTrussComponentV1PropsShape = z.object({
   config: WorkflowV1Shape.optional(),
 })
 
+type BaseOpenTrussComponentV1Props = z.infer<
+  typeof BaseOpenTrussComponentV1PropsShape
+>
+
+export type BaseOpenTrussComponentV1<
+  AdditionalProps = Record<string, unknown>,
+> = (
+  props: BaseOpenTrussComponentV1Props & AdditionalProps,
+) => React.JSX.Element
+
 export const withChildren = { children: z.any().optional() }
 const ComponentWithChildrenShape =
   BaseOpenTrussComponentV1PropsShape.extend(withChildren)
@@ -108,16 +118,6 @@ const FrameWrapperShape = BaseOpenTrussComponentV1PropsShape.extend({
   configPath: z.string(),
   frame: FrameV1Shape,
 })
-
-type BaseOpenTrussComponentV1Props = z.infer<
-  typeof BaseOpenTrussComponentV1PropsShape
->
-
-export type BaseOpenTrussComponentV1<
-  AdditionalProps = Record<string, unknown>,
-> = (
-  props: BaseOpenTrussComponentV1Props & AdditionalProps,
-) => React.JSX.Element
 
 export type FrameWrapper = BaseOpenTrussComponentV1<
   z.infer<typeof FrameWrapperShape>
