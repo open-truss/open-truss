@@ -17,6 +17,33 @@ interface FrameContext {
   configPath: string
 }
 
+class FrameError extends Error {
+  public componentName: string
+  public configPath: string
+
+  constructor(message: string, componentName: string, configPath: string) {
+    super(message)
+    this.componentName = componentName
+    this.configPath = configPath
+  }
+}
+
+function ShowError({ error }: { error: FrameError }): JSX.Element {
+  return (
+    <div
+      role="alert"
+      style={{ border: '1px solid #ececec', borderRadius: '5px' }}
+    >
+      <pre style={{ color: '#777', margin: 0 }}>
+        {error.componentName}({error.configPath})
+      </pre>
+      <div style={{ padding: '5px' }}>
+        <pre style={{ color: 'red', textAlign: 'center' }}>{error.message}</pre>
+      </div>
+    </div>
+  )
+}
+
 export function Frame(props: FrameContext): React.JSX.Element {
   const {
     frame: { view, data, frames },
@@ -24,36 +51,47 @@ export function Frame(props: FrameContext): React.JSX.Element {
     configPath,
   } = props
   const { component, props: viewProps } = view
-  const Component = getComponent(component, COMPONENTS)
-  const processedProps = processProps({ data, config, viewProps, COMPONENTS })
-  if (frames === undefined) {
-    if (data) {
-      return <DataProvider {...processedProps} component={Component} />
-    } else {
-      return <Component {...processedProps} />
+  try {
+    const Component = getComponent(component, configPath, COMPONENTS)
+    const processedProps = processProps({
+      data,
+      config,
+      configPath,
+      viewProps,
+      COMPONENTS,
+    })
+    if (frames === undefined) {
+      if (data) {
+        return <DataProvider {...processedProps} component={Component} />
+      } else {
+        return <Component {...processedProps} />
+      }
     }
-  }
 
-  return (
-    <Component {...props}>
-      {frames.map((subframe, k) => {
-        const subframePath = `${configPath}.frames.${k}`
-        return (
-          <FrameWrapper key={k} frame={subframe} configPath={subframePath}>
-            <Frame
-              frame={subframe}
-              configPath={subframePath}
-              globalContext={props.globalContext}
-            />
-          </FrameWrapper>
-        )
-      })}
-    </Component>
-  )
+    return (
+      <Component {...props}>
+        {frames.map((subframe, k) => {
+          const subframePath = `${configPath}.frames.${k}`
+          return (
+            <FrameWrapper key={k} frame={subframe} configPath={subframePath}>
+              <Frame
+                frame={subframe}
+                configPath={subframePath}
+                globalContext={props.globalContext}
+              />
+            </FrameWrapper>
+          )
+        })}
+      </Component>
+    )
+  } catch (e: any) {
+    return <ShowError error={e} />
+  }
 }
 
 interface ComponentPropsShape {
   config: WorkflowV1
+  configPath: string
   viewProps: ViewPropsV1
   data: DataV1
   COMPONENTS: COMPONENTS
@@ -70,6 +108,7 @@ function isComponent(prop: YamlType): prop is string {
 
 function processProps({
   config,
+  configPath,
   viewProps,
   data,
   COMPONENTS,
@@ -79,7 +118,7 @@ function processProps({
     for (const propName in viewProps) {
       const prop = viewProps[propName]
       if (isComponent(prop)) {
-        newProps[propName] = getComponent(prop, COMPONENTS)
+        newProps[propName] = getComponent(prop, configPath, COMPONENTS)
       }
     }
   }
@@ -94,12 +133,17 @@ function processProps({
 
 export function getComponent(
   component: string,
+  configPath: string,
   COMPONENTS: COMPONENTS,
 ): OpenTrussComponent {
   const componentName = component.replaceAll(/(<|\/>)/g, '').trim()
   let Component = COMPONENTS[componentName]
   if (!Component) {
-    throw new Error(`No component '${componentName}' configured.`)
+    throw new FrameError(
+      `No component '${componentName}' configured.`,
+      componentName,
+      configPath,
+    )
   }
 
   if (hasDefaultExport(Component)) {
@@ -107,7 +151,11 @@ export function getComponent(
   }
 
   if (!Component) {
-    throw new Error(`No component '${componentName}' configured.`)
+    throw new FrameError(
+      `No component '${componentName}' configured.`,
+      componentName,
+      configPath,
+    )
   }
 
   return Component

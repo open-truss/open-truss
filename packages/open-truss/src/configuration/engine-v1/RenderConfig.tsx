@@ -22,25 +22,32 @@ const OTDefaultFrameWrapper: FrameWrapper = ({ children }) => <>{children}</>
 
 export function RenderConfig({
   COMPONENTS,
-  config,
+  config: _config,
+  validateConfig = true,
 }: {
   COMPONENTS: COMPONENTS
   config: WorkflowV1
+  validateConfig?: boolean
 }): React.JSX.Element {
   _COMPONENTS = COMPONENTS
   // Runs validations in config-schemas
-  const result = WorkflowV1Shape.safeParse(config)
-  if (!result.success) {
-    // TODO for now just raise any config validation errors.
-    // We likely want to render something nicer eventually.
-    throw result.error
+  let config = _config
+  if (validateConfig) {
+    const result = WorkflowV1Shape.safeParse(config)
+    if (!result.success) {
+      // TODO for now just raise any config validation errors.
+      // We likely want to render something nicer eventually.
+      throw result.error
+    }
+    config = result.data
   }
   const FrameWrapper = getComponent(
     config.frameWrapper ?? 'OTDefaultFrameWrapper',
+    'workflow',
     { ...COMPONENTS, OTDefaultFrameWrapper },
   )
   const globalContext: GlobalContext = {
-    config: result.data,
+    config,
     COMPONENTS,
     FrameWrapper,
   }

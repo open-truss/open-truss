@@ -15,7 +15,11 @@ export default function Page(): JSX.Element {
   return (
     <>
       <h1>{sanitizedSlug}</h1>
-      <RenderFromEndpoint configName={sanitizedSlug} components={components} />
+      <RenderFromEndpoint
+        configName={sanitizedSlug}
+        components={components}
+        validateConfig={false}
+      />
     </>
   )
 }
