@@ -1,5 +1,8 @@
 workflow:
   version: 1
+  signals:
+    accountIds: AccountIDs
+    userIds: AccountIDs
   frames:
     - frame:
       view:
@@ -7,3 +10,13 @@ workflow:
     - frame:
       view:
         component: IncrementAccountID
+    - frame:
+      view:
+        component: IncrementAccountID
+        props:
+          accountIds: :userIds
+    - frame:
+      view:
+        component: IncrementAccountID
+        props:
+          accountIds: :userIds
