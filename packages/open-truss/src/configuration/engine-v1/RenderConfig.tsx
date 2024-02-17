@@ -4,6 +4,7 @@ import {
   type FrameWrapper,
   type WorkflowV1,
   WorkflowV1Shape,
+  type FrameType,
 } from './config-schemas'
 import { getComponent, Frame } from './Frame'
 
@@ -41,9 +42,10 @@ export function RenderConfig({
     }
     config = result.data
   }
+  const configPath = 'workflow'
   const FrameWrapper = getComponent(
     config.frameWrapper ?? 'OTDefaultFrameWrapper',
-    'workflow',
+    configPath,
     COMPONENTS,
   ) as FrameWrapper
   const globalContext: GlobalContext = {
@@ -51,21 +53,17 @@ export function RenderConfig({
     COMPONENTS,
     FrameWrapper,
   }
+  // Workflows are just frames! Use unknown to convince TS of this fact.
+  const frame = {
+    ...config,
+    view: { component: '__FRAGMENT__' },
+  } as unknown as FrameType
 
   return (
-    <>
-      {config.frames.map((frame, i) => {
-        const configPath = `workflow.frames.${i}`
-        return (
-          <FrameWrapper key={i} frame={frame} configPath={configPath}>
-            <Frame
-              frame={frame}
-              configPath={configPath}
-              globalContext={globalContext}
-            />
-          </FrameWrapper>
-        )
-      })}
-    </>
+    <Frame
+      frame={frame}
+      configPath={configPath}
+      globalContext={globalContext}
+    />
   )
 }
