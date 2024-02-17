@@ -27,7 +27,7 @@ export function SignalType<T>(
 
   const zodType = z
     .custom<Signal<T>>(validator)
-    .default(signal<T>(defaultValue))
+    .default((): Signal<T> => signal<T>(defaultValue))
     .describe(`Signal<${name}>`)
 
   SIGNALS[name] = zodType
