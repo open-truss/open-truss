@@ -33,6 +33,14 @@ export default function Home(): JSX.Element {
                 Config Builder
               </Link>
             </li>
+            <li>
+              <Link
+                href="/ot/query-editor"
+                className="text-blue-500 hover:underline"
+              >
+                Query Editor
+              </Link>
+            </li>
           </ul>
         </CardContent>
       </Card>
