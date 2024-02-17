@@ -6,7 +6,7 @@ import {
   type FramesV1,
 } from './config-schemas'
 import { Frame, eachComponentSignal } from './Frame'
-import { type Signals } from '../../shims'
+import { type Signals } from '../../signals'
 
 export interface GlobalContext {
   config: WorkflowV1

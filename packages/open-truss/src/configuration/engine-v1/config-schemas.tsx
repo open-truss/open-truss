@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { YamlShape } from '../../utils/yaml'
 import { type OpenTrussComponentExports } from '../RenderConfig'
 import { RUNTIME_COMPONENTS } from './RenderConfig'
+import { type SignalsZodType } from '../../signals'
 
 // Data Schemas
 /*
