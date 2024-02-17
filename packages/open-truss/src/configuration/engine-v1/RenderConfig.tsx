@@ -4,6 +4,7 @@ import {
   type WorkflowV1,
   WorkflowV1Shape,
   type FramesV1,
+  type SignalsV1,
 } from './config-schemas'
 import { Frame, eachComponentSignal } from './Frame'
 import { type Signals } from '../../signals'
@@ -35,10 +36,22 @@ export function RenderConfig({
     throw result.error
   }
 
+  const signals = createSignals(result.data?.signals)
   const globalContext: GlobalContext = {
     config: result.data,
     COMPONENTS,
-    signals: createSignals(result.data?.frames, COMPONENTS),
+    signals,
+  }
+
+  const propErrors = validateComponentProps(
+    result?.data?.frames,
+    COMPONENTS,
+    signals,
+  )
+  if (propErrors.length > 0) {
+    throw new Error(
+      `Encountered component prop errors: ${propErrors.join(',')}`,
+    )
   }
 
   return (
@@ -50,25 +63,45 @@ export function RenderConfig({
   )
 }
 
-function createSignals(frames: FramesV1, COMPONENTS: COMPONENTS): Signals {
-  let signals: Signals = {}
+function createSignals(signalsConfig: SignalsV1): Signals {
+  const signals: Signals = {}
+  if (signalsConfig === undefined) return signals
+  Object.entries(signalsConfig).forEach(([name, signalType]) => {
+    signals[name] = signalType.parse(undefined)
+  })
+  return signals
+}
+
+function validateComponentProps(
+  frames: FramesV1,
+  COMPONENTS: COMPONENTS,
+  signals: Signals,
+): string[] {
+  let errors: string[] = []
+
   frames.forEach((f) => {
     if (f.frames) {
-      signals = { ...signals, ...createSignals(f.frames, COMPONENTS) }
+      errors = [
+        ...errors,
+        ...validateComponentProps(f.frames, COMPONENTS, signals),
+      ]
     }
     const componentName = f?.view?.component
     if (!componentName) return
 
     eachComponentSignal(componentName, COMPONENTS, (propName, signalsType) => {
-      // TODO add a check for when the same signal name is being set twice
-      //   - if it's of the same type it's probably fine but worth noting
-      //   - if it's not the same type then we should display an error
-      //     or handling aliasing / resolution better
-      if (signals[propName] === undefined) {
-        signals[propName] = signalsType.parse(undefined)
+      const signal = signals[propName]
+      if (signal === undefined) {
+        errors.push(
+          `Component ${componentName} expected ${propName} signal to be set in signals`,
+        )
       }
+
+      // TODO validate component prop is set by data (data currently doesn't have list of returned values for us to validate against)
+      // TODO validate component prop is set by viewProps
+      // TODO validate signal types declared in signal store match types expected by component
     })
   })
 
-  return signals
+  return errors
 }
