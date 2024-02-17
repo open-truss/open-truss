@@ -9,7 +9,11 @@ import { type COMPONENTS, type OpenTrussComponent } from '../RenderConfig'
 import React from 'react'
 import DataProvider from './DataProvider'
 import { type GlobalContext } from './RenderConfig'
-import { getSignalsType, type Signals, type SignalsZodType } from '../../shims'
+import {
+  getSignalsType,
+  type Signals,
+  type SignalsZodType,
+} from '../../signals'
 import { type Signal } from '@preact/signals-react'
 
 interface FrameContext {
@@ -83,9 +87,8 @@ function processProps({
   }
 
   eachComponentSignal(componentName, COMPONENTS, (propName, signalsType) => {
-    const vProps = viewProps ?? {}
-    const viewPropValue = vProps[propName]
-
+    const viewPropValue =
+      viewProps === undefined ? undefined : viewProps[propName]
     if (viewPropValue !== undefined) {
       if (isSignal(viewPropValue)) {
         const signalName = parseSignalName(viewPropValue) ?? ''
