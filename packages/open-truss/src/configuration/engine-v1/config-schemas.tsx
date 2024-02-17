@@ -106,6 +106,7 @@ export const SignalsV1Shape = z
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: `Could not find ${String(val)} SignalType`,
+            fatal: true,
           })
         }
         return signal
