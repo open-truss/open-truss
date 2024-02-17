@@ -7,7 +7,7 @@ import {
   type SignalsV1,
 } from './config-schemas'
 import { Frame, eachComponentSignal } from './Frame'
-import { type Signals } from '../../signals'
+import { type Signals, SIGNALS } from '../../signals'
 
 export interface GlobalContext {
   config: WorkflowV1
@@ -66,8 +66,8 @@ export function RenderConfig({
 function createSignals(signalsConfig: SignalsV1): Signals {
   const signals: Signals = {}
   if (signalsConfig === undefined) return signals
-  Object.entries(signalsConfig).forEach(([name, signalType]) => {
-    signals[name] = signalType.parse(undefined)
+  Object.entries(signalsConfig).forEach(([name, signal]) => {
+    signals[name] = signal.parse(undefined)
   })
   return signals
 }

@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { YamlShape } from '../../utils/yaml'
 import { type OpenTrussComponentExports } from '../RenderConfig'
 import { RUNTIME_COMPONENTS } from './RenderConfig'
-import { type SignalsZodType } from '../../signals'
+import { type SignalsZodType, SIGNALS } from '../../signals'
 
 // Data Schemas
 /*
@@ -89,7 +89,30 @@ export const FramesV1Shape = FrameV1Shape.array()
 export type FramesV1 = z.infer<typeof FramesV1Shape>
 
 export const SignalsV1Shape = z
-  .record(z.custom<SignalsZodType>((_) => true))
+  .record(
+    z.preprocess(
+      (val, ctx) => {
+        if (typeof val !== 'string') {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Could not find ${String(val)} SignalType`,
+            fatal: true,
+          })
+          return z.NEVER
+        }
+
+        const signal = SIGNALS[val]
+        if (signal === undefined) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Could not find ${String(val)} SignalType`,
+          })
+        }
+        return signal
+      },
+      z.custom<SignalsZodType>((_) => true),
+    ),
+  )
   .optional()
 export type SignalsV1 = z.infer<typeof SignalsV1Shape>
 
