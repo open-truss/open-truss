@@ -82,13 +82,23 @@ function processProps({
     }
   }
 
-  // Add signals to props
   eachComponentSignal(componentName, COMPONENTS, (propName, signalsType) => {
-    const signal = signals[propName]
-    if (signal) {
-      const result = signalsType.safeParse(signal)
-      if (result.success) {
-        newProps[propName] = signal
+    const vProps = viewProps ?? {}
+    const viewPropValue = vProps[propName]
+
+    if (viewPropValue !== undefined) {
+      if (isSignal(viewPropValue)) {
+        const signalName = parseSignalName(viewPropValue) ?? ''
+        const signal = signals[signalName]
+        if (signal) addSignalToProps(propName, signal, signalsType, newProps)
+      } else {
+        const signal = signalsType.parse(viewPropValue)
+        addSignalToProps(propName, signal, signalsType, newProps)
+      }
+    } else {
+      const signal = signals[propName]
+      if (signal) {
+        addSignalToProps(propName, signal, signalsType, newProps)
       }
     }
   })
@@ -97,6 +107,36 @@ function processProps({
     ...viewProps,
     ...newProps,
   }
+}
+
+function addSignalToProps(
+  propName: string,
+  signal: Signal<any>,
+  signalsType: SignalsZodType,
+  newProps: ComponentPropsReturnShape,
+): void {
+  const result = signalsType.safeParse(signal)
+  if (result.success) {
+    newProps[propName] = signal
+  } else {
+    throw new Error(`Signal passed to component is incorrect type.
+      Expected ${propName} to be type ${signalsType.description},
+      but got ${typeof signal}.
+    `)
+  }
+}
+
+function isSignal(possibleSignal: any): boolean {
+  if (typeof possibleSignal !== 'string') return false
+  if (possibleSignal[0] !== ':') return false
+
+  return true
+}
+
+function parseSignalName(possibleSignal: any): string | undefined {
+  if (!isSignal(possibleSignal)) return
+
+  return possibleSignal.slice(1)
 }
 
 type EachComponentSignal = (
