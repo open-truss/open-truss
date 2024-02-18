@@ -202,10 +202,9 @@ export const eachComponentSignal: EachComponentSignal = (
   COMPONENTS,
   func,
 ) => {
-  const props = getComponentProps(componentName, COMPONENTS)
-  if (!props) return
-
-  Object.entries(props).forEach(([propName, propValue]) => {
+  const Component = getComponent(componentName, '', COMPONENTS)
+  if (!hasPropsExport(Component)) return
+  Object.entries(Component.Props.shape).forEach(([propName, propValue]) => {
     const signalsType = getSignalsType(propValue)
     if (signalsType !== undefined) {
       func(propName, signalsType)
@@ -241,21 +240,6 @@ export function getComponent(
   }
 
   return Component
-}
-
-export function getComponentProps(
-  component: string,
-  COMPONENTS: COMPONENTS,
-): OpenTrussComponent | undefined {
-  const componentName = parseComponentName(component)
-  const Component = COMPONENTS[componentName]
-  if (!Component) {
-    throw new Error(`No component '${componentName}' configured.`)
-  }
-
-  if (!hasPropsExport(Component)) return
-
-  return Component.Props.shape
 }
 
 export function parseComponentName(componentName: string): string {
