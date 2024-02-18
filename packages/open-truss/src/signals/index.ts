@@ -7,9 +7,9 @@ export type SignalTypes = Record<string, SignalsZodType>
 export const SIGNALS: SignalTypes = {}
 const SignalsRegex = /^Signal<([^>]+)>$/
 export function getSignalsType(
-  possibleZodObject: any,
+  possibleZodObject: unknown,
 ): SignalsZodType | undefined {
-  const description = possibleZodObject?._def?.description
+  const description = (possibleZodObject as SignalsZodType)?._def?.description
   if (description) {
     const matches = description.match(SignalsRegex)
     if (matches && matches.length > 1) {
