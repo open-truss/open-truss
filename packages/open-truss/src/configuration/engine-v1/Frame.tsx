@@ -206,12 +206,9 @@ export const eachComponentSignal: EachComponentSignal = (
   if (!props) return
 
   Object.entries(props).forEach(([propName, propValue]) => {
-    const description = propValue?._def?.description
-    if (description) {
-      const signalsType = getSignalsType(description)
-      if (signalsType !== undefined) {
-        func(propName, signalsType)
-      }
+    const signalsType = getSignalsType(propValue)
+    if (signalsType !== undefined) {
+      func(propName, signalsType)
     }
   })
 }
