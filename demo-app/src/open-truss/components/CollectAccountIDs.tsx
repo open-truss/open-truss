@@ -10,7 +10,7 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   accountIds: AccountIDsSignal,
 })
 
-export default function IncrementAccountID({
+export default function CollectAccountIDs({
   accountIds,
 }: z.infer<typeof Props>): JSX.Element {
   const [inputValue, setInputValue] = useState('')

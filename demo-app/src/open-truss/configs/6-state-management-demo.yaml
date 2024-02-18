@@ -6,17 +6,17 @@ workflow:
   frames:
     - frame:
       view:
-        component: IncrementAccountID
+        component: CollectAccountIDs
     - frame:
       view:
-        component: IncrementAccountID
+        component: CollectAccountIDs
     - frame:
       view:
-        component: IncrementAccountID
+        component: CollectAccountIDs
         props:
           accountIds: :userIds
     - frame:
       view:
-        component: IncrementAccountID
+        component: CollectAccountIDs
         props:
           accountIds: :userIds
