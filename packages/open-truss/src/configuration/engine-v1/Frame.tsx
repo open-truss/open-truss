@@ -145,15 +145,18 @@ function processProps({
     const viewPropValue =
       viewProps === undefined ? undefined : viewProps[propName]
     if (viewPropValue !== undefined) {
-      if (isSignal(viewPropValue)) {
+      if (isSymbol(viewPropValue)) {
+        // If viewPropValue is a :symbol, use the signal by that name.
         const signalName = parseSignalName(viewPropValue) ?? ''
         const signal = signals[signalName]
         if (signal) addSignalToProps(propName, signal, signalsType, newProps)
       } else {
+        // Else the view prop is a scalar and we coerce the scalar into a signal type.
         const signal = signalsType.parse(viewPropValue)
         addSignalToProps(propName, signal, signalsType, newProps)
       }
     } else {
+      // Default lookup signal baesd on the name of the component prop.
       const signal = signals[propName]
       if (signal) {
         addSignalToProps(propName, signal, signalsType, newProps)
@@ -184,7 +187,7 @@ function addSignalToProps(
   }
 }
 
-function isSignal(possibleSignal: any): boolean {
+function isSymbol(possibleSignal: any): boolean {
   if (typeof possibleSignal !== 'string') return false
   if (possibleSignal[0] !== ':') return false
 
@@ -192,7 +195,7 @@ function isSignal(possibleSignal: any): boolean {
 }
 
 function parseSignalName(possibleSignal: any): string | undefined {
-  if (!isSignal(possibleSignal)) return
+  if (!isSymbol(possibleSignal)) return
 
   return possibleSignal.slice(1)
 }
