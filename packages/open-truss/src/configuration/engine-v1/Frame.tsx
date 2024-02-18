@@ -189,7 +189,7 @@ function addSignalToProps(
 
 function isSymbol(possibleSignal: any): boolean {
   if (typeof possibleSignal !== 'string') return false
-  if (possibleSignal[0] !== ':') return false
+  if (!possibleSignal.startsWith(':')) return false
 
   return true
 }
