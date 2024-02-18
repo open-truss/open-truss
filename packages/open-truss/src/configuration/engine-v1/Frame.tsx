@@ -142,26 +142,17 @@ function processProps({
   }
 
   eachComponentSignal(componentName, COMPONENTS, (propName, signalsType) => {
-    const viewPropValue =
-      viewProps === undefined ? undefined : viewProps[propName]
-    if (viewPropValue !== undefined) {
-      if (isSymbol(viewPropValue)) {
-        // If viewPropValue is a :symbol, use the signal by that name.
-        const signalName = parseSignalName(viewPropValue) ?? ''
-        const signal = signals[signalName]
-        if (signal) addSignalToProps(propName, signal, signalsType, newProps)
-      } else {
-        // Else the view prop is a scalar and we coerce the scalar into a signal type.
-        const signal = signalsType.parse(viewPropValue)
-        addSignalToProps(propName, signal, signalsType, newProps)
-      }
+    const viewPropVal = viewProps?.[propName]
+    let signal: Signal
+    if (isSymbol(viewPropVal)) {
+      const signalName = parseSignalName(viewPropVal) ?? ''
+      signal = signals[signalName]
+    } else if (viewPropVal !== undefined) {
+      signal = signalsType.parse(viewPropVal)
     } else {
-      // Default lookup signal baesd on the name of the component prop.
-      const signal = signals[propName]
-      if (signal) {
-        addSignalToProps(propName, signal, signalsType, newProps)
-      }
+      signal = signals[propName]
     }
+    addSignalToProps(propName, signal, signalsType, newProps)
   })
 
   return {
