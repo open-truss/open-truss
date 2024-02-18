@@ -1,7 +1,9 @@
 import { type YamlType } from '../../utils/yaml'
 import {
   type FrameV1,
+  type DataV1,
   type ViewPropsV1,
+  type WorkflowV1,
   hasDefaultExport,
   hasPropsExport,
 } from './config-schemas'
@@ -19,41 +21,92 @@ import { type Signal } from '@preact/signals-react'
 interface FrameContext {
   frame: FrameV1
   globalContext: GlobalContext
+  configPath: string
+}
+
+class FrameError extends Error {
+  public componentName: string
+  public configPath: string
+
+  constructor(message: string, componentName: string, configPath: string) {
+    super(message)
+    this.componentName = componentName
+    this.configPath = configPath
+  }
+}
+
+function ShowError({ error }: { error: FrameError }): JSX.Element {
+  return (
+    <div
+      role="alert"
+      style={{ border: '1px solid #ececec', borderRadius: '5px' }}
+    >
+      <pre style={{ color: '#777', margin: 0 }}>
+        {error.componentName}({error.configPath})
+      </pre>
+      <div style={{ padding: '5px' }}>
+        <pre style={{ color: 'red', textAlign: 'center' }}>{error.message}</pre>
+      </div>
+    </div>
+  )
 }
 
 export function Frame(props: FrameContext): React.JSX.Element {
   const {
     frame: { view, data, frames },
-    globalContext: { COMPONENTS, signals },
+    globalContext: { COMPONENTS, config, FrameWrapper, signals },
+    configPath,
   } = props
-  const { component: componentName, props: viewProps } = view
-  const Component = getComponent(componentName, COMPONENTS)
-  const processedProps = processProps({
-    viewProps,
-    COMPONENTS,
-    componentName,
-    signals,
-  })
-  if (frames === undefined) {
-    if (data) {
+  const { component, props: viewProps } = view
+  try {
+    const subframes = frames?.map((subframe, k) => {
+      const subframePath = `${configPath}.frames.${k}`
       return (
-        <DataProvider {...processedProps} data={data} component={Component} />
+        <FrameWrapper key={k} frame={subframe} configPath={subframePath}>
+          <Frame
+            frame={subframe}
+            configPath={subframePath}
+            globalContext={props.globalContext}
+          />
+        </FrameWrapper>
       )
-    } else {
-      return <Component {...processedProps} />
-    }
-  }
+    })
 
-  return (
-    <Component {...props}>
-      {frames.map((subFrame, k) => (
-        <Frame key={k} frame={subFrame} globalContext={props.globalContext} />
-      ))}
-    </Component>
-  )
+    if (component === '__FRAGMENT__') {
+      return <>{subframes}</>
+    }
+
+    const Component = getComponent(component, configPath, COMPONENTS)
+    const processedProps = processProps({
+      data,
+      config,
+      configPath,
+      viewProps,
+      COMPONENTS,
+      signals,
+      componentName: component,
+    })
+
+    if (frames === undefined) {
+      if (data) {
+        return (
+          <DataProvider {...processedProps} data={data} component={Component} />
+        )
+      } else {
+        return <Component {...processedProps} />
+      }
+    }
+
+    return <Component {...props}>{subframes}</Component>
+  } catch (e: any) {
+    return <ShowError error={e} />
+  }
 }
 
 interface ComponentPropsShape {
+  config: WorkflowV1
+  configPath: string
+  data: DataV1
   viewProps: ViewPropsV1
   COMPONENTS: COMPONENTS
   componentName: string
@@ -71,6 +124,8 @@ function isComponent(prop: YamlType): prop is string {
 }
 
 function processProps({
+  config,
+  configPath,
   viewProps,
   componentName,
   signals,
@@ -81,7 +136,7 @@ function processProps({
     for (const propName in viewProps) {
       const prop = viewProps[propName]
       if (isComponent(prop)) {
-        newProps[propName] = getComponent(prop, COMPONENTS)
+        newProps[propName] = getComponent(prop, configPath, COMPONENTS)
       }
     }
   }
@@ -169,12 +224,17 @@ export const eachComponentSignal: EachComponentSignal = (
 
 export function getComponent(
   component: string,
+  configPath: string,
   COMPONENTS: COMPONENTS,
 ): OpenTrussComponent {
   const componentName = component.replaceAll(/(<|\/>)/g, '').trim()
   let Component = COMPONENTS[componentName]
   if (!Component) {
-    throw new Error(`No component '${componentName}' configured.`)
+    throw new FrameError(
+      `No component '${componentName}' configured.`,
+      componentName,
+      configPath,
+    )
   }
 
   if (hasDefaultExport(Component)) {
@@ -182,7 +242,11 @@ export function getComponent(
   }
 
   if (!Component) {
-    throw new Error(`No component '${componentName}' configured.`)
+    throw new FrameError(
+      `No component '${componentName}' configured.`,
+      componentName,
+      configPath,
+    )
   }
 
   return Component
