@@ -56,9 +56,7 @@ export function RenderConfig({
   const signals = createSignals(config.signals)
   const propErrors = validateComponentProps(config.frames, COMPONENTS, signals)
   if (propErrors.length > 0) {
-    throw new Error(
-      `Encountered component prop errors: ${propErrors.join(',')}`,
-    )
+    console.log(`Encountered component prop errors: ${propErrors.join(',')}`)
   }
   const globalContext: GlobalContext = {
     signals,
