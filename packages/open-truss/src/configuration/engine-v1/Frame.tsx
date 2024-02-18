@@ -227,7 +227,7 @@ export function getComponent(
   configPath: string,
   COMPONENTS: COMPONENTS,
 ): OpenTrussComponent {
-  const componentName = component.replaceAll(/(<|\/>)/g, '').trim()
+  const componentName = parseComponentName(component)
   let Component = COMPONENTS[componentName]
   if (!Component) {
     throw new FrameError(
