@@ -84,9 +84,7 @@ function createSignals(signalsConfig: SignalsV1): Signals {
   if (signalsConfig === undefined) return signals
   Object.entries(signalsConfig).forEach(([name, val]) => {
     const signal = SIGNALS[val]
-    if (signal) {
-      signals[name] = signal.parse(undefined)
-    }
+    if (signal) signals[name] = signal.parse(undefined)
   })
   return signals
 }
@@ -100,10 +98,8 @@ function validateComponentProps(
 
   frames.forEach((f) => {
     if (f.frames) {
-      errors = [
-        ...errors,
-        ...validateComponentProps(f.frames, COMPONENTS, signals),
-      ]
+      const framesErrors = validateComponentProps(f.frames, COMPONENTS, signals)
+      errors = [...errors, ...framesErrors]
     }
     const componentName = f?.view?.component
     if (!componentName) return
