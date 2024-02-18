@@ -4,6 +4,9 @@ export { effect, computed } from '@preact/signals-react'
 export type SignalsZodType = z.ZodDefault<z.ZodType<Signal<any>>>
 export type Signals = Record<string, Signal<any>>
 export type SignalTypes = Record<string, SignalsZodType>
+// We keep a global store of all SignalTypes
+// This maps the string of the declared type to the actual preact signal of that type.
+// e.g. "number[]" maps to the preact signal "Signal<number[]>"
 export const SIGNALS: SignalTypes = {}
 const SignalsRegex = /^Signal<([^>]+)>$/
 export function getSignalsType(
