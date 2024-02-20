@@ -9,7 +9,6 @@ import ConfigYaml from './ConfigYaml'
 import {
   ConfigBuilderContext,
   Provider as ConfigBuilderContextProvider,
-  INITIAL_FRAMES_PATH,
 } from './config-builder-context'
 
 interface ConfigBuilderPageInterface {
@@ -38,7 +37,7 @@ const ConfigBuilderFrameWrapper: FrameWrapper = ({
     e.stopPropagation()
     if (nestingHere) {
       // We're toggling off frame nesting.
-      setFramesPath(INITIAL_FRAMES_PATH)
+      setFramesPath(null)
       return
     }
     // Set framesPath to this component's frames array.
@@ -109,7 +108,7 @@ function Output({ components }: ConfigBuilderPageInterface): React.JSX.Element {
   )
 }
 
-export function ConfigBuilderPage({
+function ConfigBuilderPage({
   components,
 }: ConfigBuilderPageInterface): React.JSX.Element {
   return (
@@ -131,3 +130,5 @@ export function ConfigBuilderPage({
     </ConfigBuilderContextProvider>
   )
 }
+
+export { ConfigBuilderPage, ConfigBuilderContext, ConfigBuilderContextProvider }
