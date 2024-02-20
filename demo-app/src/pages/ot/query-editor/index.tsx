@@ -1,12 +1,5 @@
 import { Button } from '@/components/ui/button'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
@@ -14,7 +7,6 @@ import {
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -38,19 +30,31 @@ export default function QueryEditor(): JSX.Element {
 
   return (
     <ResizablePanelGroup direction="horizontal" className="h-full w-full">
-      <ResizablePanel className="bg-gray-100">
+      <ResizablePanel>
         <ResizablePanelGroup direction="vertical">
-          <ResizablePanel className="bg-gray-100">
-            <Textarea value={query} onChange={handleQueryChange} />
-            <Button onClick={handleRun}>Run</Button>
+          <ResizablePanel defaultSize={50} className="bg-gray-100 min-h-48">
+            <div className="p-2 h-full">
+              <Textarea
+                className="p-2 h-[calc(100%-48px)]"
+                value={query}
+                onChange={handleQueryChange}
+              />
+              <div className="flex justify-end">
+                <Button
+                  className="mt-2 bg-white text-gray-600 hover:bg-gray-200 hover:text-gray-800"
+                  onClick={handleRun}
+                >
+                  Run
+                </Button>
+              </div>
+            </div>
           </ResizablePanel>
-          <ResizableHandle />
-          <ResizablePanel className="bg-gray-100">
+          <ResizableHandle withHandle />
+          <ResizablePanel>
             <Table>
-              <TableCaption>A list of your recent invoices.</TableCaption>
               <TableHeader>
                 <TableRow>
-                  <TableHead>id</TableHead>
+                  <TableHead className="w-[100px]">id</TableHead>
                   <TableHead>login</TableHead>
                 </TableRow>
               </TableHeader>
@@ -72,41 +76,37 @@ export default function QueryEditor(): JSX.Element {
           </ResizablePanel>
         </ResizablePanelGroup>
       </ResizablePanel>
-      <ResizableHandle />
-      <ResizablePanel className="bg-gray-100">
-        <Tabs defaultValue="recent" className="w-[400px]">
+      <ResizableHandle withHandle />
+      <ResizablePanel defaultSize={25}>
+        <Tabs defaultValue="recent" className="m-2">
           <TabsList>
-            <TabsTrigger value="recent">Recent queries</TabsTrigger>
-            <TabsTrigger value="schemas">Schemas</TabsTrigger>
+            <TabsTrigger value="recent">Recent</TabsTrigger>
+            <TabsTrigger value="schemas">Catalog</TabsTrigger>
           </TabsList>
           <TabsContent value="recent">
-            <Card>
-              <CardHeader>
-                <CardDescription>3 results</CardDescription>
-              </CardHeader>
-              <CardContent>SELECT id, login FROM users</CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardDescription>1 result</CardDescription>
-              </CardHeader>
-              <CardContent>
-                DESCRIBE spamurai.spamurai.user_destroys
-              </CardContent>
-            </Card>
+            <div className="mb-2 p-2 bg-gray-100 rounded-sm text-sm">
+              SELECT id, login FROM users
+            </div>
+            <div className="mb-2 p-2 bg-gray-100 rounded-sm text-sm">
+              DESCRIBE spamurai.spamurai.user_destroys
+            </div>
           </TabsContent>
           <TabsContent value="schemas">
-            <Card>
-              <CardHeader>
-                <CardTitle>users</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul>
-                  <li>id: bigint</li>
-                  <li>login: string</li>
-                </ul>
-              </CardContent>
-            </Card>
+            <div className="mb-2 p-2 bg-gray-100 rounded-sm">
+              <h3 className="font-medium">abuse_classifications</h3>
+              <ul className="text-sm">
+                <li>id: bigint</li>
+                <li>previous_classification: string</li>
+                <li>current_classification: string</li>
+              </ul>
+            </div>
+            <div className="mb-2 p-2 bg-gray-100 rounded-sm">
+              <h3 className="font-medium">users</h3>
+              <ul className="text-sm">
+                <li>id: bigint</li>
+                <li>login: string</li>
+              </ul>
+            </div>
           </TabsContent>
         </Tabs>
       </ResizablePanel>
