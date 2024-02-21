@@ -6,17 +6,17 @@ workflow:
   frames:
     - frame:
       view:
-        component: CollectAccountIDs
+        component: SimpleSignalExample
     - frame:
       view:
-        component: CollectAccountIDs
+        component: SimpleSignalExample
     - frame:
       view:
-        component: CollectAccountIDs
+        component: SimpleSignalExample
         props:
           accountIds: :userIds
     - frame:
       view:
-        component: CollectAccountIDs
+        component: SimpleSignalExample
         props:
           accountIds: :userIds
