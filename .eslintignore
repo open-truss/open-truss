@@ -1,4 +1,5 @@
 /packages/open-truss/dist/*
+/packages/server/dist/*
 demo-app/next.config.js
 demo-app/next-env.d.ts
 demo-app/postcss.config.js
