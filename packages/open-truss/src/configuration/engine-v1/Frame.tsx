@@ -7,7 +7,11 @@ import {
   hasDefaultExport,
   hasPropsExport,
 } from './config-schemas'
-import { type COMPONENTS, type OpenTrussComponent, type OpenTrussComponentExports } from '../RenderConfig'
+import {
+  type COMPONENTS,
+  type OpenTrussComponent,
+  type OpenTrussComponentExports,
+} from '../RenderConfig'
 import React from 'react'
 import DataProvider from './DataProvider'
 import { type GlobalContext } from './RenderConfig'
