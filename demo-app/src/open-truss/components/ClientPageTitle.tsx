@@ -10,7 +10,7 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   title: z.string().default('Page Title'),
 })
 
-const ClientPageTitle: BaseOpenTrussComponentV1<typeof Props> = ({
+const ClientPageTitle: BaseOpenTrussComponentV1<z.infer<typeof Props>> = ({
   color,
   headerElement = 'h1',
   title,
