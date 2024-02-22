@@ -1,5 +1,6 @@
 export * from './components'
 export * from './configuration'
+export * from './hooks'
 export * from './shims'
 export * from './uqi/iterator'
 export * from './uqi/uqi'

@@ -1,8 +1,8 @@
 import get from 'lodash/get'
 import set from 'lodash/set'
-import { createContext, useCallback, useState } from 'react'
-import { type FrameType, type WorkflowSpec } from '../../configuration'
-import { type YamlType, parseYaml, stringifyYaml } from '../../utils/yaml'
+import { createContext, useCallback, useContext, useState } from 'react'
+import { type FrameType, type WorkflowSpec } from '../configuration'
+import { type YamlType, parseYaml, stringifyYaml } from '../utils/yaml'
 
 const CONFIG_BASE = `
 workflow:
@@ -21,7 +21,7 @@ interface ConfigBuilder {
   deleteFrame: (framePath?: string) => void
 }
 
-export const ConfigBuilderContext = createContext<ConfigBuilder>({
+const ConfigBuilderContext = createContext<ConfigBuilder>({
   config: CONFIG_BASE,
   setConfig: (_c: string) => null,
   framesPath: INITIAL_FRAMES_PATH,
@@ -30,7 +30,13 @@ export const ConfigBuilderContext = createContext<ConfigBuilder>({
   deleteFrame: (_c?: string) => null,
 })
 
-export const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
+export const useConfigBuilderContext = (): ConfigBuilder => {
+  return useContext(ConfigBuilderContext)
+}
+
+export const ConfigBuilderContextProvider: React.FC<
+  React.PropsWithChildren
+> = ({ children }) => {
   const [config, setConfig] = useState<string>(CONFIG_BASE)
   const [framesPath, _setFramesPath] = useState<string>(INITIAL_FRAMES_PATH)
 
