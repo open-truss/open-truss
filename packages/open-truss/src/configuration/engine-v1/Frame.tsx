@@ -161,6 +161,8 @@ function processProps({
   }
 }
 
+// This adds Signals to props which allows components to set state
+// globally so that it can be used by other components.
 function addSignalToProps(
   propName: string,
   signal: Signal<any>,

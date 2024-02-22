@@ -109,7 +109,7 @@ workflow:
 workflow:
   version: 1
   signals:
-    - account_id: number
+    - accountId: number
   renderFrames: InSequence
   frameWrapper: ConfigBuilderFrameWrapper
   frames:
@@ -118,15 +118,15 @@ workflow:
         component: OTInputForm
         props:
           fields:
-            - :account_id
+            - :accountId
     - frame:
       data:
         query: >\n
           SELECT id AS issue_id
           FROM issues
-          WHERE author_id = :account_id
+          WHERE author_id = :accountId
         params:
-          account_id: :account_id
+          accountId: :accountId
         transforms:
           mapColumns:
             issue_id: issue_ids # TableOfContent
@@ -139,9 +139,15 @@ workflow:
             component: OTStoredQueryToolbar
         - frame:
           view:
+            component: OTUserViewer
+            props:
+              userId: :accountId # example of aliasing a signal to a different prop name
+        - frame:
+          view:
             component: TableOfContent
-              content_ids: :issue_ids # example of argument aliasing
-              content_type: issue
+            props:
+              contentIds: :issue_ids # example of argument aliasing
+              contentType: issue
 ```
 
 </details>

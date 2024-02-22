@@ -54,9 +54,12 @@ export function RenderConfig({
   ) as FrameWrapper
 
   const signals = createSignals(config.signals)
-  const propErrors = validateComponentProps(config.frames, COMPONENTS, signals)
-  if (propErrors.length > 0) {
-    console.log(`Encountered component prop errors: ${propErrors.join(',')}`)
+
+  if (validateConfig) {
+    const propErrs = validateComponentProps(config.frames, COMPONENTS, signals)
+    if (propErrs.length > 0) {
+      console.log(`Encountered component prop errors: ${propErrs.join(',')}`)
+    }
   }
   const globalContext: GlobalContext = {
     signals,
