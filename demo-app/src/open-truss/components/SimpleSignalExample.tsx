@@ -17,7 +17,9 @@ export default function SimpleSignalExample({
   const [inputValue, setInputValue] = useState('')
   const accountIDsString = computed(() => accountIds.value.join(', '))
 
-  const handleInputChange = (event): void => {
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void => {
     setInputValue(event.target.value)
   }
 
