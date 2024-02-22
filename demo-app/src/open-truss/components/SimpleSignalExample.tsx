@@ -10,6 +10,7 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   accountIds: AccountIDsSignal,
 })
 
+// This component shows how Open Truss components can use signals (backed by @preact/signals-react) to share state with other components.
 export default function SimpleSignalExample({
   accountIds,
 }: z.infer<typeof Props>): JSX.Element {
