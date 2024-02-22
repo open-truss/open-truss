@@ -7,7 +7,7 @@ import {
   hasDefaultExport,
   hasPropsExport,
 } from './config-schemas'
-import { type COMPONENTS, type OpenTrussComponent } from '../RenderConfig'
+import { type COMPONENTS, type OpenTrussComponent, type OpenTrussComponentExports } from '../RenderConfig'
 import React from 'react'
 import DataProvider from './DataProvider'
 import { type GlobalContext } from './RenderConfig'
@@ -76,7 +76,7 @@ export function Frame(props: FrameContext): React.JSX.Element {
       return <>{subframes}</>
     }
 
-    const Component = getComponent(component, configPath, COMPONENTS)
+    const Component = getDefaultComponent(component, configPath, COMPONENTS)
     const processedProps = processProps({
       data,
       config,
@@ -136,7 +136,7 @@ function processProps({
     for (const propName in viewProps) {
       const prop = viewProps[propName]
       if (isComponent(prop)) {
-        newProps[propName] = getComponent(prop, configPath, COMPONENTS)
+        newProps[propName] = getDefaultComponent(prop, configPath, COMPONENTS)
       }
     }
   }
@@ -212,23 +212,31 @@ export const eachComponentSignal: EachComponentSignal = (
   })
 }
 
-export function getComponent(
+export function getDefaultComponent(
   component: string,
   configPath: string,
   COMPONENTS: COMPONENTS,
 ): OpenTrussComponent {
+  let Component = getComponent(component, configPath, COMPONENTS)
+  if (hasDefaultExport(Component)) {
+    Component = Component.default
+  }
+  return Component
+}
+
+export function getComponent(
+  component: string,
+  configPath: string,
+  COMPONENTS: COMPONENTS,
+): OpenTrussComponent | OpenTrussComponentExports {
   const componentName = parseComponentName(component)
-  let Component = COMPONENTS[componentName]
+  const Component = COMPONENTS[componentName]
   if (!Component) {
     throw new FrameError(
       `No component '${componentName}' configured.`,
       componentName,
       configPath,
     )
-  }
-
-  if (hasDefaultExport(Component)) {
-    Component = Component.default
   }
 
   if (!Component) {
