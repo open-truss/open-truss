@@ -5,12 +5,16 @@ import {
   type WorkflowV1,
   WorkflowV1Shape,
   type FrameType,
+  type FramesV1,
+  type SignalsV1,
 } from './config-schemas'
-import { getComponent, Frame } from './Frame'
+import { getComponent, Frame, eachComponentSignal } from './Frame'
+import { type Signals, SIGNALS } from '../../signals'
 
 export interface GlobalContext {
   config: WorkflowV1
   COMPONENTS: COMPONENTS
+  signals: Signals
   FrameWrapper: FrameWrapper
 }
 
@@ -48,7 +52,17 @@ export function RenderConfig({
     configPath,
     COMPONENTS,
   ) as FrameWrapper
+
+  const signals = createSignals(config.signals)
+
+  if (validateConfig) {
+    const propErrs = validateComponentProps(config.frames, COMPONENTS, signals)
+    if (propErrs.length > 0) {
+      console.log(`Encountered component prop errors: ${propErrs.join(',')}`)
+    }
+  }
   const globalContext: GlobalContext = {
+    signals,
     config,
     COMPONENTS,
     FrameWrapper,
@@ -66,4 +80,46 @@ export function RenderConfig({
       globalContext={globalContext}
     />
   )
+}
+
+function createSignals(signalsConfig: SignalsV1): Signals {
+  const signals: Signals = {}
+  if (signalsConfig === undefined) return signals
+  Object.entries(signalsConfig).forEach(([name, val]) => {
+    const signal = SIGNALS[val]
+    if (signal) signals[name] = signal.parse(undefined)
+  })
+  return signals
+}
+
+function validateComponentProps(
+  frames: FramesV1,
+  COMPONENTS: COMPONENTS,
+  signals: Signals,
+): string[] {
+  let errors: string[] = []
+
+  frames.forEach((f) => {
+    if (f.frames) {
+      const framesErrors = validateComponentProps(f.frames, COMPONENTS, signals)
+      errors = [...errors, ...framesErrors]
+    }
+    const componentName = f?.view?.component
+    if (!componentName) return
+
+    eachComponentSignal(componentName, COMPONENTS, (propName, signalsType) => {
+      const signal = signals[propName]
+      if (signal === undefined) {
+        errors.push(
+          `Component ${componentName} expected ${propName} signal to be set in signals`,
+        )
+      }
+
+      // TODO validate component prop is set by data (data currently doesn't have list of returned values for us to validate against)
+      // TODO validate component prop is set by viewProps
+      // TODO validate signal types declared in signal store match types expected by component
+    })
+  })
+
+  return errors
 }

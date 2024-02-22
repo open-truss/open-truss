@@ -1,0 +1,22 @@
+workflow:
+  version: 1
+  signals:
+    accountIds: AccountIDs
+    userIds: AccountIDs
+  frames:
+    - frame:
+      view:
+        component: SimpleSignalExample
+    - frame:
+      view:
+        component: SimpleSignalExample
+    - frame:
+      view:
+        component: SimpleSignalExample
+        props:
+          accountIds: :userIds
+    - frame:
+      view:
+        component: SimpleSignalExample
+        props:
+          accountIds: :userIds
