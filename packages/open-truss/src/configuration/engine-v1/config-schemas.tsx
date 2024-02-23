@@ -109,6 +109,7 @@ export const WorkflowV1Shape = z.object({
   signals: SignalsV1Shape,
   frameWrapper: z.string().optional(),
   frames: FramesV1Shape,
+  renderFrames: RenderFramesShape,
 })
 export type WorkflowV1 = z.infer<typeof WorkflowV1Shape>
 

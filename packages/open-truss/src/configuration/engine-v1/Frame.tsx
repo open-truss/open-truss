@@ -250,10 +250,18 @@ function processProps({
     addSignalToProps(propName, signal, signalsType, newProps)
   })
 
-  return {
-    ...viewProps,
-    ...newProps,
+  const compiledProps = { ...viewProps, ...newProps }
+
+  const Component = getComponent(componentName, configPath, COMPONENTS)
+  if (hasPropsExport(Component)) {
+    const result = Component.Props.safeParse(compiledProps)
+    if (!result.success) {
+      // props are not valid
+      console.log(result.error)
+    }
   }
+
+  return compiledProps
 }
 
 // This adds Signals to props which allows components to set state
