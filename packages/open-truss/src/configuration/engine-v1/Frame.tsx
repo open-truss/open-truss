@@ -137,8 +137,9 @@ function renderInSequence(
   const nextFuncName = parseSignalName(renderFrames?.next)
   if (nextFuncName && signals[nextFuncName]) {
     signals[nextFuncName].value = () => {
-      if (frameToRender < (frames?.length || 0)) {
-        setFrameCursor(workflowId, frameLevel, frameToRender + 1)
+      const nextFrameNumber = frameToRender + 1
+      if (nextFrameNumber < (frames?.length || 1)) {
+        setFrameCursor(workflowId, frameLevel, nextFrameNumber)
         reRender()
       }
     }
