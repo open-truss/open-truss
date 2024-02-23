@@ -3,8 +3,8 @@ workflow:
   signals:
     integer: number
   renderFrames:
-    InSequence:
-      next: :runCalculation # names the next function runCalculation
+    type: inSequence
+    next: :runCalculation # names the next function runCalculation
   frames:
     - frame:
       view:

@@ -35,6 +35,18 @@ workflow:
     - frame:
 */
 
+const RenderFramesShape = z
+  .discriminatedUnion('type', [
+    z.object({
+      type: z.literal('inSequence'),
+      next: z.string(),
+    }),
+    z.object({
+      type: z.literal('all'),
+    }),
+  ])
+  .optional()
+
 const FrameBase = z.object({
   frame: z.null(), // used only to make configs more readable
   view: z.object({
@@ -42,6 +54,7 @@ const FrameBase = z.object({
     props: ViewPropsV1Shape,
   }),
   data: DataV1Shape,
+  renderFrames: RenderFramesShape,
 })
 
 export type FrameType = z.infer<typeof FrameBase> & {

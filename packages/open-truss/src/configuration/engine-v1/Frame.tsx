@@ -1,6 +1,7 @@
 import { type YamlType } from '../../utils/yaml'
 import {
   type FrameV1,
+  type FrameType,
   type DataV1,
   type ViewPropsV1,
   type WorkflowV1,
@@ -58,23 +59,12 @@ function ShowError({ error }: { error: FrameError }): JSX.Element {
 export function Frame(props: FrameContext): React.JSX.Element {
   const {
     frame: { view, data, frames },
-    globalContext: { COMPONENTS, config, FrameWrapper, signals },
+    globalContext: { COMPONENTS, config, signals },
     configPath,
   } = props
   const { component, props: viewProps } = view
   try {
-    const subframes = frames?.map((subframe, k) => {
-      const subframePath = `${configPath}.frames.${k}`
-      return (
-        <FrameWrapper key={k} frame={subframe} configPath={subframePath}>
-          <Frame
-            frame={subframe}
-            configPath={subframePath}
-            globalContext={props.globalContext}
-          />
-        </FrameWrapper>
-      )
-    })
+    const subframes = RenderFrames(props)
 
     if (component === '__FRAGMENT__') {
       return <>{subframes}</>
@@ -105,6 +95,54 @@ export function Frame(props: FrameContext): React.JSX.Element {
   } catch (e: any) {
     return <ShowError error={e} />
   }
+}
+
+function RenderFrames(props: FrameContext): JSX.Element[] | undefined {
+  const renderType = props?.frame?.renderFrames?.type
+  if (renderType === 'inSequence') return renderInSequence(props)
+  return renderAll(props)
+}
+
+function renderInSequence(props: FrameContext): JSX.Element[] | undefined {
+  const {
+    frame: { frames },
+    globalContext: { FrameWrapper },
+    configPath,
+  } = props
+
+  return frames?.map((subframe, k) => {
+    const subframePath = `${configPath}.frames.${k}`
+    return (
+      <FrameWrapper key={k} frame={subframe} configPath={subframePath}>
+        <Frame
+          frame={subframe}
+          configPath={subframePath}
+          globalContext={props.globalContext}
+        />
+      </FrameWrapper>
+    )
+  })
+}
+
+function renderAll(props: FrameContext): JSX.Element[] | undefined {
+  const {
+    frame: { frames },
+    globalContext: { FrameWrapper },
+    configPath,
+  } = props
+
+  return frames?.map((subframe, k) => {
+    const subframePath = `${configPath}.frames.${k}`
+    return (
+      <FrameWrapper key={k} frame={subframe} configPath={subframePath}>
+        <Frame
+          frame={subframe}
+          configPath={subframePath}
+          globalContext={props.globalContext}
+        />
+      </FrameWrapper>
+    )
+  })
 }
 
 interface ComponentPropsShape {
