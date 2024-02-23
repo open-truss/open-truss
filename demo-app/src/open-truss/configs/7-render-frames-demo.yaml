@@ -1,19 +1,19 @@
 workflow:
   version: 1
   signals:
-    number: number
+    integer: number
   renderFrames:
     InSequence:
       next: :runCalculation # names the next function runCalculation
   frames:
     - frame:
       view:
-        component: NumberInput
+        component: IntegerInput
         props:
           submit: :runCalculation # sets submit to runCalcluation
     - frame:
       view:
-        component: ShowNumberSquared
+        component: ShowIntegerSquared
 
 # jonmagic + hktouw notes
 # renderFrames
