@@ -1,7 +1,6 @@
 import { type YamlType } from '../../utils/yaml'
 import {
   type FrameV1,
-  type FrameType,
   type DataV1,
   type ViewPropsV1,
   type WorkflowV1,
@@ -20,7 +19,6 @@ import {
   getSignalsType,
   type Signals,
   type SignalsZodType,
-  type NavigateFrameSignalType,
 } from '../../signals'
 import { type Signal } from '@preact/signals-react'
 

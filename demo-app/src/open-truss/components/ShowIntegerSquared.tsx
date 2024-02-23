@@ -16,7 +16,7 @@ export default function ShowIntegerSquared({
   return (
     <div>
       <h2>Your integer: {integer}</h2>
-      <h2>Squared Integer: {squaredInteger}</h2>
+      <h2>Your integer squared: {squaredInteger}</h2>
     </div>
   )
 }

@@ -33,7 +33,7 @@ export default function IntegerInput({
     <div>
       <h2>Please input an integer:</h2>
       <input type="number" value={inputValue} onChange={handleInputChange} />
-      <button onClick={addAccountId}>Add account ID</button>
+      <button onClick={addAccountId}>Add integer</button>
     </div>
   )
 }
