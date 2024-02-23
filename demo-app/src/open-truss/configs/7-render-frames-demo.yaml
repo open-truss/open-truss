@@ -50,10 +50,13 @@ workflow:
 #
 #
 # todo
-# - write out config
-# - build display components
-# - create renderFrames functionality in engine
-# - create default renderFrames function (All)
-# - create InSequence render function
-# - create navigation? prop type
-# - update processProp code to pass in navigation functions to components
+# x write out config
+# x build display components
+# x create renderFrames functionality in engine
+# x create default renderFrames function (All)
+# x create InSequence render function
+#   x render selected frame
+#   x set next function in signal store
+#   x create nav signal type
+# x [skip] create navigation? prop type
+# x [skip] update processProp code to pass in navigation functions to components
