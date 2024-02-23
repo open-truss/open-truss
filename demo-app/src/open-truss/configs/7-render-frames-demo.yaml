@@ -2,9 +2,10 @@ workflow:
   version: 1
   signals:
     integer: number
+    runCalculation: NavigateFrame
   renderFrames:
     type: inSequence
-    next: :runCalculation # names the next function runCalculation
+    next: :runCalculation # sets the next function as :runCalculation
   frames:
     - frame:
       view:

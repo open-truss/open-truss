@@ -1,14 +1,19 @@
-import { BaseOpenTrussComponentV1PropsShape } from '@open-truss/open-truss'
+import {
+  BaseOpenTrussComponentV1PropsShape,
+  NavigateFrameSignal,
+} from '@open-truss/open-truss'
 import { NumberSignal } from '../signals'
 import { type z } from 'zod'
 import { useState } from 'react'
 
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   integer: NumberSignal,
+  submit: NavigateFrameSignal,
 })
 
 export default function IntegerInput({
   integer,
+  submit,
 }: z.infer<typeof Props>): JSX.Element {
   const [inputValue, setInputValue] = useState('')
 
@@ -21,6 +26,7 @@ export default function IntegerInput({
   const addAccountId = (): void => {
     integer.value = Number(inputValue)
     setInputValue('')
+    submit.value()
   }
 
   return (

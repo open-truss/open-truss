@@ -20,6 +20,7 @@ import {
   getSignalsType,
   type Signals,
   type SignalsZodType,
+  type NavigateFrameSignalType,
 } from '../../signals'
 import { type Signal } from '@preact/signals-react'
 
@@ -64,7 +65,7 @@ export function Frame(props: FrameContext): React.JSX.Element {
   } = props
   const { component, props: viewProps } = view
   try {
-    const subframes = RenderFrames(props)
+    const subframes = RenderFrames(props, signals)
 
     if (component === '__FRAGMENT__') {
       return <>{subframes}</>
@@ -97,18 +98,38 @@ export function Frame(props: FrameContext): React.JSX.Element {
   }
 }
 
-function RenderFrames(props: FrameContext): JSX.Element[] | undefined {
+function RenderFrames(
+  props: FrameContext,
+  signals: Signals,
+): JSX.Element[] | undefined {
   const renderType = props?.frame?.renderFrames?.type
-  if (renderType === 'inSequence') return renderInSequence(props)
+  if (renderType === 'inSequence') return renderInSequence(props, signals)
   return renderAll(props)
 }
 
-function renderInSequence(props: FrameContext): JSX.Element[] | undefined {
+function renderInSequence(
+  props: FrameContext,
+  signals: Signals,
+): JSX.Element[] | undefined {
   const {
-    frame: { frames },
+    frame: {
+      frames,
+      renderFrames,
+      view: { component },
+    },
     globalContext: { FrameWrapper },
     configPath,
   } = props
+  if (renderFrames?.type !== 'inSequence') {
+    throw new FrameError(`This error should never occur`, component, configPath)
+  }
+
+  const nextFuncName = parseSignalName(renderFrames?.next)
+  if (nextFuncName && signals[nextFuncName]) {
+    signals[nextFuncName].value = () => {
+      console.log("hwllo")
+    }
+  }
 
   return frames?.map((subframe, k) => {
     const subframePath = `${configPath}.frames.${k}`

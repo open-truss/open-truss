@@ -37,3 +37,11 @@ export function SignalType<T>(
 
   return zodType
 }
+
+// Navigation signals
+type NavigateFrame = () => void
+export const NavigateFrameSignal = SignalType<NavigateFrame>(
+  'NavigateFrame',
+  () => {},
+)
+export type NavigateFrameSignalType = z.infer<typeof NavigateFrameSignal>
