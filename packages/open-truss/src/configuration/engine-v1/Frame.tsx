@@ -12,8 +12,9 @@ import {
   type OpenTrussComponent,
   type OpenTrussComponentExports,
 } from '../RenderConfig'
-import React from 'react'
+import React, { useState } from 'react'
 import DataProvider from './DataProvider'
+import { getWorkflowSession, setWorkflowSessionValue } from './RenderConfig'
 import { type GlobalContext } from './RenderConfig'
 import {
   getSignalsType,
@@ -63,7 +64,12 @@ export function Frame(props: FrameContext): React.JSX.Element {
   } = props
   const { component, props: viewProps } = view
   try {
-    const subframes = RenderFrames(props, signals)
+    const [renderCount, render] = useState(0)
+    // used to re render current Frame and it's tree
+    const reRender = (): void => {
+      render(renderCount + 1)
+    }
+    const subframes = RenderFrames(props, signals, reRender)
 
     if (component === '__FRAGMENT__') {
       return <>{subframes}</>
@@ -99,15 +105,18 @@ export function Frame(props: FrameContext): React.JSX.Element {
 function RenderFrames(
   props: FrameContext,
   signals: Signals,
+  reRender: () => void,
 ): JSX.Element[] | undefined {
   const renderType = props?.frame?.renderFrames?.type
-  if (renderType === 'inSequence') return renderInSequence(props, signals)
+  if (renderType === 'inSequence')
+    return renderInSequence(props, signals, reRender)
   return renderAll(props)
 }
 
 function renderInSequence(
   props: FrameContext,
   signals: Signals,
+  reRender: () => void,
 ): JSX.Element[] | undefined {
   const {
     frame: {
@@ -115,22 +124,29 @@ function renderInSequence(
       renderFrames,
       view: { component },
     },
-    globalContext: { FrameWrapper },
+    globalContext: { FrameWrapper, workflowId },
     configPath,
   } = props
   if (renderFrames?.type !== 'inSequence') {
     throw new FrameError(`This error should never occur`, component, configPath)
   }
 
+  const frameLevel = `${configPath}.frames`
+  const frameToRender = getCurrentFrameCursor(workflowId, frameLevel)
+
   const nextFuncName = parseSignalName(renderFrames?.next)
   if (nextFuncName && signals[nextFuncName]) {
     signals[nextFuncName].value = () => {
-      console.log("hwllo")
+      if (frameToRender < (frames?.length || 0)) {
+        setFrameCursor(workflowId, frameLevel, frameToRender + 1)
+        reRender()
+      }
     }
   }
 
   return frames?.map((subframe, k) => {
-    const subframePath = `${configPath}.frames.${k}`
+    if (k !== frameToRender) return <div key={k}></div>
+    const subframePath = `${frameLevel}.${k}`
     return (
       <FrameWrapper key={k} frame={subframe} configPath={subframePath}>
         <Frame
@@ -141,6 +157,23 @@ function renderInSequence(
       </FrameWrapper>
     )
   })
+}
+
+const FrameLevelKey = (framePath: string): string => `FrameLevel:${framePath}`
+function getCurrentFrameCursor(workflowId: string, frameLevel: string): number {
+  const fl = FrameLevelKey(frameLevel)
+  const frameCursor = getWorkflowSession(workflowId)[fl]
+  if (frameCursor) return Number(frameCursor)
+  return 0
+}
+
+function setFrameCursor(
+  workflowId: string,
+  frameLevel: string,
+  frameNumber: number,
+): void {
+  const fl = FrameLevelKey(frameLevel)
+  setWorkflowSessionValue(workflowId, fl, frameNumber)
 }
 
 function renderAll(props: FrameContext): JSX.Element[] | undefined {

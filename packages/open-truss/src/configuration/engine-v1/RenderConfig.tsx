@@ -16,6 +16,7 @@ export interface GlobalContext {
   COMPONENTS: COMPONENTS
   signals: Signals
   FrameWrapper: FrameWrapper
+  workflowId: string
 }
 
 let _COMPONENTS: COMPONENTS
@@ -61,12 +62,15 @@ export function RenderConfig({
       console.log(`Encountered component prop errors: ${propErrs.join(',')}`)
     }
   }
+  const workflowId = config?.id || ''
   const globalContext: GlobalContext = {
     signals,
     config,
     COMPONENTS,
     FrameWrapper,
+    workflowId,
   }
+  setWorkflowSession(workflowId)
   // Workflows are just frames! Use unknown to convince TS of this fact.
   const frame = {
     ...config,
@@ -127,4 +131,30 @@ function validateComponentProps(
   })
 
   return errors
+}
+
+function setWorkflowSession(id: string): void {
+  localStorage.setItem(`OT-Workflow:${id}`, JSON.stringify({}))
+}
+
+export function getWorkflowSession(
+  id: string,
+): Record<string, string | number> {
+  const session = localStorage.getItem(`OT-Workflow:${id}`) || ''
+  const sess = JSON.parse(session)
+  if (typeof sess === 'object') {
+    return sess
+  } else {
+    return {}
+  }
+}
+
+export function setWorkflowSessionValue(
+  id: string,
+  key: string,
+  value: string | number,
+): void {
+  const session = getWorkflowSession(id)
+  session[key] = value
+  localStorage.setItem(`OT-Workflow:${id}`, JSON.stringify(session))
 }

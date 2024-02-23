@@ -104,6 +104,7 @@ export const SignalsV1Shape = z.record(z.string()).optional()
 export type SignalsV1 = z.infer<typeof SignalsV1Shape>
 
 export const WorkflowV1Shape = z.object({
+  id: z.string().optional(),
   version: z.number().positive(),
   signals: SignalsV1Shape,
   frameWrapper: z.string().optional(),

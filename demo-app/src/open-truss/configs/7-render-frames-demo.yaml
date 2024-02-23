@@ -1,5 +1,6 @@
 workflow:
   version: 1
+  id: 7-render-frames-demo-unique-id
   signals:
     integer: number
     runCalculation: NavigateFrame
