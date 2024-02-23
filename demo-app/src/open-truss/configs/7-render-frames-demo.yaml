@@ -1,0 +1,57 @@
+workflow:
+  version: 1
+  signals:
+    number: number
+  renderFrames:
+    InSequence:
+      next: :runCalculation # names the next function runCalculation
+  frames:
+    - frame:
+      view:
+        component: NumberInput
+        props:
+          submit: :runCalculation # sets submit to runCalcluation
+    - frame:
+      view:
+        component: ShowNumberSquared
+
+# jonmagic + hktouw notes
+# renderFrames
+# - decides which rendering function to use
+# - InSequence, All, etc.
+#
+# InSequence Function
+# arguments
+# - config path of current frame level (frames.0)
+# - cursor of current frame being rendered
+# outputs
+# - next function (back function?)
+#   - next function moves to next frame + changes url
+# - current frame to render
+#   - if no cursor is present render frames.0
+#   - else use cursor to render approprate frame
+# notes
+# - in sequence applies to the current frame of navigation
+# - you can have an in sequence for each frame
+# - you have to specify a name for the next function
+# - the next function is accessible to any components that use it
+#   in the config
+# - when passing components navigation function we should look up the
+#   prop type and if it's of type "navigation" then look up the
+#   navigation function in the navigation store
+#
+# Url / state manager to grab cursur information
+# params
+# - path - e.g. frames.0.1
+#
+#
+#
+#
+# todo
+# - write out config
+# - build display components
+# - create renderFrames functionality in engine
+# - create default renderFrames function (All)
+# - create InSequence render function
+# - create navigation? prop type
+# - update processProp code to pass in navigation functions to components
