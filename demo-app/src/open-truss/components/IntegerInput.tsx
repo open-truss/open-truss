@@ -26,7 +26,7 @@ export default function IntegerInput({
   const addAccountId = (): void => {
     integer.value = Number(inputValue)
     setInputValue('')
-    submit.value()
+    if (submit) submit.value()
   }
 
   return (

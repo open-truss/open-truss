@@ -92,9 +92,8 @@ function createSignals(signalsConfig: SignalsV1, validate: boolean): Signals {
   Object.entries(signalsConfig).forEach(([name, val]) => {
     const signal = SIGNALS[val]
     if (validate && signal === undefined) {
-      throw new Error(
-        `Signal type ${val} is unknown. Please check value of ${name} Signal`,
-      )
+      const err = `Signal type ${val} is unknown. Please check value of ${name} Signal`
+      throw new Error(err)
     }
     if (signal) signals[name] = signal.parse(undefined)
   })
@@ -142,11 +141,8 @@ export function getWorkflowSession(
 ): Record<string, string | number> {
   const session = localStorage.getItem(`OT-Workflow:${id}`) || ''
   const sess = JSON.parse(session)
-  if (typeof sess === 'object') {
-    return sess
-  } else {
-    return {}
-  }
+  if (typeof sess === 'object') return sess
+  return {}
 }
 
 export function setWorkflowSessionValue(
