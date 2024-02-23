@@ -53,7 +53,7 @@ export function RenderConfig({
     COMPONENTS,
   ) as FrameWrapper
 
-  const signals = createSignals(config.signals)
+  const signals = createSignals(config.signals, validateConfig)
 
   if (validateConfig) {
     const propErrs = validateComponentProps(config.frames, COMPONENTS, signals)
@@ -82,11 +82,16 @@ export function RenderConfig({
   )
 }
 
-function createSignals(signalsConfig: SignalsV1): Signals {
+function createSignals(signalsConfig: SignalsV1, validate: boolean): Signals {
   const signals: Signals = {}
   if (signalsConfig === undefined) return signals
   Object.entries(signalsConfig).forEach(([name, val]) => {
     const signal = SIGNALS[val]
+    if (validate && signal === undefined) {
+      throw new Error(
+        `Signal type ${val} is unknown. Please check value of ${name} Signal`,
+      )
+    }
     if (signal) signals[name] = signal.parse(undefined)
   })
   return signals
