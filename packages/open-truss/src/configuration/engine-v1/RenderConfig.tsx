@@ -92,7 +92,9 @@ function createSignals(signalsConfig: SignalsV1, validate: boolean): Signals {
   Object.entries(signalsConfig).forEach(([name, val]) => {
     const signal = SIGNALS[val]
     if (validate && signal === undefined) {
-      const err = `Signal type ${val} is unknown. Please check value of ${name} Signal`
+      const err = `Signal type ${String(
+        val,
+      )} is unknown. Please check value of ${String(name)} Signal`
       throw new Error(err)
     }
     if (signal) signals[name] = signal.parse(undefined)
