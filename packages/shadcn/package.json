@@ -1,0 +1,65 @@
+{
+  "name": "@open-truss/shadcn",
+  "version": "0.3.0",
+  "description": "Open Truss display components for shadcn",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build": "bin/build",
+    "test": "jest",
+    "tsc:watch": "bin/tsc-watch"
+  },
+  "bin": {
+    "open-truss-shadcn": "./bin/open-truss-shadcn"
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "tsconfig.json",
+    "tsconfig.esm.json",
+    "src",
+    "bin",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/open-truss/open-truss.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/open-truss/open-truss/issues"
+  },
+  "homepage": "https://github.com/open-truss/open-truss#readme",
+  "exports": {
+    ".": {
+      "import": "./dist/mjs/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/mjs/index.d.ts"
+    }
+  },
+  "dependencies": {
+    "@open-truss/open-truss": "file:../open-truss",
+    "lodash": "^4.17.21",
+    "ts-node": "^10.9.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.8",
+    "@types/lodash": "^4.14.202",
+    "@types/react": "^18.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.9.1",
+    "@typescript-eslint/parser": "^6.9.1",
+    "eslint": "^8.52.0",
+    "eslint-plugin-react": "^7.33.2",
+    "fs-extra": "^11.2.0",
+    "react": "^18.2.0",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.2.2"
+  },
+  "peerDependencies": {
+    "@types/react": ">=17.0.2",
+    "react": ">=17.0.2"
+  }
+}
