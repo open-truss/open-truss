@@ -4,13 +4,19 @@ script_dir=$(dirname "$(readlink -f "$0")")
 demo_app_dir=$(dirname "$script_dir")
 root_dir=$(dirname "$demo_app_dir")
 open_truss_package_dir="$root_dir/packages/open-truss"
+open_truss_shadcn_package_dir="$root_dir/packages/shadcn"
 
 script/bootstrap
 
 # delete /dist folder in package
-cd $open_truss_package_dir \
-  && rm -r dist/ \
-  && cd $demo_app_dir
+cd $open_truss_package_dir
+rm -r dist/
+cd $demo_app_dir
+
+# delete /dist folder in shadcn package
+cd $open_truss_shadcn_package_dir
+rm -r dist/
+cd $demo_app_dir
 
 # Function to terminate both tsc processes
 terminate_tsc_processes() {
@@ -23,6 +29,9 @@ trap 'terminate_tsc_processes' SIGINT SIGTERM
 
 echo "Running npm run tsc:watch"
 (npm run tsc:watch) &
+
+echo "Running npm run tsc:watch:shadcn"
+(npm run tsc:watch:shadcn) &
 
 echo "Runing npm run dev"
 (npm run dev) &

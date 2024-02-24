@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "tsc:watch": "open-truss tsc-watch",
+    "tsc:watch:shadcn": "open-truss-shadcn tsc-watch",
     "ot:setup": "open-truss setup",
     "build": "next build",
     "start": "next start",
@@ -14,6 +15,7 @@
     "@apollo/server": "^4.9.5",
     "@as-integrations/next": "^3.0.0",
     "@open-truss/open-truss": "file:../packages/open-truss",
+    "@open-truss/shadcn": "file:../packages/shadcn",
     "graphql-tag": "^2.12.6",
     "lodash": "^4.17.21",
     "next": "^14.0.4",
