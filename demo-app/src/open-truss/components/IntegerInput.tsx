@@ -23,7 +23,7 @@ export default function IntegerInput({
     setInputValue(event.target.value)
   }
 
-  const addAccountId = (): void => {
+  const addInteger = (): void => {
     integer.value = Number(inputValue)
     setInputValue('')
     if (submit) submit.value()
@@ -33,7 +33,7 @@ export default function IntegerInput({
     <div>
       <h2>Please input an integer:</h2>
       <input type="number" value={inputValue} onChange={handleInputChange} />
-      <button onClick={addAccountId}>Add integer</button>
+      <button onClick={addInteger}>Add integer</button>
     </div>
   )
 }
