@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # Directory of open-truss project
-package_dir=$(npm ls -p @open-truss/open-truss)
+# Return first instance of reference in case there are multiple. e.g.
+# when a package also references the package
+package_dir=$(npm ls -p @open-truss/open-truss | head -n 1)
 
 # Check if package_dir is empty. If empty then we are inside of the OT repository
 if [ -z "$package_dir" ]; then
