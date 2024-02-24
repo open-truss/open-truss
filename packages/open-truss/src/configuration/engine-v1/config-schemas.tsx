@@ -40,6 +40,7 @@ const RenderFramesShape = z
     z.object({
       type: z.literal('inSequence'),
       next: z.string(),
+      back: z.string(),
     }),
     z.object({
       type: z.literal('all'),

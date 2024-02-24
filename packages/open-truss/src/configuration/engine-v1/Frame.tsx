@@ -145,6 +145,17 @@ function renderInSequence(
     }
   }
 
+  const backFuncName = parseSignalName(renderFrames?.back)
+  if (backFuncName && signals[backFuncName]) {
+    signals[backFuncName].value = () => {
+      const backFrameNumber = frameToRender - 1
+      if (backFrameNumber >= 0) {
+        setFrameCursor(workflowId, frameLevel, backFrameNumber)
+        reRender()
+      }
+    }
+  }
+
   return frames?.map((subframe, k) => {
     if (k !== frameToRender) return <div key={k}></div>
     const subframePath = `${frameLevel}.${k}`
