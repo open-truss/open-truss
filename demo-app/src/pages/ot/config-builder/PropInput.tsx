@@ -18,7 +18,7 @@ export default function PropInput({
 
   useEffect(() => {
     onChange(defaultValue)
-  }, [defaultValue])
+  }, [])
 
   if (name === 'children') {
     return null
