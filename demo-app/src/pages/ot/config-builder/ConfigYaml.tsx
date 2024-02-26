@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button'
 import { useConfigBuilderContext } from '@open-truss/open-truss'
 
 const FRAMES_PATH_PARTS = ['workflow:', 'frames:', '- frame:']
@@ -47,16 +48,19 @@ export default function ConfigYaml(): React.JSX.Element {
             return (
               <pre
                 key={i}
-                style={{ color: selectedFramesPath ? 'pink' : 'black' }}
+                className={`${
+                  selectedFramesPath ? 'color-pink' : 'color-black'
+                }`}
               >
                 {line}
-                <button
+                <Button
+                  size="xs"
                   onClick={() => {
                     setFramesPath(thisFramesPath)
                   }}
                 >
                   Nest at this level
-                </button>
+                </Button>
               </pre>
             )
           } else {
