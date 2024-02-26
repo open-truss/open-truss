@@ -1,37 +1,48 @@
 import get from 'lodash/get'
 import set from 'lodash/set'
-import { createContext, useState } from 'react'
-import { type FrameType, type WorkflowSpec } from '../../configuration'
-import { type YamlType, parseYaml, stringifyYaml } from '../../utils/yaml'
+import { createContext, useCallback, useContext, useState } from 'react'
+import { type FrameType, type WorkflowSpec } from '../configuration'
+import { type YamlType, parseYaml, stringifyYaml } from '../utils/yaml'
 
-export const CONFIG_BASE = `
+const CONFIG_BASE = `
 workflow:
   version: 1
   frameWrapper: ConfigBuilderFrameWrapper
   frames: []
 `.trim()
-export const INITIAL_FRAMES_PATH = 'workflow.frames'
+const INITIAL_FRAMES_PATH = 'workflow.frames'
 
 interface ConfigBuilder {
   config: string
   setConfig: (config: string) => void
   framesPath: string
-  setFramesPath: (path: string) => void
+  setFramesPath: (path: string | null) => void
   addFrame: (frame: FrameType) => void
   deleteFrame: (framePath?: string) => void
 }
-export const ConfigBuilderContext = createContext<ConfigBuilder>({
+
+const ConfigBuilderContext = createContext<ConfigBuilder>({
   config: CONFIG_BASE,
   setConfig: (_c: string) => null,
   framesPath: INITIAL_FRAMES_PATH,
-  setFramesPath: (_c: string) => null,
+  setFramesPath: (_c: string | null) => null,
   addFrame: (_f: FrameType) => null,
   deleteFrame: (_c?: string) => null,
 })
 
-export const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
+export const useConfigBuilderContext = (): ConfigBuilder => {
+  return useContext(ConfigBuilderContext)
+}
+
+export const ConfigBuilderContextProvider: React.FC<
+  React.PropsWithChildren
+> = ({ children }) => {
   const [config, setConfig] = useState<string>(CONFIG_BASE)
-  const [framesPath, setFramesPath] = useState<string>(INITIAL_FRAMES_PATH)
+  const [framesPath, _setFramesPath] = useState<string>(INITIAL_FRAMES_PATH)
+
+  const setFramesPath = useCallback((path: string | null): void => {
+    _setFramesPath(path ?? INITIAL_FRAMES_PATH)
+  }, [])
 
   const addFrame = (frame: FrameType): void => {
     const parsedConfig = parseYaml(config) as unknown as WorkflowSpec
