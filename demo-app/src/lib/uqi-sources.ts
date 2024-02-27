@@ -1,3 +1,4 @@
+import createMysqlUqiClient from '@/lib/mysql-uqi-client'
 import createTrinoUqiClient from '@/lib/trino-uqi-client'
 
 const sources = {
@@ -12,11 +13,13 @@ const sources = {
   },
   'mysql-demo': {
     // setup local mysql with this:
-    // docker run --name mysql8 -e MYSQL_ROOT_PASSWORD="passw0rd" -e MYSQL_USER=admin -e MYSQL_PASSWORD="passw0rd" -d mysql:8
+    // docker run --name mysql8 -e MYSQL_ROOT_PASSWORD="passw0rd" -d mysql:8
+    // mysql -uroot -p -h<hostname>
     config: {
-      // ...
+      uri: String(process.env.MYSQL_DEMO_URI),
+      socketPath: process.env.MYSQL_DEMO_SOCKET_PATH,
     },
-    // createClient: createMysqlUqiClient,
+    createClient: createMysqlUqiClient,
   },
 }
 
