@@ -15,43 +15,12 @@ export interface MysqlConfig {
   socketPath?: string
 }
 
-const mysqlTypeLookupTable: Record<number, string> = {
-  0: 'DECIMAL',
-  1: 'TINY',
-  2: 'SHORT',
-  3: 'LONG',
-  4: 'FLOAT',
-  5: 'DOUBLE',
-  6: 'NULL',
-  7: 'TIMESTAMP',
-  8: 'LONGLONG',
-  9: 'INT24',
-  10: 'DATE',
-  11: 'TIME',
-  12: 'DATETIME',
-  13: 'YEAR',
-  14: 'NEWDATE',
-  15: 'VARCHAR',
-  16: 'BIT',
-  246: 'NEWDECIMAL',
-  247: 'ENUM',
-  248: 'SET',
-  249: 'TINY_BLOB',
-  250: 'MEDIUM_BLOB',
-  251: 'LONG_BLOB',
-  252: 'BLOB',
-  253: 'VAR_STRING',
-  254: 'STRING',
-  255: 'GEOMETRY',
-}
-
-function typesForFields(fields: FieldPacket[]): UqiColumn[] {
+function makeUqiColumnCompatible(fields: FieldPacket[]): UqiColumn[] {
   return fields.map((field) => {
-    if (field.type === undefined) {
-      return { name: field.name, type: mysqlTypeLookupTable[15].toLowerCase() }
+    return {
+      name: String(field.name),
+      type: String(field.type),
     }
-    const type = mysqlTypeLookupTable[Number(field.type)]
-    return { name: field.name, type: type.toLowerCase() }
   })
 }
 
@@ -59,33 +28,33 @@ export default async function (config: MysqlConfig): Promise<UqiClient> {
   const parsedUrl = new URL(config.uri)
 
   const typeMappings: Record<string, UqiMappedType> = {
-    decimal: 'Number',
-    tiny: 'Number',
-    short: 'Number',
-    long: 'Number',
-    float: 'Number',
-    double: 'Number',
-    null: 'String',
-    timestamp: 'String',
-    longlong: 'Number',
-    int24: 'Number',
-    date: 'String',
-    time: 'String',
-    datetime: 'String',
-    year: 'String',
-    newdate: 'String',
-    varchar: 'String',
-    bit: 'Boolean',
-    newdecimal: 'Number',
-    enum: 'String',
-    set: 'JSON',
-    tiny_blob: 'String',
-    medium_blob: 'String',
-    long_blob: 'String',
-    blob: 'String',
-    var_string: 'String',
-    string: 'String',
-    geometry: 'String',
+    '0': 'Number', // 'DECIMAL'
+    '1': 'Number', // 'TINY'
+    '2': 'Number', // 'SHORT'
+    '3': 'Number', // 'LONG'
+    '4': 'Number', // 'FLOAT'
+    '5': 'Number', // 'DOUBLE'
+    '6': 'String', // 'NULL'
+    '7': 'String', // 'TIMESTAMP'
+    '8': 'Number', // 'LONGLONG'
+    '9': 'Number', // 'INT24'
+    '10': 'String', // 'DATE'
+    '11': 'String', // 'TIME'
+    '12': 'String', // 'DATETIME'
+    '13': 'String', // 'YEAR'
+    '14': 'String', // 'NEWDATE'
+    '15': 'String', // 'VARCHAR'
+    '16': 'Boolean', // 'BIT'
+    '246': 'Number', // 'NEWDECIMAL'
+    '247': 'String', // 'ENUM'
+    '248': 'JSON', // 'SET'
+    '249': 'String', // 'TINY_BLOB'
+    '250': 'String', // 'MEDIUM_BLOB'
+    '251': 'String', // 'LONG_BLOB'
+    '252': 'String', // 'BLOB'
+    '253': 'String', // 'VAR_STRING'
+    '254': 'String', // 'STRING'
+    '255': 'String', // 'GEOMETRY'
   }
 
   async function query(
@@ -100,7 +69,7 @@ export default async function (config: MysqlConfig): Promise<UqiClient> {
         yield {
           row: rows as unknown as any,
           metadata: {
-            columns: typesForFields(fields) || [],
+            columns: makeUqiColumnCompatible(fields),
           },
         }
       } else if (
@@ -112,7 +81,7 @@ export default async function (config: MysqlConfig): Promise<UqiClient> {
           yield {
             row: row as unknown as any,
             metadata: {
-              columns: typesForFields(fields) || [],
+              columns: makeUqiColumnCompatible(fields),
             },
           }
         }
@@ -120,7 +89,7 @@ export default async function (config: MysqlConfig): Promise<UqiClient> {
         yield {
           row: rows as unknown as any,
           metadata: {
-            columns: typesForFields(fields) || [],
+            columns: makeUqiColumnCompatible(fields),
           },
         }
       }
