@@ -1,13 +1,13 @@
-import React, { useContext, useState } from 'react'
-import { type YamlType } from '../../utils/yaml'
+import React, { useState } from 'react'
 import {
+  type YamlType,
+  useConfigBuilderContext,
   type OpenTrussComponentExports,
   type FrameType,
   type COMPONENTS,
-} from '../../configuration'
-import { describeZod } from '../../utils/descibe-zod'
-import * as OT_COMPONENTS from '../../components'
-import { ConfigBuilderContext } from './config-builder-context'
+  OT_COMPONENTS,
+  describeZod,
+} from '@open-truss/open-truss'
 import PropInput from './PropInput'
 
 type ViewProps = FrameType['view']['props']
@@ -54,7 +54,7 @@ function ComponentListItem({
   ALL_COMPONENTS: COMPONENTS
 }): React.JSX.Element {
   const component = ALL_COMPONENTS[componentName]
-  const { addFrame } = useContext(ConfigBuilderContext)
+  const { addFrame } = useConfigBuilderContext()
   const [props, setProps] = useState<ViewProps>(undefined)
 
   let canHaveChildren = false

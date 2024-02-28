@@ -1,10 +1,9 @@
-import { useContext } from 'react'
-import { ConfigBuilderContext } from './config-builder-context'
+import { useConfigBuilderContext } from '@open-truss/open-truss'
 
 const FRAMES_PATH_PARTS = ['workflow:', 'frames:', '- frame:']
 
 export default function ConfigYaml(): React.JSX.Element {
-  const { config, framesPath, setFramesPath } = useContext(ConfigBuilderContext)
+  const { config, framesPath, setFramesPath } = useConfigBuilderContext()
   const framesPathParts: Array<number | string> = []
 
   return (

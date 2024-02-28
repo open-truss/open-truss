@@ -1,6 +1,8 @@
+import {
+  type YamlType,
+  type ZodDescriptionObject,
+} from '@open-truss/open-truss'
 import { useEffect } from 'react'
-import { type YamlType } from '../../utils/yaml'
-import { type ZodDescriptionObject } from '../../utils/descibe-zod'
 
 export default function PropInput({
   name,
@@ -18,7 +20,7 @@ export default function PropInput({
 
   useEffect(() => {
     onChange(defaultValue)
-  }, [defaultValue])
+  }, [])
 
   if (name === 'children') {
     return null
