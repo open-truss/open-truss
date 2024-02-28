@@ -35,6 +35,19 @@ workflow:
     - frame:
 */
 
+const RenderFramesShape = z
+  .discriminatedUnion('type', [
+    z.object({
+      type: z.literal('inSequence'),
+      next: z.string(),
+      back: z.string(),
+    }),
+    z.object({
+      type: z.literal('all'),
+    }),
+  ])
+  .optional()
+
 const FrameBase = z.object({
   frame: z.null(), // used only to make configs more readable
   view: z.object({
@@ -42,6 +55,7 @@ const FrameBase = z.object({
     props: ViewPropsV1Shape,
   }),
   data: DataV1Shape,
+  renderFrames: RenderFramesShape,
 })
 
 export type FrameType = z.infer<typeof FrameBase> & {
@@ -91,10 +105,12 @@ export const SignalsV1Shape = z.record(z.string()).optional()
 export type SignalsV1 = z.infer<typeof SignalsV1Shape>
 
 export const WorkflowV1Shape = z.object({
+  id: z.string().optional(),
   version: z.number().positive(),
   signals: SignalsV1Shape,
   frameWrapper: z.string().optional(),
   frames: FramesV1Shape,
+  renderFrames: RenderFramesShape,
 })
 export type WorkflowV1 = z.infer<typeof WorkflowV1Shape>
 
