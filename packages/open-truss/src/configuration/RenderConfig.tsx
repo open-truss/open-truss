@@ -52,7 +52,7 @@ interface RenderFromEndpointInterface {
 }
 
 // TODO: Get this path from application config and only need to pass in filename?
-const CONFIG_API = '/ot/api/configs/'
+const CONFIG_API = '/api/ot/configs/'
 export function RenderFromEndpoint({
   configName,
   components,
