@@ -16,6 +16,7 @@ export interface GlobalContext {
   COMPONENTS: COMPONENTS
   signals: Signals
   FrameWrapper: FrameWrapper
+  workflowId: string
 }
 
 let _COMPONENTS: COMPONENTS
@@ -53,7 +54,7 @@ export function RenderConfig({
     COMPONENTS,
   ) as FrameWrapper
 
-  const signals = createSignals(config.signals)
+  const signals = createSignals(config.signals, validateConfig)
 
   if (validateConfig) {
     const propErrs = validateComponentProps(config.frames, COMPONENTS, signals)
@@ -61,12 +62,15 @@ export function RenderConfig({
       console.log(`Encountered component prop errors: ${propErrs.join(',')}`)
     }
   }
+  const workflowId = config?.id || ''
   const globalContext: GlobalContext = {
     signals,
     config,
     COMPONENTS,
     FrameWrapper,
+    workflowId,
   }
+  setWorkflowSession(workflowId)
   // Workflows are just frames! Use unknown to convince TS of this fact.
   const frame = {
     ...config,
@@ -82,11 +86,17 @@ export function RenderConfig({
   )
 }
 
-function createSignals(signalsConfig: SignalsV1): Signals {
+function createSignals(signalsConfig: SignalsV1, validate: boolean): Signals {
   const signals: Signals = {}
   if (signalsConfig === undefined) return signals
   Object.entries(signalsConfig).forEach(([name, val]) => {
     const signal = SIGNALS[val]
+    if (validate && signal === undefined) {
+      const err = `Signal type ${String(
+        val,
+      )} is unknown. Please check value of ${String(name)} Signal`
+      throw new Error(err)
+    }
     if (signal) signals[name] = signal.parse(undefined)
   })
   return signals
@@ -122,4 +132,27 @@ function validateComponentProps(
   })
 
   return errors
+}
+
+function setWorkflowSession(id: string): void {
+  localStorage.setItem(`OT-Workflow:${id}`, JSON.stringify({}))
+}
+
+export function getWorkflowSession(
+  id: string,
+): Record<string, string | number> {
+  const session = localStorage.getItem(`OT-Workflow:${id}`) || ''
+  const sess = JSON.parse(session)
+  if (typeof sess === 'object') return sess
+  return {}
+}
+
+export function setWorkflowSessionValue(
+  id: string,
+  key: string,
+  value: string | number,
+): void {
+  const session = getWorkflowSession(id)
+  session[key] = value
+  localStorage.setItem(`OT-Workflow:${id}`, JSON.stringify(session))
 }

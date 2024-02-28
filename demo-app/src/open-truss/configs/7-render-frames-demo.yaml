@@ -1,0 +1,19 @@
+workflow:
+  version: 1
+  id: 7-render-frames-demo-unique-id
+  signals:
+    integer: number
+    runCalculation: NavigateFrame
+  renderFrames:
+    type: inSequence
+    next: :runCalculation # sets the next function as :runCalculation
+  frames:
+    - frame:
+      view:
+        component: IntegerInput
+        props:
+          submit: :runCalculation # sets submit to runCalcluation
+    - frame:
+      view:
+        component: ShowIntegerSquared
+
