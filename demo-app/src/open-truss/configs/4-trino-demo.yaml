@@ -5,7 +5,7 @@ workflow:
   frames:
     - frame:
       view:
-        component: UqiDataProvider
+        component: OTUqiDataProvider
         props:
           source: trino-demo
           query: >

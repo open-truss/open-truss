@@ -3,18 +3,19 @@ import {
   type BaseOpenTrussComponentV1,
   BaseOpenTrussComponentV1PropsShape,
   withChildren,
+  RecordsSignal,
 } from '@open-truss/open-truss'
-import { z } from 'zod'
+import { type z } from 'zod'
 
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   ...withChildren,
-  data: z.string().default('no data'),
+  results: RecordsSignal,
 })
 
 const TrinoDemo: BaseOpenTrussComponentV1<z.infer<typeof Props>> = ({
-  data,
+  results,
 }) => {
-  return <>{JSON.stringify(data)}</>
+  return <>{JSON.stringify(results)}</>
 }
 
 export default TrinoDemo
