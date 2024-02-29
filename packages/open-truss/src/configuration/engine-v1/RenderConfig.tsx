@@ -19,9 +19,9 @@ export interface GlobalContext {
   workflowId: string
 }
 
-let _COMPONENTS: COMPONENTS
+let COMBINED_COMPONENTS: COMPONENTS
 export function RUNTIME_COMPONENTS(): COMPONENTS {
-  return _COMPONENTS
+  return COMBINED_COMPONENTS
 }
 
 const OTDefaultFrameWrapper: FrameWrapper = ({ children }) => <>{children}</>
@@ -35,7 +35,7 @@ export function RenderConfig({
   config: WorkflowV1
   validateConfig?: boolean
 }): React.JSX.Element {
-  _COMPONENTS = Object.assign({ ...COMPONENTS }, { OTDefaultFrameWrapper })
+  COMBINED_COMPONENTS = Object.assign({}, COMPONENTS, { OTDefaultFrameWrapper })
   // Runs validations in config-schemas
   let config = _config
   if (validateConfig) {
@@ -51,13 +51,17 @@ export function RenderConfig({
   const FrameWrapper = getComponent(
     config.frameWrapper ?? 'OTDefaultFrameWrapper',
     configPath,
-    COMPONENTS,
+    COMBINED_COMPONENTS,
   ) as FrameWrapper
 
   const signals = createSignals(config.signals, validateConfig)
 
   if (validateConfig) {
-    const propErrs = validateComponentProps(config.frames, COMPONENTS, signals)
+    const propErrs = validateComponentProps(
+      config.frames,
+      COMBINED_COMPONENTS,
+      signals,
+    )
     if (propErrs.length > 0) {
       console.log(`Encountered component prop errors: ${propErrs.join(',')}`)
     }
@@ -66,7 +70,7 @@ export function RenderConfig({
   const globalContext: GlobalContext = {
     signals,
     config,
-    COMPONENTS,
+    COMPONENTS: COMBINED_COMPONENTS,
     FrameWrapper,
     workflowId,
   }
