@@ -100,8 +100,11 @@ export function Frame(props: FrameContext): React.JSX.Element {
         return <Component {...processedProps} />
       }
     }
+    // TODO update process props to pass in signals even if not
+    // declared by component
+    processedProps['results'] = signals['results']
 
-    return <Component {...props}>{subframes}</Component>
+    return <Component {...processedProps}>{subframes}</Component>
   } catch (e: any) {
     return <ShowError error={e} />
   }
