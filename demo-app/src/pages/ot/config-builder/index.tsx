@@ -31,7 +31,7 @@ const Output: React.FC = () => {
       {!showConfig && (
         <RenderConfig
           config={config}
-          components={Object.assign(OT_COMPONENTS, {
+          components={Object.assign({}, OT_COMPONENTS, {
             ConfigBuilderFrameWrapper,
           })}
           validateConfig={false}
