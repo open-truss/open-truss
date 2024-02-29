@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { type COMPONENTS } from '../RenderConfig'
 import {
   type FrameWrapper,
@@ -70,7 +70,7 @@ export function RenderConfig({
     FrameWrapper,
     workflowId,
   }
-  setWorkflowSession(workflowId)
+  useSetWorkflowSession(workflowId)
   // Workflows are just frames! Use unknown to convince TS of this fact.
   const frame = {
     ...config,
@@ -134,8 +134,10 @@ function validateComponentProps(
   return errors
 }
 
-function setWorkflowSession(id: string): void {
-  localStorage.setItem(`OT-Workflow:${id}`, JSON.stringify({}))
+function useSetWorkflowSession(id: string): void {
+  useEffect(() => {
+    localStorage.setItem(`OT-Workflow:${id}`, JSON.stringify({}))
+  }, [id])
 }
 
 export function getWorkflowSession(
