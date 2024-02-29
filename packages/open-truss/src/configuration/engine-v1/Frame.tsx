@@ -3,7 +3,6 @@ import {
   type FrameV1,
   type DataV1,
   type ViewPropsV1,
-  type WorkflowV1,
   hasDefaultExport,
   hasPropsExport,
 } from './config-schemas'
@@ -59,17 +58,24 @@ function ShowError({ error }: { error: FrameError }): JSX.Element {
 export function Frame(props: FrameContext): React.JSX.Element {
   const {
     frame: { view, data, frames },
-    globalContext: { COMPONENTS, config, signals },
+    globalContext: { COMPONENTS, signals },
     configPath,
   } = props
   const { component, props: viewProps } = view
   try {
     const [renderCount, render] = useState(0)
-    // used to re render current Frame and it's tree
+    // used to re render current Frame and its tree
     const reRender = (): void => {
       render(renderCount + 1)
     }
-    const subframes = RenderFrames(props, signals, reRender)
+
+    let subframes
+    const renderType = props?.frame?.renderFrames?.type
+    if (renderType === 'inSequence') {
+      subframes = <FramesInSequence {...props} reRender={reRender} />
+    } else {
+      subframes = <AllFrames {...props} />
+    }
 
     if (component === '__FRAGMENT__') {
       return <>{subframes}</>
@@ -78,7 +84,6 @@ export function Frame(props: FrameContext): React.JSX.Element {
     const Component = getDefaultComponent(component, configPath, COMPONENTS)
     const processedProps = processProps({
       data,
-      config,
       configPath,
       viewProps,
       COMPONENTS,
@@ -102,30 +107,20 @@ export function Frame(props: FrameContext): React.JSX.Element {
   }
 }
 
-function RenderFrames(
-  props: FrameContext,
-  signals: Signals,
-  reRender: () => void,
-): JSX.Element[] | undefined {
-  const renderType = props?.frame?.renderFrames?.type
-  if (renderType === 'inSequence')
-    return renderInSequence(props, signals, reRender)
-  return renderAll(props)
+interface FramesInSequenceProps extends FrameContext {
+  reRender: () => void
 }
 
-function renderInSequence(
-  props: FrameContext,
-  signals: Signals,
-  reRender: () => void,
-): JSX.Element[] | undefined {
+const FramesInSequence: React.FC<FramesInSequenceProps> = (props) => {
   const {
     frame: {
       frames,
       renderFrames,
       view: { component },
     },
-    globalContext: { FrameWrapper, workflowId },
+    globalContext: { FrameWrapper, workflowId, signals },
     configPath,
+    reRender,
   } = props
   if (renderFrames?.type !== 'inSequence') {
     throw new FrameError(`This error should never occur`, component, configPath)
@@ -171,9 +166,9 @@ function renderInSequence(
   })
 }
 
-const FrameLevelKey = (framePath: string): string => `FrameLevel:${framePath}`
+const frameLevelKey = (framePath: string): string => `FrameLevel:${framePath}`
 function getCurrentFrameCursor(workflowId: string, frameLevel: string): number {
-  const fl = FrameLevelKey(frameLevel)
+  const fl = frameLevelKey(frameLevel)
   const frameCursor = getWorkflowSession(workflowId)[fl]
   if (frameCursor) return Number(frameCursor)
   return 0
@@ -184,11 +179,11 @@ function setFrameCursor(
   frameLevel: string,
   frameNumber: number,
 ): void {
-  const fl = FrameLevelKey(frameLevel)
+  const fl = frameLevelKey(frameLevel)
   setWorkflowSessionValue(workflowId, fl, frameNumber)
 }
 
-function renderAll(props: FrameContext): JSX.Element[] | undefined {
+const AllFrames: React.FC<FrameContext> = (props) => {
   const {
     frame: { frames },
     globalContext: { FrameWrapper },
@@ -210,7 +205,6 @@ function renderAll(props: FrameContext): JSX.Element[] | undefined {
 }
 
 interface ComponentPropsShape {
-  config: WorkflowV1
   configPath: string
   data: DataV1
   viewProps: ViewPropsV1
@@ -230,7 +224,6 @@ function isComponent(prop: YamlType): prop is string {
 }
 
 function processProps({
-  config,
   configPath,
   viewProps,
   componentName,
