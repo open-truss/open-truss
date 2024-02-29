@@ -1,9 +1,113 @@
 workflow:
   version: 1
+  signals:
+    results: Records
   frames:
     - frame:
-      data:
-        query: select * from  tpch.sf1.customer limit 10
-        source: trino-demo
+      # signals:
+      #   results: Records
       view:
-        component: TrinoDemo
+        component: UqiDataProvider
+        props:
+          source: trino-demo
+          query: >
+            SELECT Column
+            FROM tpch.sf1.customer
+            limit 10
+          results: :results
+        # TODO modify workflow where you select the type
+        # and it gets set as a param here
+        # params:
+        #   type:
+        # pageSize: 50
+          output:
+            results:
+              - column: string
+                # Type: string
+                # Extra: string
+                # Comment: string
+            # results2:
+            #   key: string
+            #   type: string
+            #   value: string
+      frames:
+        - frame:
+          view:
+            component: TrinoDemo
+            props:
+              results: :results # TrinoDemo takes a colleciton type
+
+workflow:
+  version: 1
+  signals:
+    results: Records
+  frames:
+    - frame:
+      view:
+        component: UqiDataProvider
+        props:
+          source: trino-demo
+          query: >
+            SELECT Column
+            FROM tpch.sf1.customer
+            limit 10
+          results: :results
+          output:
+            results:
+              - Column: string
+                Type: string
+                Extra: string
+                Comment: string
+      frames:
+        - frame:
+          view:
+            component: TrinoDemo
+            props:
+              results: :results
+
+
+
+
+
+
+
+
+
+
+
+
+# workflow:
+#   version: 1
+#   signals:
+#     results: Records
+#   frames:
+#     - frame:
+#       data:
+#         query: >\n
+#           SELECT key, type, value
+#           FROM tpch.sf1.customer
+#           WHERE type = 'BigInt'
+#         source: trino-demo
+#         output:
+#           results:
+#             - key: string
+#               type: string
+#               value: string
+#       view:
+#         component: TrinoDemo
+#         props:
+#           results: :results # TrinoDemo takes a colleciton type
+# TODO
+# - [x] update trino demo component to take in results
+# - [ ] update data provider to support outputs
+#   - [x] sketched out config
+#   - [ ] update data provider to loop through output config and create signals for each property
+#   - [ ] grab data from the results and put them into the signals
+# - [ ] update data provider to support params (sequence demo_
+# - [ ] update data provider to support pagination
+# - [ ] update data provider to support isLoading
+# - [ ] update signals to have one at every frame level
+# - [ ] refactor component to OT package
+# - [ ] update UqiDataprovider type mapping to support user defined higher order signal types
+# - [ ] update UqiDataprovider to support annotgations that are scalar results and not just arrays of objects or objects
+# - [ ] update UqiDataprovider to only pass through results that the config has declared and not excess results returned by uqi.
