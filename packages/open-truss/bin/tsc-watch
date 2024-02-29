@@ -6,6 +6,12 @@ cd $package_dir
 
 PACKAGE_DIR=$package_dir bin/append-package-json-to-dist
 
+if [ "$1" == "--sync" ]; then
+  tsc --project $PACKAGE_DIR/tsconfig.json
+  tsc --project $PACKAGE_DIR/tsconfig.esm.json
+  exit
+fi
+
 # Function to terminate both tsc processes
 terminate_tsc_processes() {
   echo "Terminating TypeScript watch processes..."

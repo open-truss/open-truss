@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "tsc:sync": "open-truss tsc-watch --sync",
     "tsc:watch": "open-truss tsc-watch",
     "ot:setup": "open-truss setup",
     "build": "next build",

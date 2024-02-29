@@ -12,6 +12,8 @@ cd $open_truss_package_dir \
   && rm -r dist/ \
   && cd $demo_app_dir
 
+npm run tsc:sync
+
 # Function to terminate both tsc processes
 terminate_tsc_processes() {
   echo "Terminating TypeScript watch processes..."
