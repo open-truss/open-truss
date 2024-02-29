@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { signal, type Signal } from '@preact/signals-react'
+export { Signal }
 export { effect, computed } from '@preact/signals-react'
 export type SignalsZodType = z.ZodDefault<z.ZodType<Signal<any>>>
 export type Signals = Record<string, Signal<any>>
@@ -45,3 +46,17 @@ export const NavigateFrameSignal = SignalType<NavigateFrame>(
   () => {},
 )
 export type NavigateFrameSignalType = z.infer<typeof NavigateFrameSignal>
+
+// Scalar types
+export const NumbersSignal = SignalType<number[]>('number[]', [])
+export const NumberSignal = SignalType<number>('number', 0)
+export const StringsSignal = SignalType<string[]>('string[]', [])
+export const StringSignal = SignalType<string>('string', '')
+export const BooleansSignal = SignalType<boolean[]>('boolean[]', [])
+export const BooleanSignal = SignalType<boolean>('boolean', false)
+
+// Collection types
+export const RecordsSignal = SignalType<Array<Record<string, any>>>(
+  'Records',
+  [],
+)
