@@ -100,9 +100,6 @@ export function Frame(props: FrameContext): React.JSX.Element {
         return <Component {...processedProps} />
       }
     }
-    // TODO update process props to pass in signals even if not
-    // declared by component
-    processedProps['results'] = signals['results']
 
     return <Component {...processedProps}>{subframes}</Component>
   } catch (e: any) {
@@ -239,6 +236,11 @@ function processProps({
       const prop = viewProps[propName]
       if (isComponent(prop)) {
         newProps[propName] = getDefaultComponent(prop, configPath, COMPONENTS)
+      }
+      if (isSymbol(prop)) {
+        const signalName = parseSignalName(prop) ?? ''
+        const signal = signals[signalName]
+        if (signal) newProps[propName] = signal
       }
     }
   }
