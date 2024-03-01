@@ -9,16 +9,16 @@ workflow:
         props:
           source: trino-demo
           query: >
-            SELECT 'Column', 'Type', 'Extra', 'Comment'
+            SELECT name, phone, acctbal, comment
             FROM tpch.sf1.customer
             limit 10
           results: :results
           output:
             results:
-              - Column: string
-                Type: string
-                Extra: string
-                Comment: string
+              - name: string
+                phone: string
+                acctbal: number
+                comment: string
       frames:
         - frame:
           view:
