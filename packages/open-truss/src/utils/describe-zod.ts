@@ -1,6 +1,7 @@
 import { type z } from 'zod'
 import { BaseOpenTrussComponentV1PropsShape } from '../configuration'
-import { type YamlType } from '../utils/yaml'
+import { getSignalsType } from '../signals'
+import { type YamlType } from './yaml'
 
 type ZodShape = ZodDescriptionObject | string[]
 
@@ -21,6 +22,16 @@ export function describeZod(
       // We don't process the base props like config and data.
       if (Object.keys(BaseOpenTrussComponentV1PropsShape.shape).includes(key)) {
         return description
+      }
+
+      if (getSignalsType(value)) {
+        console.log(value._def.defaultValue().value) // this is correct
+        console.log(value._def.innerType.sourceType())
+        console.log(JSON.stringify(value))
+        console.log(JSON.stringify(value._def))
+        console.log(JSON.stringify(value._def.innerType))
+        console.log(JSON.stringify(value._def.innerType._def))
+        console.log(value._def.innerType._def.schema)
       }
 
       const type = value._def.typeName

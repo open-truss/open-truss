@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { describeZod } from './descibe-zod'
+import { describeZod } from './describe-zod'
 
 test('describeZod', () => {
   const props = z.object({
