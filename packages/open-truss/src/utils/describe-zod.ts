@@ -1,12 +1,13 @@
 import { type z } from 'zod'
 import { BaseOpenTrussComponentV1PropsShape } from '../configuration'
-import { getSignalsType } from '../signals'
+import { getSignalAndValueShape } from '../signals'
 import { type YamlType } from './yaml'
 
 type ZodShape = ZodDescriptionObject | string[]
 
 export interface ZodDescriptionObject {
   type?: string
+  isSignal?: boolean
   defaultValue?: YamlType
   shape?: ZodShape
 }
@@ -24,14 +25,13 @@ export function describeZod(
         return description
       }
 
-      if (getSignalsType(value)) {
-        console.log(value._def.defaultValue().value) // this is correct
-        console.log(value._def.innerType.sourceType())
-        console.log(JSON.stringify(value))
-        console.log(JSON.stringify(value._def))
-        console.log(JSON.stringify(value._def.innerType))
-        console.log(JSON.stringify(value._def.innerType._def))
-        console.log(value._def.innerType._def.schema)
+      // For signals, we describe the shape of their value
+      // but keep track that it is actually a signal.
+      let isSignal
+      const signalAndValueShape = getSignalAndValueShape(value)
+      if (signalAndValueShape) {
+        value = signalAndValueShape.valueShape
+        isSignal = true
       }
 
       const type = value._def.typeName
@@ -41,7 +41,10 @@ export function describeZod(
         description[key] = { type, shape: describeZod(value.shape) }
       } else if (type === 'ZodArray') {
         const innerType = value._def.type
-        description[key] = { type, shape: describeZod({ innerType }).innerType }
+        description[key] = {
+          type,
+          shape: describeZod({ innerType }).innerType,
+        }
       } else if (type === 'ZodUnion') {
         description[key] = {
           type,
@@ -52,12 +55,15 @@ export function describeZod(
       } else if (type === 'ZodDefault') {
         const innerType = value._def.innerType
         const desc: ZodDescriptionObject = {
-          defaultValue: value._def.defaultValue(),
+          defaultValue: value.parse(undefined),
           ...(describeZod({ innerType }).innerType as object),
         }
         description[key] = desc
       } else {
         description[key] = { type }
+      }
+      if (isSignal) {
+        description[key].isSignal = true
       }
       return description
     },

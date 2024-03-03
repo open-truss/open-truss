@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { describeZod } from './describe-zod'
+import { SignalType } from '../signals'
 
 test('describeZod', () => {
   const props = z.object({
@@ -14,9 +15,20 @@ test('describeZod', () => {
     arrayProp: z.array(z.string()).default(['a', 'b', 'c']),
     enumProp: z.enum(['enum1', 'enum2']).default('enum1'),
     unionProp: z.union([z.number(), z.string()]).default(123),
+    numberSignalProp: SignalType<number>(
+      'NumberSignal',
+      z.number().default(123),
+    ),
+    stringArraySignalProp: SignalType<string[]>(
+      'StringArraySignal',
+      z.array(z.string()).default(['a', 'b']),
+    ),
   })
   expect(describeZod(props.shape)).toEqual({
-    stringProp: { type: 'ZodString', defaultValue: 'hello world' },
+    stringProp: {
+      type: 'ZodString',
+      defaultValue: 'hello world',
+    },
     numberProp: { type: 'ZodNumber', defaultValue: 42 },
     objectProp: {
       type: 'ZodObject',
@@ -42,6 +54,19 @@ test('describeZod', () => {
       type: 'ZodUnion',
       shape: [{ type: 'ZodNumber' }, { type: 'ZodString' }],
       defaultValue: 123,
+    },
+    numberSignalProp: {
+      type: 'ZodNumber',
+      isSignal: true,
+      defaultValue: 123,
+    },
+    stringArraySignalProp: {
+      type: 'ZodArray',
+      isSignal: true,
+      shape: {
+        type: 'ZodString',
+      },
+      defaultValue: ['a', 'b'],
     },
   })
 })
