@@ -15,6 +15,7 @@
     "@apollo/server": "^4.9.5",
     "@as-integrations/next": "^3.0.0",
     "@open-truss/open-truss": "file:../packages/open-truss",
+    "azure-kusto-data": "^5.2.3",
     "graphql-tag": "^2.12.6",
     "lodash": "^4.17.21",
     "mysql2": "^3.9.2",
