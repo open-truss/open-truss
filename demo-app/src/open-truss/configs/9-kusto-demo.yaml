@@ -6,4 +6,4 @@ workflow:
         query: cluster("acme").database("widgets").RawEvent | limit 1
         source: kusto-demo
       view:
-        component: TrinoDemo
+        component: DataDemo
