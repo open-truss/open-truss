@@ -29,7 +29,7 @@ export function RenderConfig({
   config: string
   validateConfig?: boolean
 }): React.JSX.Element {
-  const components = Object.assign(appComponents, OT_COMPONENTS)
+  const components = Object.assign({}, appComponents, OT_COMPONENTS)
   const parsedConfig = parseYaml(config)
   const workflow = (parsedConfig as unknown as WorkflowSpec).workflow
   if (workflow.version === 1) {
@@ -52,7 +52,7 @@ interface RenderFromEndpointInterface {
 }
 
 // TODO: Get this path from application config and only need to pass in filename?
-const CONFIG_API = '/ot/api/configs/'
+const CONFIG_API = '/api/ot/configs/'
 export function RenderFromEndpoint({
   configName,
   components,

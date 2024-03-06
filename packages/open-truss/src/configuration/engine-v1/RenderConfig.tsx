@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { type COMPONENTS } from '../RenderConfig'
 import {
   type FrameWrapper,
@@ -16,11 +16,12 @@ export interface GlobalContext {
   COMPONENTS: COMPONENTS
   signals: Signals
   FrameWrapper: FrameWrapper
+  workflowId: string
 }
 
-let _COMPONENTS: COMPONENTS
+let COMBINED_COMPONENTS: COMPONENTS
 export function RUNTIME_COMPONENTS(): COMPONENTS {
-  return _COMPONENTS
+  return COMBINED_COMPONENTS
 }
 
 const OTDefaultFrameWrapper: FrameWrapper = ({ children }) => <>{children}</>
@@ -34,7 +35,7 @@ export function RenderConfig({
   config: WorkflowV1
   validateConfig?: boolean
 }): React.JSX.Element {
-  _COMPONENTS = Object.assign(COMPONENTS, { OTDefaultFrameWrapper })
+  COMBINED_COMPONENTS = Object.assign({}, COMPONENTS, { OTDefaultFrameWrapper })
   // Runs validations in config-schemas
   let config = _config
   if (validateConfig) {
@@ -50,23 +51,30 @@ export function RenderConfig({
   const FrameWrapper = getComponent(
     config.frameWrapper ?? 'OTDefaultFrameWrapper',
     configPath,
-    COMPONENTS,
+    COMBINED_COMPONENTS,
   ) as FrameWrapper
 
-  const signals = createSignals(config.signals)
+  const signals = createSignals(config.signals, validateConfig)
 
   if (validateConfig) {
-    const propErrs = validateComponentProps(config.frames, COMPONENTS, signals)
+    const propErrs = validateComponentProps(
+      config.frames,
+      COMBINED_COMPONENTS,
+      signals,
+    )
     if (propErrs.length > 0) {
       console.log(`Encountered component prop errors: ${propErrs.join(',')}`)
     }
   }
+  const workflowId = config?.id || ''
   const globalContext: GlobalContext = {
     signals,
     config,
-    COMPONENTS,
+    COMPONENTS: COMBINED_COMPONENTS,
     FrameWrapper,
+    workflowId,
   }
+  useSetWorkflowSession(workflowId)
   // Workflows are just frames! Use unknown to convince TS of this fact.
   const frame = {
     ...config,
@@ -82,11 +90,17 @@ export function RenderConfig({
   )
 }
 
-function createSignals(signalsConfig: SignalsV1): Signals {
+function createSignals(signalsConfig: SignalsV1, validate: boolean): Signals {
   const signals: Signals = {}
   if (signalsConfig === undefined) return signals
   Object.entries(signalsConfig).forEach(([name, val]) => {
     const signal = SIGNALS[val]
+    if (validate && signal === undefined) {
+      const err = `Signal type ${String(
+        val,
+      )} is unknown. Please check value of ${String(name)} Signal`
+      throw new Error(err)
+    }
     if (signal) signals[name] = signal.parse(undefined)
   })
   return signals
@@ -122,4 +136,29 @@ function validateComponentProps(
   })
 
   return errors
+}
+
+function useSetWorkflowSession(id: string): void {
+  useEffect(() => {
+    localStorage.setItem(`OT-Workflow:${id}`, JSON.stringify({}))
+  }, [id])
+}
+
+export function getWorkflowSession(
+  id: string,
+): Record<string, string | number> {
+  const session = localStorage.getItem(`OT-Workflow:${id}`) || ''
+  const sess = JSON.parse(session)
+  if (typeof sess === 'object') return sess
+  return {}
+}
+
+export function setWorkflowSessionValue(
+  id: string,
+  key: string,
+  value: string | number,
+): void {
+  const session = getWorkflowSession(id)
+  session[key] = value
+  localStorage.setItem(`OT-Workflow:${id}`, JSON.stringify(session))
 }
