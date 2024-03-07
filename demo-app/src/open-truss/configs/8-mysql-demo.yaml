@@ -3,7 +3,7 @@ workflow:
   frames:
     - frame:
       data:
-        query: select * from  tpch.sf1.customer limit 10
-        source: trino-demo
+        query: select * from sys.metrics
+        source: mysql-demo
       view:
         component: DataDemo

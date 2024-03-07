@@ -11,10 +11,10 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   data: z.string().default('no data'),
 })
 
-const TrinoDemo: BaseOpenTrussComponentV1<z.infer<typeof Props>> = ({
+const DataDemo: BaseOpenTrussComponentV1<z.infer<typeof Props>> = ({
   data,
 }) => {
   return <>{JSON.stringify(data)}</>
 }
 
-export default TrinoDemo
+export default DataDemo
