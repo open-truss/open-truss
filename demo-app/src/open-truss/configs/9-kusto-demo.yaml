@@ -3,7 +3,7 @@ workflow:
   frames:
     - frame:
       data:
-        query: select * from  tpch.sf1.customer limit 10
-        source: trino-demo
+        query: cluster("acme").database("widgets").RawEvent | limit 1
+        source: kusto-demo
       view:
         component: DataDemo

@@ -1,3 +1,4 @@
+import createKustoUqiClient from '@/lib/kusto-uqi-client'
 import createMysqlUqiClient from '@/lib/mysql-uqi-client'
 import createTrinoUqiClient from '@/lib/trino-uqi-client'
 
@@ -20,6 +21,15 @@ const sources = {
       socketPath: process.env.MYSQL_DEMO_SOCKET_PATH,
     },
     createClient: createMysqlUqiClient,
+  },
+  'kusto-demo': {
+    config: {
+      appid: String(process.env.KUSTO_DEMO_AZURE_CLIENT_ID),
+      appkey: String(process.env.KUSTO_DEMO_AZURE_CLIENT_SECRET),
+      authorityId: String(process.env.KUSTO_DEMO_AZURE_TENANT_ID),
+      endpoint: String(process.env.KUSTO_DEMO_ENDPOINT),
+    },
+    createClient: createKustoUqiClient,
   },
 }
 

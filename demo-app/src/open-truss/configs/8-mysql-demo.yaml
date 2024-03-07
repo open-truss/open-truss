@@ -6,4 +6,4 @@ workflow:
         query: select * from sys.metrics
         source: mysql-demo
       view:
-        component: TrinoDemo
+        component: DataDemo

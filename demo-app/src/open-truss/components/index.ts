@@ -1,6 +1,6 @@
 export * as ClientPageTitle from './ClientPageTitle'
 export * as NextLink from './NextLink'
-export * as TrinoDemo from './TrinoDemo'
+export * as DataDemo from './DataDemo'
 export * as YourAppExampleComponent from './YourAppExampleComponent'
 export * as SimpleSignalExample from './SimpleSignalExample'
 export * as IntegerInput from './IntegerInput'
