@@ -94,7 +94,7 @@ export default async function (config: KustoConfig): Promise<UqiClient> {
         yield {
           row,
           metadata: {
-            columns: (kustoResultRow.columns as unknown as UqiColumn[]) || [],
+            columns: (kustoResultRow.columns as UqiColumn[]) || [],
           },
         }
       }
