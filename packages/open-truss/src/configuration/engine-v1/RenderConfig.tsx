@@ -94,7 +94,7 @@ function createSignals(signalsConfig: SignalsV1, validate: boolean): Signals {
   const signals: Signals = {}
   if (signalsConfig === undefined) return signals
   Object.entries(signalsConfig).forEach(([name, val]) => {
-    const signal = SIGNALS[val]
+    const signal = SIGNALS[val]?.signal
     if (validate && signal === undefined) {
       const err = `Signal type ${String(
         val,
@@ -121,7 +121,7 @@ function validateComponentProps(
     const componentName = f?.view?.component
     if (!componentName) return
 
-    eachComponentSignal(componentName, COMPONENTS, (propName, signalsType) => {
+    eachComponentSignal(componentName, COMPONENTS, (propName, _signalsType) => {
       const signal = signals[propName]
       if (signal === undefined) {
         errors.push(
