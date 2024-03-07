@@ -33,21 +33,16 @@ function buildClient({
   return client
 }
 
-const clusterRegex = /cluster\((?<quote>["'])(?<cluster>[^"']*)\1\)/
 const databaseRegex = /database\((?<quote>["'])(?<database>[^"']*)\1\)/
 
-function clusterAndDatabaseFromKustoQuery(query: string): {
-  cluster: string
-  database: string
-} {
-  const cluster = query.match(clusterRegex)?.groups?.cluster
+function dataFromKustoQuery(query: string): { database: string } {
   const database = query.match(databaseRegex)?.groups?.database
 
-  if (cluster == null || database == null) {
-    return { cluster: 'auditlogexplorerro', database: 'auditlogevents' }
+  if (database == null) {
+    throw new Error('Could not find database in query')
   }
 
-  return { cluster, database }
+  return { database }
 }
 
 interface KustoConfig {
@@ -75,7 +70,7 @@ export default async function (config: KustoConfig): Promise<UqiClient> {
     context: UqiContext<KustoConfig, Client>,
     query: string,
   ): Promise<AsyncIterableIterator<UqiResult>> {
-    const { database } = clusterAndDatabaseFromKustoQuery(query)
+    const { database } = dataFromKustoQuery(query)
 
     const kustoResponseDataSet = await context.client.execute(database, query)
 
