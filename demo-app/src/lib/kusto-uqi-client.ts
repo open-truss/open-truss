@@ -77,7 +77,7 @@ export default async function (config: KustoConfig): Promise<UqiClient> {
   ): Promise<AsyncIterableIterator<UqiResult>> {
     const { database } = clusterAndDatabaseFromKustoQuery(query)
 
-    const kustoResponseDataSet = await client.execute(database, query)
+    const kustoResponseDataSet = await context.client.execute(database, query)
 
     // TODO: handle failed query
     // if (kustoResponseDataSet.statusTable) {
