@@ -59,10 +59,16 @@ interface KustoConfig {
 
 export default async function (config: KustoConfig): Promise<UqiClient> {
   const typeMappings: Record<string, UqiMappedType> = {
+    bool: 'Boolean',
     datetime: 'Date',
-    string: 'String',
+    decimal: 'Number',
     dynamic: 'JSON',
-    // TODO: finish mappings
+    guid: 'String',
+    int: 'Number',
+    long: 'BigInt',
+    real: 'Number',
+    string: 'String',
+    timespan: 'String',
   }
 
   async function query(
