@@ -1,5 +1,7 @@
-import { SignalType } from '@open-truss/open-truss'
+import { z, SignalType } from '@open-truss/open-truss'
 
-// scalar types
 // higher order types
-export const AccountIDsSignal = SignalType<number[]>('AccountIDs', [])
+export const AccountIDsSignal = SignalType<number[]>(
+  'AccountIDs',
+  z.array(z.number()).default([]),
+)

@@ -1,0 +1,9 @@
+workflow:
+  version: 1
+  frames:
+    - frame:
+      data:
+        query: cluster("acme").database("widgets").RawEvent | limit 1
+        source: kusto-demo
+      view:
+        component: DataDemo

@@ -22,6 +22,6 @@ workflow:
       frames:
         - frame:
           view:
-            component: TrinoDemo
+            component: DataDemo
             props:
               results: :results # TrinoDemo takes a colleciton type

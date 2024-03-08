@@ -2,8 +2,8 @@ import {
   BaseOpenTrussComponentV1PropsShape,
   computed,
   NumberSignal,
+  type z,
 } from '@open-truss/open-truss'
-import { type z } from 'zod'
 
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   integer: NumberSignal,

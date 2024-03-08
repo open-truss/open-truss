@@ -1,0 +1,9 @@
+workflow:
+  version: 1
+  frames:
+    - frame:
+      data:
+        query: select * from sys.metrics
+        source: mysql-demo
+      view:
+        component: DataDemo

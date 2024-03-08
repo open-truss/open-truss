@@ -1,9 +1,9 @@
 import {
   BaseOpenTrussComponentV1PropsShape,
   computed,
+  type z,
 } from '@open-truss/open-truss'
 import { AccountIDsSignal } from '../signals'
-import { type z } from 'zod'
 import { useState } from 'react'
 
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
