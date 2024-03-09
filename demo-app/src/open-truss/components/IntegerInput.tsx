@@ -2,8 +2,8 @@ import {
   type z,
   BaseOpenTrussComponentV1PropsShape,
   NavigateFrameSignal,
+  NumberSignal,
 } from '@open-truss/open-truss'
-import { NumberSignal } from '../signals'
 import { useState } from 'react'
 
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({

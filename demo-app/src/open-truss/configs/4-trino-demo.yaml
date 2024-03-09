@@ -1,9 +1,27 @@
 workflow:
   version: 1
+  signals:
+    results: Records
   frames:
     - frame:
-      data:
-        query: select * from  tpch.sf1.customer limit 10
-        source: trino-demo
       view:
-        component: DataDemo
+        component: OTUqiDataProvider
+        props:
+          source: trino-demo
+          query: >
+            SELECT name, phone, acctbal, comment
+            FROM tpch.sf1.customer
+            limit 10
+          results: :results
+          output:
+            results:
+              - name: string
+                phone: string
+                acctbal: number
+                comment: string
+      frames:
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :results # TrinoDemo takes a colleciton type

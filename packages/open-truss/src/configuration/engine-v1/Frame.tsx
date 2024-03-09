@@ -101,7 +101,7 @@ export function Frame(props: FrameContext): React.JSX.Element {
       }
     }
 
-    return <Component {...props}>{subframes}</Component>
+    return <Component {...processedProps}>{subframes}</Component>
   } catch (e: any) {
     return <ShowError error={e} />
   }
@@ -237,6 +237,11 @@ function processProps({
       if (isComponent(prop)) {
         newProps[propName] = getDefaultComponent(prop, configPath, COMPONENTS)
       }
+      if (isSymbol(prop)) {
+        const signalName = parseSignalName(prop) ?? ''
+        const signal = signals[signalName]
+        if (signal) newProps[propName] = signal
+      }
     }
   }
 
@@ -247,7 +252,12 @@ function processProps({
       const signalName = parseSignalName(viewPropVal) ?? ''
       signal = signals[signalName]
     } else if (viewPropVal !== undefined) {
-      signal = signalsType.parse(viewPropVal)
+      // TODO This condition is for viewProps that are hard coded values (not signals)
+      // We need to transform them into a signal so that the component can use them.
+      // If creating many signals becomes an issue, perhaps we can make a simple wrapper
+      // object that mirrors the signal interface (eg. signal.value) and use that instead
+      signal = signalsType.parse(undefined)
+      signal.value = viewPropVal
     } else {
       signal = signals[propName]
     }

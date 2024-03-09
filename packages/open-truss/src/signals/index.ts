@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { signal, type Signal } from '@preact/signals-react'
+export { Signal }
 
 export { effect, computed } from '@preact/signals-react'
 
@@ -67,3 +68,29 @@ export const NavigateFrameSignal = SignalType<NavigateFrame>(
   z.function().default(() => () => {}),
 )
 export type NavigateFrameSignalType = z.infer<typeof NavigateFrameSignal>
+
+// Scalar types
+export const NumbersSignal = SignalType<number[]>(
+  'number[]',
+  z.array(z.number()).default([]),
+)
+export const NumberSignal = SignalType<number>('number', z.number().default(0))
+export const StringsSignal = SignalType<string[]>(
+  'string[]',
+  z.array(z.string()).default([]),
+)
+export const StringSignal = SignalType<string>('string', z.string().default(''))
+export const BooleansSignal = SignalType<boolean[]>(
+  'boolean[]',
+  z.array(z.boolean()).default([]),
+)
+export const BooleanSignal = SignalType<boolean>(
+  'boolean',
+  z.boolean().default(false),
+)
+
+// Collection types
+export const RecordsSignal = SignalType<Array<Record<string, any>>>(
+  'Records',
+  z.array(z.any()).default([]),
+)
