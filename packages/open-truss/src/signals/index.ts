@@ -147,7 +147,7 @@ export const BooleanSignal = SignalType<boolean>(
 )
 
 // Collection types
-export const RecordsSignal = SignalType<Array<Record<string, any>>>(
-  'Records',
-  z.array(z.any()).default([]),
+export const UnknownSignal = SignalType<unknown>(
+  'unknown',
+  z.unknown().default(''),
 )
