@@ -1,5 +1,8 @@
-import { z } from 'zod'
+import { z, type ZodTypeAny } from 'zod'
 import { signal, type Signal } from '@preact/signals-react'
+import { typeToZodMap, typeToDefaultValue } from '../utils/describe-zod'
+import { isObject } from '../utils/misc'
+import CryptoJS from 'crypto-js'
 export { Signal }
 
 export { effect, computed } from '@preact/signals-react'
@@ -58,6 +61,60 @@ export function SignalType<T>(
   SIGNALS[name] = { signal: zodType, valueShape }
 
   return zodType
+}
+
+// Creates a signal from an object or object[]
+// - It adds the signal to the SIGNALS store using a sha256 hash of the object as the name
+// - It sets the default value of the signal to match the shape of the object or object[].
+//   string, boolean, and number  fields are set with default values of "", false, 0.
+// - It sets the type to unknown given that this is runtime and typescript types don't exist
+// - TODO it accpets predfined higher order types as valid types
+export function createSignal(signal: object | object[]): SignalsZodType {
+  const name = signalNameFromObject(signal)
+  if (name in SIGNALS) return SIGNALS[name].signal
+
+  const { zodShape, defValue } = createZodShape(signal)
+  return SignalType<unknown>(name, zodShape.default(defValue))
+}
+
+function signalNameFromObject(signal: object | object[]): string {
+  const s = JSON.stringify(signal)
+  return CryptoJS.SHA256(s).toString()
+}
+
+function createZodShape(signal: object | object[]): {
+  zodShape: ZodTypeAny
+  defValue: object | object[]
+} {
+  if (Array.isArray(signal)) {
+    const signalObject = signal?.[0]
+    if (!isObject(signalObject))
+      throw new Error('Array signals must be an object as first and only value')
+
+    const { zodShape, defValue } = createZodShape(signalObject)
+    return { zodShape: z.array(zodShape), defValue: [defValue] }
+  } else {
+    const zodSchema: Record<string, ZodTypeAny> = {}
+    const defValue: Record<
+      string,
+      string | boolean | number | object | object[]
+    > = {}
+
+    for (const [key, value] of Object.entries(signal)) {
+      if (isObject(value)) {
+        const { zodShape, defValue: defaultValue } = createZodShape(value)
+        zodSchema[key] = zodShape
+        defValue[key] = defaultValue
+      } else if (typeof value === 'string' && value in typeToZodMap) {
+        zodSchema[key] = typeToZodMap[value]
+        defValue[key] = typeToDefaultValue[value]
+      } else {
+        throw new Error(`unknown signal value: ${value}`)
+      }
+    }
+
+    return { zodShape: z.object(zodSchema), defValue }
+  }
 }
 
 // Navigation signals
