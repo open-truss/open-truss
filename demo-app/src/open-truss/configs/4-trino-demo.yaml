@@ -1,7 +1,16 @@
 workflow:
   version: 1
   signals:
-    results: Records
+    resultsArray: # OTUqiDataProvider returns collection with rows using the shape of the object
+      - name: string
+        phone: string
+        acctbal: number
+        comment: string
+    resultsObject: # OTUqiDataProvider returns object grabbing the first row of results
+      name: string
+      phone: string
+      acctbal: number
+      comment: string
   frames:
     - frame:
       view:
@@ -12,16 +21,28 @@ workflow:
             SELECT name, phone, acctbal, comment
             FROM tpch.sf1.customer
             limit 10
-          results: :results
+          # output: [:resultsArray, :resultsObject, :name]
+          resultsArray: :resultsArray
+          resultsObject: :resultsObject
           output:
-            results:
+            resultsArray:
               - name: string
                 phone: string
                 acctbal: number
                 comment: string
+            resultsObject:
+              name: string
+              phone: string
+              acctbal: number
+              comment: string
       frames:
         - frame:
           view:
             component: DataDemo
             props:
-              results: :results # TrinoDemo takes a colleciton type
+              results: :resultsArray
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :resultsObject
