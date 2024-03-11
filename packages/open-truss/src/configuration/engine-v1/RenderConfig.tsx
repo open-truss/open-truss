@@ -109,7 +109,7 @@ function createSignals(signalsConfig: SignalsV1, validate: boolean): Signals {
 
     if (signal) signals[name] = signal.parse(undefined)
     if (signal === undefined && validate)
-      throw new Error(`Signal ${val} is unknown. Please check ${name} Signal`)
+      throw new Error(`${String(val)} is unknown. Please check ${name} Signal`)
   })
   return signals
 }
