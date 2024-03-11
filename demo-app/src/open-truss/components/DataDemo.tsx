@@ -15,7 +15,12 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
 const DataDemo: BaseOpenTrussComponentV1<z.infer<typeof Props>> = ({
   results,
 }) => {
-  return <>{JSON.stringify(results)}</>
+  return (
+    <>
+      <h2>Results</h2>
+      {JSON.stringify(results)}
+    </>
+  )
 }
 
 export default DataDemo
