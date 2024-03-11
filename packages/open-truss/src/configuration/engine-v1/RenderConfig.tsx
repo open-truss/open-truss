@@ -101,16 +101,15 @@ function createSignals(signalsConfig: SignalsV1, validate: boolean): Signals {
   if (signalsConfig === undefined) return signals
   Object.entries(signalsConfig).forEach(([name, val]) => {
     let signal: SignalsZodType | undefined
-    if (typeof val === 'string') {
-      signal = SIGNALS[val]?.signal
-      if (validate && signal === undefined) {
-        const err = `Signal type ${val} is unknown. Please check value of ${name} Signal`
-        throw new Error(err)
-      }
+    if (typeof val === 'string' && val in SIGNALS) {
+      signal = SIGNALS[val].signal
     } else if (isObject(val) || Array.isArray(val)) {
       signal = createSignal(val)
     }
+
     if (signal) signals[name] = signal.parse(undefined)
+    if (signal === undefined && validate)
+      throw new Error(`Signal ${val} is unknown. Please check ${name} Signal`)
   })
   return signals
 }
