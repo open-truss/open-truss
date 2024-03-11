@@ -1,7 +1,8 @@
 workflow:
   version: 1
   signals:
-    results: Records
+    results:
+      - Variable_name: string
   frames:
     - frame:
       view:

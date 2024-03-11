@@ -9,7 +9,13 @@ import {
   type SignalsV1,
 } from './config-schemas'
 import { getComponent, Frame, eachComponentSignal } from './Frame'
-import { type Signals, SIGNALS } from '../../signals'
+import { isObject } from '../../utils/misc'
+import {
+  type Signals,
+  SIGNALS,
+  type SignalsZodType,
+  createSignal,
+} from '../../signals'
 
 export interface GlobalContext {
   config: WorkflowV1
@@ -94,14 +100,16 @@ function createSignals(signalsConfig: SignalsV1, validate: boolean): Signals {
   const signals: Signals = {}
   if (signalsConfig === undefined) return signals
   Object.entries(signalsConfig).forEach(([name, val]) => {
-    const signal = SIGNALS[val]?.signal
-    if (validate && signal === undefined) {
-      const err = `Signal type ${String(
-        val,
-      )} is unknown. Please check value of ${String(name)} Signal`
-      throw new Error(err)
+    let signal: SignalsZodType | undefined
+    if (typeof val === 'string' && val in SIGNALS) {
+      signal = SIGNALS[val].signal
+    } else if (isObject(val) || Array.isArray(val)) {
+      signal = createSignal(val)
     }
+
     if (signal) signals[name] = signal.parse(undefined)
+    if (signal === undefined && validate)
+      throw new Error(`${String(val)} is unknown. Please check ${name} Signal`)
   })
   return signals
 }
