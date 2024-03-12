@@ -1,0 +1,28 @@
+{
+  "name": "@open-truss/uqi",
+  "version": "0.1.0",
+  "description": "A query client and client builder that can be used to wrap any data source client and present a unified query interface.",
+  "main": "./dist/cjs/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/src/index.js",
+      "require": "./dist/cjs/src/index.js"
+    }
+  },
+  "scripts": {
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc",
+    "build": "npm run build:cjs && npm run build:esm"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Jonathan Hoyt",
+    "url": "https://github.com/jonmagic"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.20.1",
+    "typescript": "^5.4.2"
+  }
+}
