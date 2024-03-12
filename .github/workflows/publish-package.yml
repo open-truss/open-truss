@@ -16,10 +16,19 @@ jobs:
       - name: Run CI
         working-directory: ./packages/open-truss
         run: npm ci
-      - name: Build dist
+      - name: Build @open-truss/open-truss dist
         working-directory: ./packages/open-truss
         run: npm run build
-      - uses: JS-DevTools/npm-publish@v3
+      - name: Publish @open-truss/open-truss
+        uses: JS-DevTools/npm-publish@v3
         with:
           token: ${{ secrets.NPM_TOKEN }}
           package: ./packages/open-truss
+      - name: Build @open-truss/uqi dist
+        working-directory: ./packages/open-truss
+        run: npm run build
+      - name: Publish @open-truss/uqi
+        uses: JS-DevTools/npm-publish@v3
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: ./packages/uqi
