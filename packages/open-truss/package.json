@@ -44,6 +44,7 @@
       "types": "./dist/mjs/pages.d.ts"
     }
   },
+  "typings": "./dist/mjs/index.d.ts",
   "dependencies": {
     "@preact/signals-react": "^2.0.0",
     "crypto-js": "^4.2.0",
