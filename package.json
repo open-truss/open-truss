@@ -20,5 +20,9 @@
     "eslint-plugin-react": "^7.33.2",
     "prettier": "^3.0.3",
     "typescript": "^5.2.2"
-  }
+  },
+  "dependencies": {
+    "@open-truss/open-truss": "^0.3.0"
+  },
+  "ot:setup": "open-truss setup"
 }
