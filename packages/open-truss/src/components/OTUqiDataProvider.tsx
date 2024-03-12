@@ -20,7 +20,7 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   output: z.array(UnknownSignal).optional(),
 })
 
-const UqiDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
+const OTUqiDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
   props,
 ) => {
   const { query, children, output, source } = props
@@ -60,4 +60,4 @@ const UqiDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
   return children
 }
 
-export default UqiDataProvider
+export default OTUqiDataProvider
