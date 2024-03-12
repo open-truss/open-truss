@@ -1,6 +1,6 @@
 {
   "name": "@open-truss/open-truss",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Framework for building internal tools",
   "directories": {
     "doc": "docs"
@@ -44,6 +44,7 @@
       "types": "./dist/mjs/pages.d.ts"
     }
   },
+  "typings": "./dist/mjs/index.d.ts",
   "dependencies": {
     "@preact/signals-react": "^2.0.0",
     "crypto-js": "^4.2.0",

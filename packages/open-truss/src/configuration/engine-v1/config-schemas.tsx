@@ -127,9 +127,7 @@ type BaseOpenTrussComponentV1Props = z.infer<
 
 export type BaseOpenTrussComponentV1<
   AdditionalProps = Record<string, unknown>,
-> = (
-  props: BaseOpenTrussComponentV1Props & AdditionalProps,
-) => React.JSX.Element
+> = (props: BaseOpenTrussComponentV1Props & AdditionalProps) => JSX.Element
 
 export const withChildren = { children: z.any().optional() }
 const ComponentWithChildrenShape =

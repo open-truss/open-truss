@@ -14,7 +14,7 @@ export default function PropInput({
   onChange: (value: YamlType) => void
   type: ZodDescriptionObject
   value?: string
-}): React.JSX.Element | null {
+}): JSX.Element | null {
   const defaultValue = type.defaultValue as string
   value = value ?? defaultValue
 
