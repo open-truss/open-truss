@@ -27,7 +27,6 @@ export default function QueryEditor(): JSX.Element {
     setQuery(value)
   }
 
-  console.log({ query })
   return (
     <ResizablePanelGroup direction="horizontal" className="h-full w-full">
       <ResizablePanel>
@@ -46,7 +45,7 @@ export default function QueryEditor(): JSX.Element {
           </ResizablePanel>
           <div className="flex justify-end">
             <Button
-              className="mt-2 bg-white text-gray-600 hover:bg-gray-200 hover:text-gray-800"
+              className="m-3 bg-white text-gray-600 hover:bg-gray-200 hover:text-gray-800 bg-gray-100"
               onClick={handleRun}
             >
               Run
@@ -78,7 +77,7 @@ export default function QueryEditor(): JSX.Element {
             </Table>
           </ResizablePanel>
         </ResizablePanelGroup>
-      </ResizablePanel >
+      </ResizablePanel>
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={25}>
         <Tabs defaultValue="recent" className="m-2">
