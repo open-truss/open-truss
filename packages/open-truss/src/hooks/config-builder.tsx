@@ -34,9 +34,9 @@ export const useConfigBuilderContext = (): ConfigBuilder => {
   return useContext(ConfigBuilderContext)
 }
 
-export const ConfigBuilderContextProvider: React.FC<
-  React.PropsWithChildren
-> = ({ children }) => {
+export const ConfigBuilderContextProvider: React.FC<{
+  children: JSX.Element
+}> = ({ children }) => {
   const [config, setConfig] = useState<string>(CONFIG_BASE)
   const [framesPath, _setFramesPath] = useState<string>(INITIAL_FRAMES_PATH)
 

@@ -55,7 +55,7 @@ function ShowError({ error }: { error: FrameError }): JSX.Element {
   )
 }
 
-export function Frame(props: FrameContext): React.JSX.Element {
+export function Frame(props: FrameContext): JSX.Element {
   const {
     frame: { view, data, frames },
     globalContext: { COMPONENTS, signals },
@@ -72,9 +72,9 @@ export function Frame(props: FrameContext): React.JSX.Element {
     let subframes
     const renderType = props?.frame?.renderFrames?.type
     if (renderType === 'inSequence') {
-      subframes = <FramesInSequence {...props} reRender={reRender} />
+      subframes = FramesInSequence({ ...props, reRender })
     } else {
-      subframes = <AllFrames {...props} />
+      subframes = AllFrames({ ...props })
     }
 
     if (component === '__FRAGMENT__') {
@@ -111,7 +111,9 @@ interface FramesInSequenceProps extends FrameContext {
   reRender: () => void
 }
 
-const FramesInSequence: React.FC<FramesInSequenceProps> = (props) => {
+const FramesInSequence = (
+  props: FramesInSequenceProps,
+): JSX.Element[] | undefined => {
   const {
     frame: {
       frames,
@@ -183,7 +185,7 @@ function setFrameCursor(
   setWorkflowSessionValue(workflowId, fl, frameNumber)
 }
 
-const AllFrames: React.FC<FrameContext> = (props) => {
+const AllFrames = (props: FrameContext): JSX.Element[] | undefined => {
   const {
     frame: { frames },
     globalContext: { FrameWrapper },
