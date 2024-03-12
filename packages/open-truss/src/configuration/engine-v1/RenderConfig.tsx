@@ -107,7 +107,11 @@ function createSignals(signalsConfig: SignalsV1, validate: boolean): Signals {
       signal = createSignal(val)
     }
 
-    if (signal) signals[name] = signal.parse(undefined)
+    if (signal) {
+      const s = signal.parse(undefined)
+      s.yamlName = name
+      signals[name] = s
+    }
     if (signal === undefined && validate)
       throw new Error(`${String(val)} is unknown. Please check ${name} Signal`)
   })
