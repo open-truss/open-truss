@@ -3,7 +3,7 @@ import { useConfigBuilderContext } from '@open-truss/open-truss'
 
 const FRAMES_PATH_PARTS = ['workflow:', 'frames:', '- frame:']
 
-export default function ConfigYaml(): React.JSX.Element {
+export default function ConfigYaml(): JSX.Element {
   const { config, framesPath, setFramesPath } = useConfigBuilderContext()
   const framesPathParts: Array<number | string> = []
 

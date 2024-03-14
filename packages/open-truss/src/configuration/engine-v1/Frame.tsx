@@ -55,7 +55,7 @@ function ShowError({ error }: { error: FrameError }): JSX.Element {
   )
 }
 
-export function Frame(props: FrameContext): React.JSX.Element {
+export function Frame(props: FrameContext): JSX.Element {
   const {
     frame: { view, data, frames },
     globalContext: { COMPONENTS, signals },
@@ -72,9 +72,9 @@ export function Frame(props: FrameContext): React.JSX.Element {
     let subframes
     const renderType = props?.frame?.renderFrames?.type
     if (renderType === 'inSequence') {
-      subframes = <FramesInSequence {...props} reRender={reRender} />
+      subframes = FramesInSequence({ ...props, reRender })
     } else {
-      subframes = <AllFrames {...props} />
+      subframes = AllFrames({ ...props })
     }
 
     if (component === '__FRAGMENT__') {
@@ -101,7 +101,7 @@ export function Frame(props: FrameContext): React.JSX.Element {
       }
     }
 
-    return <Component {...props}>{subframes}</Component>
+    return <Component {...processedProps}>{subframes}</Component>
   } catch (e: any) {
     return <ShowError error={e} />
   }
@@ -111,7 +111,9 @@ interface FramesInSequenceProps extends FrameContext {
   reRender: () => void
 }
 
-const FramesInSequence: React.FC<FramesInSequenceProps> = (props) => {
+const FramesInSequence = (
+  props: FramesInSequenceProps,
+): JSX.Element[] | undefined => {
   const {
     frame: {
       frames,
@@ -183,7 +185,7 @@ function setFrameCursor(
   setWorkflowSessionValue(workflowId, fl, frameNumber)
 }
 
-const AllFrames: React.FC<FrameContext> = (props) => {
+const AllFrames = (props: FrameContext): JSX.Element[] | undefined => {
   const {
     frame: { frames },
     globalContext: { FrameWrapper },
@@ -237,6 +239,11 @@ function processProps({
       if (isComponent(prop)) {
         newProps[propName] = getDefaultComponent(prop, configPath, COMPONENTS)
       }
+      if (isSymbol(prop)) {
+        const signalName = parseSignalName(prop) ?? ''
+        const signal = signals[signalName]
+        if (signal) newProps[propName] = signal
+      }
     }
   }
 
@@ -247,7 +254,12 @@ function processProps({
       const signalName = parseSignalName(viewPropVal) ?? ''
       signal = signals[signalName]
     } else if (viewPropVal !== undefined) {
-      signal = signalsType.parse(viewPropVal)
+      // TODO This condition is for viewProps that are hard coded values (not signals)
+      // We need to transform them into a signal so that the component can use them.
+      // If creating many signals becomes an issue, perhaps we can make a simple wrapper
+      // object that mirrors the signal interface (eg. signal.value) and use that instead
+      signal = signalsType.parse(undefined)
+      signal.value = viewPropVal
     } else {
       signal = signals[propName]
     }
