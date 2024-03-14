@@ -20,7 +20,7 @@ workflow:
   frames:
     - frame:
       view:
-        component: OTAvailableWorkflowsFromEndpoint
+        component: AvailableWorkflowsFromEndpoint
         props:
           link: <NextLink />
 */
