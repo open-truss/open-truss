@@ -1,3 +1,4 @@
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   BaseOpenTrussComponentV1PropsShape,
   withChildren,
@@ -37,16 +38,25 @@ const AvailableWorkflowsFromEndpoint: BaseOpenTrussComponentV1<
   }
 
   return (
-    <div>
-      <h1>Available Workflows:</h1>
-      <ul>
-        {workflowIds.map((workflowId) => (
-          <li key={workflowId}>
-            <Link href={`/ot/playground/${workflowId}`}>{workflowId}</Link>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Card className="m-6">
+      <CardHeader>
+        <CardTitle>Available Workflows:</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ul>
+          {workflowIds.map((workflowId) => (
+            <li key={workflowId} className="list-none">
+              <Link
+                className="text-blue-500 hover:underline"
+                href={`/ot/playground/${workflowId}`}
+              >
+                {workflowId}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
   )
 }
 
