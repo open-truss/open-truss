@@ -14,9 +14,7 @@ export default function Page(): JSX.Element {
 
   return (
     <>
-      <h1
-        className='text-4xl font-bold text-center'
-      >{sanitizedSlug}</h1>
+      <h1 className="text-4xl font-bold text-center">{sanitizedSlug}</h1>
       <RenderFromEndpoint
         configName={sanitizedSlug}
         components={components}
