@@ -3,8 +3,10 @@ import {
   computed,
   type z,
 } from '@open-truss/open-truss'
-import { AccountIDsSignal } from '../signals'
 import { useState } from 'react'
+import { AccountIDsSignal } from '../signals'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   accountIds: AccountIDsSignal,
@@ -29,10 +31,14 @@ export default function SimpleSignalExample({
   }
 
   return (
-    <div>
+    <div className="m-6 flex flex-col">
       <h2>Currently selected AccountIDs: {accountIDsString}</h2>
-      <input type="number" value={inputValue} onChange={handleInputChange} />
-      <button onClick={addAccountId}>Add account ID</button>
+      <div className="flex flex-row mt-2 w-1/2 justify-start items-center">
+        <Input type="number" value={inputValue} onChange={handleInputChange} />
+        <Button className="ml-4" onClick={addAccountId}>
+          Add account ID
+        </Button>
+      </div>
     </div>
   )
 }

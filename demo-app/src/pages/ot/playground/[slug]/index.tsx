@@ -1,7 +1,7 @@
+import * as _components from '@/open-truss/components'
+import { RenderFromEndpoint, type COMPONENTS } from '@open-truss/open-truss'
 import { useRouter } from 'next/router'
 import path from 'path'
-import { RenderFromEndpoint, type COMPONENTS } from '@open-truss/open-truss'
-import * as _components from '@/open-truss/components'
 const components = _components as unknown as COMPONENTS
 
 export default function Page(): JSX.Element {
@@ -14,7 +14,7 @@ export default function Page(): JSX.Element {
 
   return (
     <>
-      <h1>{sanitizedSlug}</h1>
+      <h1 className="text-4xl font-bold text-center">{sanitizedSlug}</h1>
       <RenderFromEndpoint
         configName={sanitizedSlug}
         components={components}

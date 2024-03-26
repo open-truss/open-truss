@@ -1,9 +1,22 @@
 workflow:
   version: 1
+  signals:
+    results:
+      - Variable_name: string
   frames:
     - frame:
-      data:
-        query: select * from sys.metrics
-        source: mysql-demo
       view:
-        component: DataDemo
+        component: OTUqiDataProvider
+        props:
+          source: mysql-demo
+          query: select Variable_name from sys.metrics
+          results: :results
+          output:
+            results:
+              - Variable_name: string
+      frames:
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :results # TrinoDemo takes a colleciton type

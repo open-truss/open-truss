@@ -28,7 +28,7 @@ export function RenderConfig({
   components: COMPONENTS
   config: string
   validateConfig?: boolean
-}): React.JSX.Element {
+}): JSX.Element {
   const components = Object.assign({}, appComponents, OT_COMPONENTS)
   const parsedConfig = parseYaml(config)
   const workflow = (parsedConfig as unknown as WorkflowSpec).workflow

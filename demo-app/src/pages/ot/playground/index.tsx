@@ -1,5 +1,5 @@
-import { PlaygroundPage } from '@open-truss/open-truss/pages'
 import OT_COMPONENTS from '@/lib/ot-components'
+import { PlaygroundPage } from '@open-truss/open-truss/pages'
 
 const config = `
 workflow:
@@ -7,9 +7,7 @@ workflow:
   frames:
     - frame:
       view:
-        component: OTAvailableWorkflowsFromEndpoint
-        props:
-          link: <NextLink />
+        component: AvailableWorkflowsFromEndpoint
 `
 
 export default function Playground(): JSX.Element {
