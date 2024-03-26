@@ -10,10 +10,7 @@ workflow:
         props:
           source: mysql-demo
           query: select Variable_name from sys.metrics
-          results: :results
-          output:
-            results:
-              - Variable_name: string
+          output: [:results]
       frames:
         - frame:
           view:

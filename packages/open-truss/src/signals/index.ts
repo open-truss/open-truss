@@ -1,9 +1,13 @@
 import { z, type ZodTypeAny } from 'zod'
-import { signal, type Signal } from '@preact/signals-react'
+import { signal, type Signal as PreactSignal } from '@preact/signals-react'
 import { typeToZodMap, typeToDefaultValue } from '../utils/describe-zod'
 import { isObject } from '../utils/misc'
 import CryptoJS from 'crypto-js'
-export { Signal }
+
+export interface Signal<T = any> extends PreactSignal<T> {
+  name: string // Used to look up the zodShape for a given signal
+  yamlName: string // Used to look up the key that was used for the signal in a workflow
+}
 
 export { effect, computed } from '@preact/signals-react'
 
@@ -26,6 +30,10 @@ export function getSignalsType(
   possibleZodObject: unknown,
 ): SignalsZodType | undefined {
   return getSignalAndValueShape(possibleZodObject)?.signal
+}
+
+export function signalValueShape(signal: Signal): SignalsZodType {
+  return SIGNALS[signal.name]?.valueShape
 }
 
 export function getSignalAndValueShape(
@@ -55,7 +63,11 @@ export function SignalType<T>(
 
   const zodType = z
     .custom<Signal<T>>(validator)
-    .default((): Signal<T> => signal<T>(defaultValue))
+    .default(() => {
+      const s = signal<T>(defaultValue) as Signal<T>
+      s.name = name
+      return s
+    })
     .describe(`Signal<${name}>`)
 
   SIGNALS[name] = { signal: zodType, valueShape }

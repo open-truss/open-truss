@@ -11,6 +11,7 @@ workflow:
       phone: string
       acctbal: number
       comment: string
+    name: string
   frames:
     - frame:
       view:
@@ -21,20 +22,7 @@ workflow:
             SELECT name, phone, acctbal, comment
             FROM tpch.sf1.customer
             limit 10
-          # output: [:resultsArray, :resultsObject, :name]
-          resultsArray: :resultsArray
-          resultsObject: :resultsObject
-          output:
-            resultsArray:
-              - name: string
-                phone: string
-                acctbal: number
-                comment: string
-            resultsObject:
-              name: string
-              phone: string
-              acctbal: number
-              comment: string
+          output: [:resultsArray, :resultsObject, :name]
       frames:
         - frame:
           view:
@@ -46,3 +34,8 @@ workflow:
             component: DataDemo
             props:
               results: :resultsObject
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :name
