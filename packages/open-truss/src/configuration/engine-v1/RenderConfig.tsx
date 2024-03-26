@@ -40,7 +40,7 @@ export function RenderConfig({
   COMPONENTS: COMPONENTS
   config: WorkflowV1
   validateConfig?: boolean
-}): React.JSX.Element {
+}): JSX.Element {
   COMBINED_COMPONENTS = Object.assign({}, COMPONENTS, { OTDefaultFrameWrapper })
   // Runs validations in config-schemas
   let config = _config

@@ -26,7 +26,7 @@ function PropInputs({
   component: OpenTrussComponentExports
   onChange: (propName: string) => (value: YamlType) => void
   props: ViewProps
-}): React.JSX.Element | null {
+}): JSX.Element | null {
   const niceProps = describeZod(component.Props.shape)
 
   return (
@@ -52,7 +52,7 @@ function ComponentListItem({
 }: {
   componentName: string
   ALL_COMPONENTS: COMPONENTS
-}): React.JSX.Element {
+}): JSX.Element {
   const component = ALL_COMPONENTS[componentName]
   const { addFrame } = useConfigBuilderContext()
   const [props, setProps] = useState<ViewProps>(undefined)
@@ -97,7 +97,7 @@ interface ComponentListInterface {
 
 export default function ComponentList({
   components,
-}: ComponentListInterface): React.JSX.Element {
+}: ComponentListInterface): JSX.Element {
   const ALL_COMPONENTS = React.useMemo(() => {
     return {
       ...components,
