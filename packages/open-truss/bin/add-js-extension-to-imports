@@ -3,11 +3,10 @@
 const fs = require('fs')
 const path = require('path')
 
-// Review this file and clean
+// TODO delete this todo list
 // add it to our build step to add extensions to mjs files
 const outputDirectory = `${process.env.PACKAGE_DIR}/dist/mjs`
 
-console.log(outputDirectory)
 function addJsExtensionToImports(filePath) {
   const directoryPath = path.dirname(filePath)
   let content = fs.readFileSync(filePath, 'utf8')

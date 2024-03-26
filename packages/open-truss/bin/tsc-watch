@@ -9,6 +9,7 @@ PACKAGE_DIR=$package_dir bin/append-package-json-to-dist
 if [ "$1" == "--sync" ]; then
   tsc --project $PACKAGE_DIR/tsconfig.json
   tsc --project $PACKAGE_DIR/tsconfig.esm.json
+  PACKAGE_DIR=$package_dir bin/add-js-extension-to-imports*
   exit
 fi
 
@@ -29,5 +30,9 @@ echo "Running tsc watch using $(echo $package_dir/tsconfig.json)"
 echo "Running tsc watch using $(echo $package_dir/tsconfig.esm.json)"
 (tsc --watch --preserveWatchOutput --project $package_dir/tsconfig.esm.json) &
 
-# Wait for both background processes to complete or for a signal to terminate
+# Run bin/add-js-extension-to-imports with --watch
+echo "Running bin/add-js-extension-to-imports"
+(PACKAGE_DIR=$package_dir bin/add-js-extension-to-imports --watch) &
+
+# Wait for all background processes to complete or for a signal to terminate
 wait
