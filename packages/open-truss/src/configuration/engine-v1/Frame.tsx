@@ -1,4 +1,5 @@
 import { type YamlType } from '../../utils/yaml'
+import { isViewProps } from '../../utils/misc'
 import {
   type FrameV1,
   type DataV1,
@@ -19,8 +20,8 @@ import {
   getSignalsType,
   type Signals,
   type SignalsZodType,
+  type Signal,
 } from '../../signals'
-import { type Signal } from '@preact/signals-react'
 
 interface FrameContext {
   frame: FrameV1
@@ -215,36 +216,28 @@ interface ComponentPropsShape {
   signals: Signals
 }
 
-type ComponentPropsReturnShape = Record<
-  string,
-  YamlType | OpenTrussComponent | Signal<any>
->
+type ComponentProp =
+  | YamlType
+  | OpenTrussComponent
+  | Signal<any>
+  | ComponentProp[]
+  | ComponentPropsReturnShape
+
+interface ComponentPropsReturnShape {
+  [key: string]: ComponentProp | ComponentPropsReturnShape
+}
 
 // Checks to see if the prop is a string like "<Component />"
 function isComponent(prop: YamlType): prop is string {
   return typeof prop === 'string' && prop.startsWith('<') && prop.endsWith('/>')
 }
 
-function processProps({
-  configPath,
-  viewProps,
-  componentName,
-  signals,
-  COMPONENTS,
-}: ComponentPropsShape): ComponentPropsReturnShape {
+function processProps(props: ComponentPropsShape): ComponentPropsReturnShape {
+  const { configPath, viewProps, componentName, signals, COMPONENTS } = props
   const newProps: ComponentPropsReturnShape = {}
   if (viewProps !== undefined) {
-    for (const propName in viewProps) {
-      const prop = viewProps[propName]
-      if (isComponent(prop)) {
-        newProps[propName] = getDefaultComponent(prop, configPath, COMPONENTS)
-      }
-      if (isSymbol(prop)) {
-        const signalName = parseSignalName(prop) ?? ''
-        const signal = signals[signalName]
-        if (signal) newProps[propName] = signal
-      }
-    }
+    const processedViewProps = processViewProps(props)
+    Object.assign(newProps, processedViewProps)
   }
 
   eachComponentSignal(componentName, COMPONENTS, (propName, signalsType) => {
@@ -278,6 +271,48 @@ function processProps({
   }
 
   return compiledProps
+}
+
+// Processes viewProps defined by component and does the following
+// If the props is a
+// - component (e.g. <Component>) it looks up the component and sets it as the value
+// - symbol (e.g. :symbol) it looks up the symbol and sets it as the value
+// - viewProp (e.g. yaml object) it calls processViewProps recursively and sets it as the value
+// - array it calls processViewProps recursively and sets it as the value
+// - else it sets the original viewProp value
+// Returns the processed view props
+function processViewProps(
+  props: ComponentPropsShape,
+): ComponentPropsReturnShape {
+  const { configPath, viewProps, signals, COMPONENTS } = props
+  const newProps: ComponentPropsReturnShape = {}
+  for (const propName in viewProps) {
+    const prop = viewProps[propName]
+    if (isComponent(prop)) {
+      newProps[propName] = getDefaultComponent(prop, configPath, COMPONENTS)
+    } else if (isSymbol(prop)) {
+      const signalName = parseSignalName(prop) ?? ''
+      const signal = signals[signalName]
+      signal === undefined
+        ? (newProps[propName] = prop)
+        : (newProps[propName] = signal)
+    } else if (isViewProps(prop)) {
+      const subProps = Object.assign({}, props, { viewProps: prop })
+      newProps[propName] = processViewProps(subProps)
+    } else if (Array.isArray(prop)) {
+      const propsFromArray = prop.map((value) => {
+        const tmpKey = '_key'
+        const subViewProps = { viewProps: { [tmpKey]: value } }
+        const subProps = Object.assign({}, props, subViewProps)
+        return processViewProps(subProps)[tmpKey]
+      })
+
+      newProps[propName] = propsFromArray
+    } else {
+      newProps[propName] = prop
+    }
+  }
+  return newProps
 }
 
 // This adds Signals to props which allows components to set state

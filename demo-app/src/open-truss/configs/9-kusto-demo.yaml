@@ -10,10 +10,7 @@ workflow:
         props:
         source: kusto-demo
           query: cluster("acme").database("widgets").RawEvent | limit 1
-          results: :results
-          output:
-            results:
-              - name: string
+          output: [:results]
       frames:
         - frame:
           view:
