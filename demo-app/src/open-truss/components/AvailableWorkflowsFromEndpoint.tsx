@@ -1,20 +1,20 @@
-import React from 'react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
-  withChildren,
   BaseOpenTrussComponentV1PropsShape,
+  withChildren,
   type BaseOpenTrussComponentV1,
-} from '../configuration/engine-v1'
-import { CSLinkShape } from '../shims'
+} from '@open-truss/open-truss'
+import Link from 'next/link'
+import * as React from 'react'
 import { type z } from 'zod'
 
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   ...withChildren,
-  link: CSLinkShape,
 })
 
 const AvailableWorkflowsFromEndpoint: BaseOpenTrussComponentV1<
   z.infer<typeof Props>
-> = (props) => {
+> = () => {
   const [workflowIds, setConfigs] = React.useState<string[]>([])
   const [loading, setLoading] = React.useState<boolean>(false)
   const [error, setError] = React.useState<Error | null>(null)
@@ -37,22 +37,26 @@ const AvailableWorkflowsFromEndpoint: BaseOpenTrussComponentV1<
     return <>Loading...</>
   }
 
-  if (props.link === undefined) {
-    return <>OOPS! missing Link component in config</>
-  }
-
-  const Link = props.link
   return (
-    <div>
-      <h1>Available Workflows:</h1>
-      <ul>
-        {workflowIds.map((workflowId) => (
-          <li key={workflowId}>
-            <Link to={`/ot/playground/${workflowId}`}>{workflowId}</Link>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Card className="m-6">
+      <CardHeader>
+        <CardTitle>Available Workflows:</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ul>
+          {workflowIds.map((workflowId) => (
+            <li key={workflowId} className="list-none">
+              <Link
+                className="text-blue-500 hover:underline"
+                href={`/ot/playground/${workflowId}`}
+              >
+                {workflowId}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
   )
 }
 

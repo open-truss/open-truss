@@ -5,7 +5,8 @@ import {
   NumberSignal,
 } from '@open-truss/open-truss'
 import { useState } from 'react'
-
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   integer: NumberSignal,
   submit: NavigateFrameSignal,
@@ -30,10 +31,14 @@ export default function IntegerInput({
   }
 
   return (
-    <div>
+    <div className="m-5">
       <h2>Please input an integer:</h2>
-      <input type="number" value={inputValue} onChange={handleInputChange} />
-      <button onClick={addInteger}>Add integer</button>
+      <div className="mb-5">
+        <Input type="number" value={inputValue} onChange={handleInputChange} />
+      </div>
+      <div className="mb-5">
+        <Button onClick={addInteger}>Add integer</Button>
+      </div>
     </div>
   )
 }

@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button'
 import React, { useState } from 'react'
 import {
   type YamlType,
@@ -26,7 +27,7 @@ function PropInputs({
   component: OpenTrussComponentExports
   onChange: (propName: string) => (value: YamlType) => void
   props: ViewProps
-}): React.JSX.Element | null {
+}): JSX.Element | null {
   const niceProps = describeZod(component.Props.shape)
 
   return (
@@ -52,7 +53,7 @@ function ComponentListItem({
 }: {
   componentName: string
   ALL_COMPONENTS: COMPONENTS
-}): React.JSX.Element {
+}): JSX.Element {
   const component = ALL_COMPONENTS[componentName]
   const { addFrame } = useConfigBuilderContext()
   const [props, setProps] = useState<ViewProps>(undefined)
@@ -73,20 +74,20 @@ function ComponentListItem({
   }
 
   return (
-    <div>
+    <div className="border-2 mb-2 p-2 rounded-md relative">
       {componentName}
-      <button
+      <Button
+        size="xs"
+        className="absolute right-2 top-2"
         onClick={() => {
           addFrame(frame)
         }}
       >
         Add
-      </button>
+      </Button>
       {hasPropsConfigured && (
         <PropInputs component={component} onChange={onChange} props={props} />
       )}
-      <br />
-      <br />
     </div>
   )
 }
@@ -97,7 +98,7 @@ interface ComponentListInterface {
 
 export default function ComponentList({
   components,
-}: ComponentListInterface): React.JSX.Element {
+}: ComponentListInterface): JSX.Element {
   const ALL_COMPONENTS = React.useMemo(() => {
     return {
       ...components,
