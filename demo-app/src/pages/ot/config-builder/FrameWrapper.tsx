@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button'
 import {
   useConfigBuilderContext,
   type FrameWrapper,
@@ -38,26 +39,19 @@ const ConfigBuilderFrameWrapper: FrameWrapper = ({
 
   return (
     <div
-      style={{
-        position: 'relative',
-        border: nestingHere ? '1px solid pink' : undefined,
-      }}
+      className={`relative border-1 border-solid${
+        nestingHere ? ' border-rose-600' : ''
+      }`}
     >
-      <div
-        style={{
-          position: 'absolute',
-          right: 0,
-          top: 0,
-          display: 'flex',
-          padding: '5px',
-        }}
-      >
+      <div className="absolute right-0 top-0 flex">
         {canNestFrames && (
-          <button onClick={nestHere}>
+          <Button size="xs" className="mr-1" onClick={nestHere}>
             {nestingHere ? 'Stop nesting' : 'Nest here'}
-          </button>
+          </Button>
         )}
-        <button onClick={deleteThisFrame}>Delete</button>
+        <Button size="xs" onClick={deleteThisFrame}>
+          Delete
+        </Button>
       </div>
       {children}
     </div>
