@@ -75,7 +75,10 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground h-full;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  #__next {
+    @apply flex flex-col h-screen;
   }
 }
