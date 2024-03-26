@@ -9,7 +9,7 @@ PACKAGE_DIR=$package_dir bin/append-package-json-to-dist
 if [ "$1" == "--sync" ]; then
   tsc --project $PACKAGE_DIR/tsconfig.json
   tsc --project $PACKAGE_DIR/tsconfig.esm.json
-  PACKAGE_DIR=$package_dir bin/add-js-extension-to-imports*
+  PACKAGE_DIR=$package_dir bin/add-js-extension-to-imports
   exit
 fi
 

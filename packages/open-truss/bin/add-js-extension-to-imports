@@ -64,9 +64,8 @@ function watchDirectory(directory) {
 const shouldWatch = process.argv.includes('--watch')
 
 if (shouldWatch) {
-  console.log('Watching for file changes...')
+  console.log('Watching for file changes to add js extensions...')
   watchDirectory(outputDirectory)
 } else {
-  console.log('Processing files once...')
   processDirectory(outputDirectory)
 }
