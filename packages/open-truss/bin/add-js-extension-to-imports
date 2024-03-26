@@ -3,8 +3,6 @@
 const fs = require('fs')
 const path = require('path')
 
-// TODO delete this todo list
-// add it to our build step to add extensions to mjs files
 const outputDirectory = `${process.env.PACKAGE_DIR}/dist/mjs`
 
 function addJsExtensionToImports(filePath) {
