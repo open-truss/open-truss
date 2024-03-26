@@ -23,7 +23,6 @@ checksum() {
     echo "$(which brew)"
     echo "$(which nodejs)"
     cat .tool-versions 2>/dev/null
-    cat Brewfile 2>/dev/null
     cat package.json package-lock.json 2>/dev/null
     cat $open_truss_package_dir/package.json $open_truss_package_dir/package-lock.json 2>/dev/null
     cat script/* 2>/dev/null
@@ -50,10 +49,6 @@ if [ "$NO_HOMEBREW" = "true" ]; then
     exit 1
   fi
 fi
-
-# Install Homebrew dependencies.
-echo "Installing Homebrew dependencies..."
-brew bundle --file=$demo_app_dir/Brewfile
 
 # Check if node.js is installed and raise error if it is not.
 if ! which node >/dev/null 2>/dev/null; then
