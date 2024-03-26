@@ -3,14 +3,18 @@
 const fs = require('fs')
 const path = require('path')
 
+// Review this file and clean
+// add it to our build step to add extensions to mjs files
 const outputDirectory = `${process.env.PACKAGE_DIR}/dist/mjs`
 
-  console.log(outputDirectory)
+console.log(outputDirectory)
 function addJsExtensionToImports(filePath) {
     const directoryPath = path.dirname(filePath)
     let content = fs.readFileSync(filePath, 'utf8')
     const updatedContent = content.replace(/from '(.*)'/g, (match, p1) => {
-      if (p1.startsWith('.') && !p1.endsWith('.js')) {
+      // If it is a local reference and it is not referencing a .js or .jsx file
+      // proceed with adding the extension
+      if (p1.startsWith('.') && !(p1.endsWith('.js') || p1.endsWith('.jsx'))) {
         let fullPath = path.join(directoryPath, p1)
 
         if (fs.existsSync(fullPath) && fs.statSync(fullPath).isDirectory()) {
@@ -20,7 +24,6 @@ function addJsExtensionToImports(filePath) {
             return `from '${p1}/index.jsx'`
           }
         }
-
 
         if (fs.existsSync(`${fullPath}.js`)) {
           return `from '${p1}.js'`
