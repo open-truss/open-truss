@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button'
 import React, { useState } from 'react'
 import {
   type YamlType,
@@ -73,20 +74,20 @@ function ComponentListItem({
   }
 
   return (
-    <div>
+    <div className="border-2 mb-2 p-2 rounded-md relative">
       {componentName}
-      <button
+      <Button
+        size="xs"
+        className="absolute right-2 top-2"
         onClick={() => {
           addFrame(frame)
         }}
       >
         Add
-      </button>
+      </Button>
       {hasPropsConfigured && (
         <PropInputs component={component} onChange={onChange} props={props} />
       )}
-      <br />
-      <br />
     </div>
   )
 }

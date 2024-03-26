@@ -1,30 +1,32 @@
-import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { TypographyH2 } from '@/components/ui/typography'
+import OT_COMPONENTS from '@/lib/ot-components'
 import {
-  useConfigBuilderContext,
   ConfigBuilderContextProvider,
   RenderConfig,
+  useConfigBuilderContext,
 } from '@open-truss/open-truss'
-import OT_COMPONENTS from '@/lib/ot-components'
+import { useState } from 'react'
 import ComponentList from './ComponentList'
-import ConfigBuilderFrameWrapper from './FrameWrapper'
 import ConfigYaml from './ConfigYaml'
+import ConfigBuilderFrameWrapper from './FrameWrapper'
 
 const Output: React.FC = () => {
   const [showConfig, setShowConfig] = useState<boolean>(false)
   const { config } = useConfigBuilderContext()
   return (
     <>
-      <button
-        style={{ textAlign: 'right' }}
+      <Button
+        className="text-right"
         onClick={() => {
           setShowConfig((prev) => !prev)
         }}
       >
         {showConfig ? 'Show workflow' : 'Show config'}
-      </button>
+      </Button>
       {showConfig && (
         <div>
-          <h2>config</h2>
+          <TypographyH2>config</TypographyH2>
           <ConfigYaml />
         </div>
       )}
@@ -44,17 +46,11 @@ const Output: React.FC = () => {
 const ConfigBuilder: React.FC = () => {
   return (
     <ConfigBuilderContextProvider>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          padding: 10,
-        }}
-      >
-        <div>
+      <div className="flex justify-between p-2">
+        <div className="mr-2">
           <ComponentList components={OT_COMPONENTS} />
         </div>
-        <div style={{ flexGrow: 1 }}>
+        <div className="flex-grow">
           <Output />
         </div>
       </div>
