@@ -8,6 +8,25 @@ export type UqiMappedType =
   | 'Date'
   | 'JSON'
 
+export function castUqiValue(type: UqiMappedType, value: string): unknown {
+  switch (type) {
+    case 'String':
+      return String(value)
+    case 'Number':
+      return Number(value)
+    case 'Boolean':
+      return value.toLowerCase() === 'true'
+    case 'BigInt':
+      return BigInt(value)
+    case 'Date':
+      return Date.parse(value)
+    case 'JSON':
+      return JSON.parse(value)
+    default:
+      return value
+  }
+}
+
 // Parses and reformats a SynchronousQueryResult and
 // casts the values to the appropriate javascript type
 // SynchronousQueryResult:
@@ -37,25 +56,6 @@ export function parseUqiResult(
   })
 }
 
-export function castUqiValue(type: string, value: string): unknown {
-  switch (type) {
-    case 'String':
-      return String(value)
-    case 'Number':
-      return Number(value)
-    case 'Boolean':
-      return value.toLowerCase() === 'true'
-    case 'BigInt':
-      return BigInt(value)
-    case 'JSON':
-      return JSON.parse(value)
-    case 'Date':
-      return Date.parse(value)
-    default:
-      return value
-  }
-}
-
 export interface SynchronousQueryResult {
   rows: SynchronousQueryRow[]
   metadata: SynchronousQueryMetadata
@@ -67,7 +67,7 @@ export interface SynchronousQueryRow {
 
 export interface SynchronousQueryValue {
   key: string
-  type: string
+  type: UqiMappedType
   value: string
 }
 
