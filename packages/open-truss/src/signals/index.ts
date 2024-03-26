@@ -32,7 +32,7 @@ export function getSignalsType(
   return getSignalAndValueShape(possibleZodObject)?.signal
 }
 
-export function getSignalsShapeFromSignal(signal: Signal): SignalsZodType {
+export function signalValueShape(signal: Signal): SignalsZodType {
   return SIGNALS[signal.name]?.valueShape
 }
 

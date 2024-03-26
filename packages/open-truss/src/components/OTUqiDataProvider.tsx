@@ -6,11 +6,7 @@ import {
 } from '../configuration/engine-v1'
 import { parseUqiResult, type SynchronousQueryResult } from '../uqi/uqi'
 import { isObject } from '../utils/misc'
-import {
-  StringSignal,
-  UnknownSignal,
-  getSignalsShapeFromSignal,
-} from '../signals'
+import { StringSignal, UnknownSignal, signalValueShape } from '../signals'
 import { z } from 'zod'
 
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
@@ -43,7 +39,7 @@ const OTUqiDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
   if (queryResults === undefined) return <></>
 
   for (const signal of output || []) {
-    const shape = getSignalsShapeFromSignal(signal)
+    const shape = signalValueShape(signal)
     const parsedResults = parseUqiResult(queryResults)
     const defaultValue = shape.parse(undefined)
 
