@@ -7,7 +7,10 @@ export default async function handler(
 ): Promise<void> {
   if (request.method === 'POST') {
     try {
-      const data = JSON.parse(request.body)
+      const data =
+        request.headers['content-type'] === 'application/json'
+          ? request.body
+          : JSON.parse(request.body)
       const result = await synchronousUqiQuery(null, data, null)
       response.status(200).json(result)
     } catch (error) {
