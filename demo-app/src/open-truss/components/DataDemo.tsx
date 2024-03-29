@@ -20,8 +20,10 @@ const DataDemo: BaseOpenTrussComponentV1<z.infer<typeof Props>> = ({
 
   return (
     <>
-      <h2>Results</h2>
-      {computedArray}
+      <div className="m-6 flex flex-col">
+        <h2>Results</h2>
+        {computedArray}
+      </div>
     </>
   )
 }
