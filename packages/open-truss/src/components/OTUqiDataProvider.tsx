@@ -32,9 +32,7 @@ const OTUqiDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
     const fetchData = async function (): Promise<undefined> {
       const result = await fetch('/api/synchronous-uqi-query', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query, source }),
       })
       const deserialized = await result.json()
