@@ -13,7 +13,7 @@ export function castUqiValue(type: UqiMappedType, value: string): unknown {
     case 'String':
       return String(value)
     case 'Number':
-      return Number(value)
+      return Number(value) || 0
     case 'Boolean':
       return value.toLowerCase() === 'true'
     case 'BigInt':
