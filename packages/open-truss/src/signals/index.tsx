@@ -1,5 +1,5 @@
 import { z, type ZodTypeAny } from 'zod'
-import { signal, type Signal as PreactSignal } from '@preact/signals-react'
+import { useSignal, type Signal as PreactSignal } from '@preact/signals-react'
 import { typeToZodMap, typeToDefaultValue } from '../utils/describe-zod'
 import { isObject } from '../utils/misc'
 import CryptoJS from 'crypto-js'
@@ -9,7 +9,7 @@ export interface Signal<T = any> extends PreactSignal<T> {
   yamlName: string // Used to look up the key that was used for the signal in a workflow
 }
 
-export { effect, computed } from '@preact/signals-react'
+export { useSignalEffect, useComputed } from '@preact/signals-react'
 
 export type SignalsZodType<T = any> = z.ZodDefault<z.ZodType<Signal<T>>>
 export type Signals = Record<string, Signal<any>>
@@ -64,7 +64,7 @@ export function SignalType<T>(
   const zodType = z
     .custom<Signal<T>>(validator)
     .default(() => {
-      const s = signal<T>(defaultValue) as Signal<T>
+      const s = useSignal<T>(defaultValue) as Signal<T>
       s.name = name
       return s
     })
