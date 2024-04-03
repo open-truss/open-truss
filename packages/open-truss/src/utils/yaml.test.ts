@@ -26,4 +26,8 @@ test('parseYaml', () => {
     { foo: [4, 2, 1] },
   ])
   expect(parseYaml('- foo:\n    - baz: 4')).toEqual([{ foo: [{ baz: 4 }] }])
+  expect(parseYaml<{ foo: string; bar: number }>('foo: bar')).toEqual({
+    foo: 'bar',
+    bar: 0,
+  })
 })
