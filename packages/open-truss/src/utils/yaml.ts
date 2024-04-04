@@ -18,7 +18,7 @@ export const YamlShape: z.ZodType<YamlType> = yamlScalars
   .or(z.lazy(() => YamlObjectShape))
 export const YamlObjectShape = z.record(z.string(), YamlShape)
 
-export function parseYaml(yamlString: string): YamlObject {
+export function parseYaml<T = YamlObject>(yamlString: string): T {
   return yaml.parse(yamlString)
 }
 
