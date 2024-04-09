@@ -1,9 +1,41 @@
 workflow:
   version: 1
+  signals:
+    resultsArray: # OTUqiDataProvider returns collection with rows using the shape of the object
+      - name: string
+        phone: string
+        acctbal: number
+        comment: string
+    resultsObject: # OTUqiDataProvider returns object grabbing the first row of results
+      name: string
+      phone: string
+      acctbal: number
+      comment: string
+    name: string
   frames:
     - frame:
-      data:
-        query: select * from  tpch.sf1.customer limit 10
-        source: trino-demo
       view:
-        component: DataDemo
+        component: OTUqiDataProvider
+        props:
+          source: trino-demo
+          query: >
+            SELECT name, phone, acctbal, comment
+            FROM tpch.sf1.customer
+            limit 10
+          output: [:resultsArray, :resultsObject, :name]
+      frames:
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :resultsArray
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :resultsObject
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :name

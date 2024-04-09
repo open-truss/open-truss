@@ -8,6 +8,78 @@ export type UqiMappedType =
   | 'Date'
   | 'JSON'
 
+export function castUqiValue(type: UqiMappedType, value: string): unknown {
+  switch (type) {
+    case 'String':
+      return String(value)
+    case 'Number':
+      return Number(value)
+    case 'Boolean':
+      return value.toLowerCase() === 'true'
+    case 'BigInt':
+      return BigInt(value)
+    case 'Date':
+      return Date.parse(value)
+    case 'JSON':
+      return JSON.parse(value)
+    default:
+      return value
+  }
+}
+
+// Parses and reformats a SynchronousQueryResult and
+// casts the values to the appropriate javascript type
+// SynchronousQueryResult:
+// {
+//   rows: [
+//     {
+//       values: {
+//         key: 'name', type: 'String', value: 'value'
+//       }
+//     }
+//   ]
+// }
+//
+// Result:
+// [
+//   { name: 'value' }
+// ]
+export function parseUqiResult(
+  result: SynchronousQueryResult,
+): Array<Record<string, unknown>> {
+  return result.rows.map((row) => {
+    const rowResult: Record<string, unknown> = {}
+    row.values.forEach(({ key, type, value }) => {
+      rowResult[key] = castUqiValue(type, value)
+    })
+    return rowResult
+  })
+}
+
+export interface SynchronousQueryResult {
+  rows: SynchronousQueryRow[]
+  metadata: SynchronousQueryMetadata
+}
+
+export interface SynchronousQueryRow {
+  values: SynchronousQueryValue[]
+}
+
+export interface SynchronousQueryValue {
+  key: string
+  type: UqiMappedType
+  value: string
+}
+
+export interface SynchronousQueryMetadata {
+  columns: SynchronousQueryColumn[]
+}
+
+export interface SynchronousQueryColumn {
+  name: string
+  type: string
+}
+
 export type UqiTypeMappings = Record<string, UqiMappedType>
 
 export interface UqiColumn {

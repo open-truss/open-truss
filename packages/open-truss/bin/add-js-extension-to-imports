@@ -1,0 +1,69 @@
+#!/usr/bin/env node
+
+const fs = require('fs')
+const path = require('path')
+
+const outputDirectory = `${process.env.PACKAGE_DIR}/dist/mjs`
+
+function addJsExtensionToImports(filePath) {
+  const directoryPath = path.dirname(filePath)
+  let content = fs.readFileSync(filePath, 'utf8')
+  const updatedContent = content.replace(/from '(.*)'/g, (match, p1) => {
+    // If it is a local reference and it is not referencing a .js or .jsx file
+    // proceed with adding the extension
+    if (p1.startsWith('.') && !(p1.endsWith('.js') || p1.endsWith('.jsx'))) {
+      let fullPath = path.join(directoryPath, p1)
+
+      if (fs.existsSync(fullPath) && fs.statSync(fullPath).isDirectory()) {
+        if (fs.existsSync(path.join(fullPath, 'index.js'))) {
+          return `from '${p1}/index.js'`
+        } else {
+          return `from '${p1}/index.jsx'`
+        }
+      }
+
+      if (fs.existsSync(`${fullPath}.js`)) {
+        return `from '${p1}.js'`
+      } else {
+        return `from '${p1}.jsx'`
+      }
+    }
+
+    return match
+  })
+
+  if (content !== updatedContent) {
+    fs.writeFileSync(filePath, updatedContent, 'utf8')
+  }
+}
+
+function processDirectory(directory) {
+  const files = fs.readdirSync(directory, { withFileTypes: true });
+
+  for (const file of files) {
+    const fullPath = path.join(directory, file.name);
+    if (file.isDirectory()) {
+      processDirectory(fullPath);
+    } else if (file.name.endsWith('.js') || file.name.endsWith('.jsx')) {
+      addJsExtensionToImports(fullPath);
+    }
+  }
+}
+
+function watchDirectory(directory) {
+  fs.watch(directory, { recursive: true }, (_eventType, filename) => {
+    if (filename && (filename.endsWith('.js') || filename.endsWith('.jsx'))) {
+      const fullPath = path.join(directory, filename)
+      addJsExtensionToImports(fullPath)
+    }
+  })
+}
+
+const shouldWatch = process.argv.includes('--watch')
+
+if (shouldWatch) {
+  console.log('Watching for file changes to add js extensions...')
+  watchDirectory(outputDirectory)
+} else {
+  processDirectory(outputDirectory)
+}

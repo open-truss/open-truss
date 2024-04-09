@@ -1,9 +1,19 @@
 workflow:
   version: 1
+  signals:
+    results:
+      - Variable_name: string
   frames:
     - frame:
-      data:
-        query: cluster("acme").database("widgets").RawEvent | limit 1
-        source: kusto-demo
       view:
-        component: DataDemo
+        component: OTUqiDataProvider
+        props:
+        source: kusto-demo
+          query: cluster("acme").database("widgets").RawEvent | limit 1
+          output: [:results]
+      frames:
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :results # TrinoDemo takes a colleciton type

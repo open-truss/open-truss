@@ -1,4 +1,4 @@
-import { type z } from 'zod'
+import { z as zod, type z } from 'zod'
 import { BaseOpenTrussComponentV1PropsShape } from '../configuration'
 import { getSignalAndValueShape } from '../signals'
 import { type YamlType } from './yaml'
@@ -69,4 +69,16 @@ export function describeZod(
     },
     {},
   )
+}
+
+export const typeToZodMap: Record<string, z.ZodTypeAny> = {
+  string: zod.string(),
+  number: zod.number(),
+  boolean: zod.boolean(),
+}
+
+export const typeToDefaultValue: Record<string, string | boolean | number> = {
+  string: '',
+  number: 0,
+  boolean: false,
 }

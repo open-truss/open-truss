@@ -34,9 +34,9 @@ export const useConfigBuilderContext = (): ConfigBuilder => {
   return useContext(ConfigBuilderContext)
 }
 
-export const ConfigBuilderContextProvider: React.FC<
-  React.PropsWithChildren
-> = ({ children }) => {
+export const ConfigBuilderContextProvider: React.FC<{
+  children: JSX.Element
+}> = ({ children }) => {
   const [config, setConfig] = useState<string>(CONFIG_BASE)
   const [framesPath, _setFramesPath] = useState<string>(INITIAL_FRAMES_PATH)
 
@@ -45,7 +45,7 @@ export const ConfigBuilderContextProvider: React.FC<
   }, [])
 
   const addFrame = (frame: FrameType): void => {
-    const parsedConfig = parseYaml(config) as unknown as WorkflowSpec
+    const parsedConfig = parseYaml<WorkflowSpec>(config)
     const frames = (get(parsedConfig, framesPath, []) as FrameType[]).concat(
       frame,
     )
@@ -60,7 +60,7 @@ export const ConfigBuilderContextProvider: React.FC<
     if (!framePath) {
       return
     }
-    const parsedConfig = parseYaml(config) as unknown as WorkflowSpec
+    const parsedConfig = parseYaml<WorkflowSpec>(config)
     const framePathParts = framePath.split('.')
     const frameToDeleteIndex = Number(framePathParts.pop())
     const thisFramesFramesPath = framePathParts.join('.')

@@ -1,6 +1,6 @@
 {
   "name": "@open-truss/open-truss",
-  "version": "0.3.0",
+  "version": "0.7.0",
   "description": "Framework for building internal tools",
   "directories": {
     "doc": "docs"
@@ -44,8 +44,10 @@
       "types": "./dist/mjs/pages.d.ts"
     }
   },
+  "typings": "./dist/mjs/index.d.ts",
   "dependencies": {
     "@preact/signals-react": "^2.0.0",
+    "crypto-js": "^4.2.0",
     "lodash": "^4.17.21",
     "sql-formatter": "^13.0.4",
     "ts-node": "^10.9.1",
@@ -53,6 +55,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
     "@types/jest": "^29.5.8",
     "@types/lodash": "^4.14.202",
     "@types/react": "^18.2.0",
