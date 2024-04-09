@@ -13,19 +13,18 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Textarea } from '@/components/ui/textarea'
+import Editor from '@monaco-editor/react'
 import { useState } from 'react'
 
 export default function QueryEditor(): JSX.Element {
   const [query, setQuery] = useState('SELECT id, login FROM users')
 
-  const handleQueryChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>,
-  ): void => {
-    setQuery(event.target.value)
-  }
   const handleRun = (): void => {
     alert(query)
+  }
+
+  const queryChangeHandler = (value: string): void => {
+    setQuery(value)
   }
 
   return (
@@ -34,21 +33,24 @@ export default function QueryEditor(): JSX.Element {
         <ResizablePanelGroup direction="vertical">
           <ResizablePanel defaultSize={50} className="bg-gray-100 min-h-48">
             <div className="p-2 h-full">
-              <Textarea
-                className="p-2 h-[calc(100%-48px)]"
-                value={query}
-                onChange={handleQueryChange}
+              <Editor
+                height="90vh"
+                defaultLanguage="sql"
+                defaultValue={query}
+                onChange={(value: string | undefined) => {
+                  queryChangeHandler(value || '')
+                }}
               />
-              <div className="flex justify-end">
-                <Button
-                  className="mt-2 bg-white text-gray-600 hover:bg-gray-200 hover:text-gray-800"
-                  onClick={handleRun}
-                >
-                  Run
-                </Button>
-              </div>
             </div>
           </ResizablePanel>
+          <div className="flex justify-end">
+            <Button
+              className="m-3 bg-white text-gray-600 hover:bg-gray-200 hover:text-gray-800 bg-gray-100"
+              onClick={handleRun}
+            >
+              Run
+            </Button>
+          </div>
           <ResizableHandle withHandle />
           <ResizablePanel>
             <Table>
