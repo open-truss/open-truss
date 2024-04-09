@@ -30,9 +30,9 @@ function formatParams(params: Record<string, Param>): Record<string, string> {
 export function formatQuery(template: string, config?: Config): string {
   return sqlFormat(template, {
     language: config?.language || 'sql',
-    tabWidth: 4,
     linesBetweenQueries: 2,
-    paramTypes: { named: [':'] },
     params: config?.params ? formatParams(config.params) : undefined,
+    paramTypes: { named: [':'] },
+    tabWidth: 4,
   })
 }
