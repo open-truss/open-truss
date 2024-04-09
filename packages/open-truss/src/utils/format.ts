@@ -29,6 +29,7 @@ function formatParams(params: Record<string, Param>): Record<string, string> {
 
 export function formatQuery(template: string, config?: Config): string {
   return sqlFormat(template, {
+    keywordCase: 'upper',
     language: config?.language || 'sql',
     linesBetweenQueries: 2,
     params: config?.params ? formatParams(config.params) : undefined,
