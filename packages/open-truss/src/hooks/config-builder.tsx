@@ -1,6 +1,6 @@
 import get from 'lodash/get'
 import set from 'lodash/set'
-import { createContext, useCallback, useContext, useState } from 'react'
+import React, { createContext, useCallback, useContext, useState } from 'react'
 import { type FrameType, type WorkflowSpec } from '../configuration'
 import { type YamlType, parseYaml, stringifyYaml } from '../utils/yaml'
 
