@@ -1,6 +1,6 @@
 import {
   BaseOpenTrussComponentV1PropsShape,
-  computed,
+  useComputed,
   type z,
 } from '@open-truss/open-truss'
 import { useState } from 'react'
@@ -17,7 +17,7 @@ export default function SimpleSignalExample({
   accountIds,
 }: z.infer<typeof Props>): JSX.Element {
   const [inputValue, setInputValue] = useState('')
-  const accountIDsString = computed(() => accountIds.value.join(', '))
+  const accountIDsString = useComputed(() => JSON.stringify(accountIds))
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,

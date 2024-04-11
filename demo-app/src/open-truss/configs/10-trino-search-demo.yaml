@@ -1,0 +1,33 @@
+workflow:
+  version: 1
+  signals:
+    accountIds: AccountIDs
+    query: string
+    results:
+      - name: string
+        phone: string
+        acctbal: number
+  frames:
+    - frame:
+      view:
+        component: SearchInput
+        props:
+          query: :query
+          template: >
+            SELECT name, phone, acctbal, comment
+            FROM tpch.sf1.customer
+            WHERE name LIKE :value
+            limit 10
+    - frame:
+      view:
+        component: OTUqiDataProvider
+        props:
+          source: trino-demo
+          query: :query
+          output: [:results]
+      frames:
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :results
