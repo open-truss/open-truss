@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   withChildren,
   BaseOpenTrussComponentV1PropsShape,
