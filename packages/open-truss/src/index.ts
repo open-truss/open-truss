@@ -10,4 +10,13 @@ export * from './utils/format'
 export * from './utils/yaml'
 export * from './utils/misc'
 export { z } from 'zod'
-export { useComputed } from '@preact/signals-react'
+export {
+  batch,
+  computed,
+  effect,
+  signal,
+  untracked,
+  useComputed,
+  useSignal,
+  useSignalEffect,
+} from '@preact/signals-react'
