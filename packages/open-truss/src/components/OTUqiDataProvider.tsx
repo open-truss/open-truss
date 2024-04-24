@@ -23,9 +23,10 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
 const OTUqiDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
   props,
 ) => {
-  const { query, children, output, source } = props
+  const { query, children, output, source, debug } = props
 
   useSignalEffect(() => {
+    if (debug) console.log({ query: query.value, source: source.value })
     let queryResults: SynchronousQueryResult
     if (query.value === '') return
     const fetchData = async function (): Promise<undefined> {
@@ -35,6 +36,7 @@ const OTUqiDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
         body: JSON.stringify({ query, source }),
       })
       const deserialized = await result.json()
+      if (debug) console.log({ api_response: result })
       queryResults = deserialized
     }
 
@@ -54,6 +56,12 @@ const OTUqiDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
             : parsedResults[0]?.[signal.yamlName]
 
           const validatedResult = shape.parse(result)
+          if (debug)
+            console.log({
+              message: 'formated query results',
+              signal_name: signal.yamlName,
+              result: validatedResult,
+            })
           signal.value = validatedResult
         }
       })
