@@ -107,6 +107,7 @@ export type SignalsV1 = z.infer<typeof SignalsV1Shape>
 export const WorkflowV1Shape = z.object({
   id: z.string().optional(),
   version: z.number().positive(),
+  debug: z.boolean().optional(),
   signals: SignalsV1Shape,
   frameWrapper: z.string().optional(),
   frames: FramesV1Shape,
@@ -119,6 +120,7 @@ export type WorkflowV1 = z.infer<typeof WorkflowV1Shape>
 export const BaseOpenTrussComponentV1PropsShape = z.object({
   data: DataV1Shape,
   config: WorkflowV1Shape.optional(),
+  debug: z.boolean().optional(),
 })
 
 type BaseOpenTrussComponentV1Props = z.infer<
