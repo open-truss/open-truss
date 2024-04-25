@@ -91,7 +91,7 @@ export function Frame(props: FrameContext): JSX.Element {
       signals,
       componentName: component,
     })
-    processedProps.debug = debug
+    processedProps._DEBUG_ = debug
 
     if (frames === undefined) {
       if (data) {

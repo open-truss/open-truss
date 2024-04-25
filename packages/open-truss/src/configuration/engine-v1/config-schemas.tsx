@@ -120,7 +120,7 @@ export type WorkflowV1 = z.infer<typeof WorkflowV1Shape>
 export const BaseOpenTrussComponentV1PropsShape = z.object({
   data: DataV1Shape,
   config: WorkflowV1Shape.optional(),
-  debug: z.boolean().optional(),
+  _DEBUG_: z.boolean().optional(),
 })
 
 type BaseOpenTrussComponentV1Props = z.infer<
