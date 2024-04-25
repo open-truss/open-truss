@@ -6,6 +6,7 @@ import {
 import { parseUqiResult, type SynchronousQueryResult } from '../uqi/uqi'
 import { isObject } from '../utils/misc'
 import {
+  NumberSignal,
   StringSignal,
   UnknownSignal,
   signalValueShape,
@@ -17,13 +18,15 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   ...withChildren,
   source: StringSignal,
   query: StringSignal,
+  force_query: NumberSignal,
   output: z.array(UnknownSignal).optional(),
 })
 
 const OTUqiDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
   props,
 ) => {
-  const { query, children, output, source, debug } = props
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const { query, force_query, children, output, source, debug } = props
 
   useSignalEffect(() => {
     if (debug) console.log({ query: query.value, source: source.value })
@@ -32,7 +35,13 @@ const OTUqiDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
     const fetchData = async function (): Promise<undefined> {
       const result = await fetch('/api/synchronous-uqi-query', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          // The uqi-force-query header is a hack to make it easy to force a query
+          // that works by including a NumberSignal that can be incremented by the
+          // application which triggers a re-rendering of this component.
+          'uqi-force-query': String(force_query?.value),
+        },
         body: JSON.stringify({ query, source }),
       })
       const deserialized = await result.json()
