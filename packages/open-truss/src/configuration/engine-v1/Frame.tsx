@@ -59,7 +59,7 @@ function ShowError({ error }: { error: FrameError }): JSX.Element {
 export function Frame(props: FrameContext): JSX.Element {
   const {
     frame: { view, data, frames },
-    globalContext: { COMPONENTS, signals },
+    globalContext: { COMPONENTS, signals, debug },
     configPath,
   } = props
   const { component, props: viewProps } = view
@@ -91,6 +91,7 @@ export function Frame(props: FrameContext): JSX.Element {
       signals,
       componentName: component,
     })
+    processedProps._DEBUG_ = debug
 
     if (frames === undefined) {
       if (data) {

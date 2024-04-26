@@ -23,6 +23,7 @@ export interface GlobalContext {
   signals: Signals
   FrameWrapper: FrameWrapper
   workflowId: string
+  debug: boolean
 }
 
 let COMBINED_COMPONENTS: COMPONENTS
@@ -59,6 +60,7 @@ export function RenderConfig({
     configPath,
     COMBINED_COMPONENTS,
   ) as FrameWrapper
+  const debug = config.debug ?? false
 
   const signals = createSignals(config.signals, validateConfig)
 
@@ -79,6 +81,7 @@ export function RenderConfig({
     COMPONENTS: COMBINED_COMPONENTS,
     FrameWrapper,
     workflowId,
+    debug,
   }
   useSetWorkflowSession(workflowId)
   // Workflows are just frames! Use unknown to convince TS of this fact.
