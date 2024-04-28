@@ -21,7 +21,7 @@ function addJsExtensionToImports(filePath) {
       if (fs.existsSync(`${fullPath}.js`)) {
         return `from '${p1}.js'`
       // Else if import is a directory
-      } else if (fs.statSync(fullPath) && fs.statSync(fullPath).isDirectory()) {
+      } else if (fs.existsSync(fullPath) && fs.statSync(fullPath).isDirectory()) {
         // Is it the case that all imports of directories default to index.js?
         // If not, we should make sure OT's does since this code depends on it.
         return `from '${p1}/index.js'`
@@ -33,6 +33,7 @@ function addJsExtensionToImports(filePath) {
       }
     // else a package import
     } else {
+      return match
       const slashCount = p1.split('/').length - 1
       //@ Imports with 2 slashes need .js. e.g. import get from '@open-truss/open-truss/pages.js'
       if (p1.includes('@')) {
