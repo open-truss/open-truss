@@ -5,8 +5,13 @@ package_dir="${PACKAGE_DIR:-.}"
 cd $package_dir
 
 if [ "$1" == "--sync" ]; then
-  tsc --project $PACKAGE_DIR/tsconfig.json
-  tsc --project $PACKAGE_DIR/tsconfig.esm.json
+  rollup -c &
+  tsc --project $PACKAGE_DIR/tsconfig.json &
+  tsc --project $PACKAGE_DIR/tsconfig.esm.json &
+
+  # Wait for all background processes to complete
+  wait
+
   exit
 fi
 
@@ -26,6 +31,9 @@ echo "Running tsc watch using $(echo $package_dir/tsconfig.json)"
 # Run tsc with --watch for tsconfig.esm.json and capture the output
 echo "Running tsc watch using $(echo $package_dir/tsconfig.esm.json)"
 (tsc --watch --preserveWatchOutput --project $package_dir/tsconfig.esm.json) &
+
+echo "Running rollup watch using"
+(rollup -c --watch) &
 
 # Wait for all background processes to complete or for a signal to terminate
 wait
