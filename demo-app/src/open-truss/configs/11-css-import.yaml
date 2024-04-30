@@ -1,0 +1,10 @@
+workflow:
+  version: 1
+  frames:
+    - frame:
+      view:
+        component: ExamplePageFromOTPackage
+      frames:
+        - frame:
+          view:
+            component: OTExampleComponent
