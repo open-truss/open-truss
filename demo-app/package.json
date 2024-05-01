@@ -21,8 +21,8 @@
     "clsx": "^2.1.0",
     "graphql-tag": "^2.12.6",
     "lodash": "^4.17.21",
-    "lucide-react": "^0.331.0",
     "mysql2": "^3.9.7",
+    "lucide-react": "^0.331.0",
     "next": "^14.0.4",
     "react": "^18",
     "react-dom": "^18",
@@ -32,20 +32,15 @@
     "yaml": "^2.3.3"
   },
   "devDependencies": {
-    "@rollup/plugin-multi-entry": "^6.0.1",
     "@types/lodash": "^4.14.202",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.4.17",
-    "cssnano": "^7.0.1",
     "encoding": "^0.1.13",
     "eslint": "^8",
     "eslint-config-next": "13.5.5",
     "postcss": "^8.4.35",
-    "rollup": "^4.17.1",
-    "rollup-plugin-postcss": "^4.0.2",
-    "sass": "^1.75.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }
