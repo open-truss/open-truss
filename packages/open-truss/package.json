@@ -42,6 +42,10 @@
       "import": "./dist/mjs/pages.js",
       "require": "./dist/cjs/pages.js",
       "types": "./dist/mjs/pages.d.ts"
+    },
+    "./styles/": {
+      "import": "./dist/styles/",
+      "require": "./dist/styles/"
     }
   },
   "typings": "./dist/mjs/index.d.ts",
