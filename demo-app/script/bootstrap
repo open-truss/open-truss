@@ -6,6 +6,7 @@ script_dir=$(dirname "$(readlink -f "$0")")
 demo_app_dir=$(dirname "$script_dir")
 root_dir=$(dirname "$demo_app_dir")
 open_truss_package_dir="$root_dir/packages/open-truss"
+react_path=$(readlink -f $open_truss_package_dir/node_modules/react)
 
 set -e
 
@@ -33,7 +34,7 @@ checksum() {
 # Check if the checksum matches the current configuration and exit early if it does.
 checksum_path=".checksum"
 if [ "$1" != "--force" ] && [ "$1" != "-f" ]; then
-  if [ -f $checksum_path ] && [ "$(cat $checksum_path)" = "$(checksum)" ]; then
+  if [ -f $checksum_path ] && [ "$(cat $checksum_path)" = "$(checksum)" ] && [[ $react_path == *"demo-app/node_modules/react" ]]; then
     echo "All dependencies are up to date."
     exit 0
   fi

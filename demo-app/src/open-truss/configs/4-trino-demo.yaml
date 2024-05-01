@@ -1,5 +1,6 @@
 workflow:
   version: 1
+  debug: true
   signals:
     resultsArray: # OTUqiDataProvider returns collection with rows using the shape of the object
       - name: string
