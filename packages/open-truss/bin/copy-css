@@ -1,0 +1,49 @@
+#!/usr/bin/env node
+
+const fs = require('fs')
+const path = require('path')
+
+const srcDirectory = `${process.env.PACKAGE_DIR}/src`
+const outputDirectory = `${process.env.PACKAGE_DIR}/dist/styles`
+
+if (!fs.existsSync(outputDirectory)) {
+  fs.mkdirSync(outputDirectory, { recursive: true })
+}
+
+function copyCss(fullPath) {
+  const filename = path.basename(fullPath)
+  const outputFilename = path.join(outputDirectory, filename)
+  fs.copyFileSync(fullPath, outputFilename)
+}
+
+function processDirectory(directory) {
+  const files = fs.readdirSync(directory, { withFileTypes: true });
+
+  for (const file of files) {
+    const fullPath = path.join(directory, file.name);
+
+    if (file.isDirectory()) {
+      processDirectory(fullPath);
+    } else if (file.name.endsWith('.css')) {
+      copyCss(fullPath);
+    }
+  }
+}
+
+function watchDirectory(directory) {
+  fs.watch(directory, { recursive: true }, (_eventType, filename) => {
+    if (filename && (filename.endsWith('.css'))) {
+      const fullPath = path.join(directory, filename)
+      copyCss(fullPath)
+    }
+  })
+}
+
+const shouldWatch = process.argv.includes('--watch')
+
+if (shouldWatch) {
+  console.log('Watching for file changes to add js extensions...')
+  watchDirectory(srcDirectory)
+} else {
+  processDirectory(srcDirectory)
+}
