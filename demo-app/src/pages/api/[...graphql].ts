@@ -7,7 +7,9 @@ import { loadSchemaSync } from '@graphql-tools/load'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { createYoga } from 'graphql-yoga'
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+const sleep = async (ms: number): Promise<void> => {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
 
 const typeDefs = loadSchemaSync('src/types/schema.graphql', {
   loaders: [new GraphQLFileLoader()],
