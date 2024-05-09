@@ -8,4 +8,8 @@ generates:
       - "typescript-resolvers"
     config:
       contextType: "./context#Context"
+      scalars:
+        BigInt: "BigInt"
+        DateTime: "Date"
+        JSON: "Record<string, any>"
       useIndexSignature: true
