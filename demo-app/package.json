@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "codegen": "graphql-codegen",
     "dev": "next dev",
     "tsc:sync": "open-truss tsc-watch --sync",
     "tsc:watch": "open-truss tsc-watch",
