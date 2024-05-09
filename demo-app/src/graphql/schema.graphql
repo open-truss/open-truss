@@ -1,17 +1,110 @@
+scalar BigInt
+scalar DateTime
+scalar JSON
+
 input HelloInput {
   name: String!
+}
+
+input ArchiveStoredQueryInput {
+  databaseId: BigInt!
+}
+
+input CreateStoredQueryInput {
+  query: String!
+  source: String!
+  name: String
+  description: String
+  expireAt: DateTime
+}
+
+input UpdateStoredQueryInput {
+  databaseId: BigInt!
+  name: String
+  description: String
+  expireAt: DateTime
+}
+
+input QueryFilter {
+  nameAndDescription: String
+  creatorId: BigInt
+  started: Boolean
+  completed: Boolean
+  failed: Boolean
+  archived: Boolean
 }
 
 type HelloResponse {
   message: String!
 }
 
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type StoredQueryRow {
+  serializedData: JSON!
+}
+
+type StoredQueryRowEdge {
+  node: StoredQueryRow
+}
+
+type StoredQueryRowConnection {
+  edges: [StoredQueryRowEdge!]
+  pageInfo: PageInfo!
+}
+
+type Source {
+  name: String!
+  type: String!
+}
+
+type StoredQuery {
+  id: ID!
+  databaseId: BigInt!
+  query: String!
+  name: String
+  description: String
+  source: JSON!
+  serializedConfig: JSON!
+  expireAt: DateTime!
+  creatorId: BigInt!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  startedAt: DateTime
+  completedAt: DateTime
+  archivedAt: DateTime
+  failedAt: DateTime
+  failedReason: String
+  columns: JSON!
+  tables: [String!]!
+}
+
+type StoredQueryEdge {
+  node: StoredQuery
+}
+
+type StoredQueryConnection {
+  edges: [StoredQueryEdge!]
+  pageInfo: PageInfo!
+}
+
 type Mutation {
   hello(input: HelloInput!): HelloResponse!
+  createStoredQuery(input: CreateStoredQueryInput!): StoredQuery!
+  updateStoredQuery(input: UpdateStoredQueryInput!): StoredQuery!
+  archiveStoredQuery(input: ArchiveStoredQueryInput!): StoredQuery!
 }
 
 type Query {
   hello: HelloResponse!
+  showStoredQuery(databaseId: BigInt!): StoredQuery!
+  showStoredQueryRows(first: Int, after: String, before: String, last: Int): StoredQueryRowConnection!
+  searchStoredQueries(first: Int, after: String, before: String, last: Int, filterBy: QueryFilter): StoredQueryConnection!
 }
 
 type Subscription {
