@@ -1,2 +1,5 @@
 # Dependency directories
 node_modules/
+
+# Data
+demo-app/src/db/dev.db
