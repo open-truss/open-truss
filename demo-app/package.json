@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "codegen": "graphql-codegen",
     "dev": "next dev",
     "tsc:sync": "open-truss tsc-watch --sync",
     "tsc:watch": "open-truss tsc-watch",
@@ -14,6 +15,8 @@
   "dependencies": {
     "@apollo/server": "^4.9.5",
     "@as-integrations/next": "^3.0.0",
+    "@graphql-tools/graphql-file-loader": "^8.0.1",
+    "@graphql-tools/load": "^8.0.2",
     "@monaco-editor/react": "^4.6.0",
     "@open-truss/open-truss": "file:../packages/open-truss",
     "@radix-ui/react-slot": "^1.0.2",
@@ -21,7 +24,10 @@
     "azure-kusto-data": "^5.2.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6",
+    "graphql-tools": "^9.0.1",
+    "graphql-yoga": "^5.3.1",
     "lodash": "^4.17.21",
     "lucide-react": "^0.331.0",
     "mysql2": "^3.9.7",
@@ -35,6 +41,10 @@
     "yaml": "^2.3.3"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/typescript": "^4.0.6",
+    "@graphql-codegen/typescript-operations": "^4.2.0",
+    "@graphql-codegen/typescript-resolvers": "^4.0.6",
     "@types/lodash": "^4.14.202",
     "@types/node": "^20",
     "@types/react": "^18",
