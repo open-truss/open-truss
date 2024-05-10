@@ -35,6 +35,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-resizable-panels": "^2.0.9",
+    "sqlite3": "^5.1.7",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "trino-client": "^0.2.2",
