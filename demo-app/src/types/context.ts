@@ -1,3 +1,5 @@
+import { type UqiClient } from '@open-truss/open-truss'
+
 export interface Context {
-  name: string
+  db: UqiClient
 }

@@ -1,5 +1,6 @@
 /* eslint-disable check-file/filename-naming-convention */
 
+import sources from '@/lib/uqi-sources'
 import { type Context } from '@/types/context'
 import { type HelloResponse, type Resolvers } from '@/types/generated-types'
 import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader'
@@ -10,6 +11,9 @@ import { createYoga } from 'graphql-yoga'
 const sleep = async (ms: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
+
+const { config: dbConfig, createClient: createDbClient } =
+  sources['demo-app-db']
 
 const typeDefs = loadSchemaSync('src/types/schema.graphql', {
   loaders: [new GraphQLFileLoader()],
@@ -56,6 +60,13 @@ const server = createYoga({
     defaultQuery,
   },
   graphqlEndpoint: '/api/graphql',
+  context: async () => {
+    const db = await createDbClient(dbConfig)
+
+    // Return anything needed in the global context like instantiated
+    // database clients, etc.
+    return { db }
+  },
 })
 
 export default server
