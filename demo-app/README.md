@@ -16,7 +16,7 @@ The application will be available at [http://localhost:3000](http://localhost:30
 
 Model Home is a mix of Open Truss examples and research we're doing that has not yet been added to an `@open-truss` package.
 
-When making changes to `src/types/schema.graphql` make sure to run `npm run codegen` to regenerate Typescript types from the GraphQL SDL.
+When making changes to `src/graphql/schema.graphql` make sure to run `npm run codegen` to regenerate Typescript types from the GraphQL SDL.
 
 ## FAQ
 
