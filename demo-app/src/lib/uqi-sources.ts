@@ -1,8 +1,15 @@
 import createKustoUqiClient from '@/lib/kusto-uqi-client'
 import createMysqlUqiClient from '@/lib/mysql-uqi-client'
+import createSqliteUqiClient from '@/lib/sqlite-uqi-client'
 import createTrinoUqiClient from '@/lib/trino-uqi-client'
 
 const sources = {
+  'demo-app-db': {
+    config: {
+      uri: String(process.env.DEMO_APP_DB_URI),
+    },
+    createClient: createSqliteUqiClient,
+  },
   // setup local trino with this:
   // docker run --name trino -d -p 8080:8080 trinodb/trino
   'trino-demo': {

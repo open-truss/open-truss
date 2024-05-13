@@ -1,0 +1,20 @@
+workflow:
+  version: 1
+  signals:
+    results:
+      - name: string
+        rootpage: number
+  frames:
+    - frame:
+      view:
+        component: OTUqiDataProvider
+        props:
+          source: demo-app-db
+          query: SELECT name, rootpage FROM sqlite_master
+          output: [:results]
+      frames:
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :results
