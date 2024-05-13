@@ -2,8 +2,16 @@ import createKustoUqiClient from '@/lib/kusto-uqi-client'
 import createMysqlUqiClient from '@/lib/mysql-uqi-client'
 import createSqliteUqiClient from '@/lib/sqlite-uqi-client'
 import createTrinoUqiClient from '@/lib/trino-uqi-client'
+import { type UqiClient } from '@open-truss/open-truss'
 
-const sources = {
+type SourceConfig = any // TODO: make a type that can represent any source config
+
+interface Source {
+  config: SourceConfig
+  createClient: (config: SourceConfig) => Promise<UqiClient>
+}
+
+const sources: Record<string, Source> = {
   'demo-app-db': {
     config: {
       uri: String(process.env.DEMO_APP_DB_URI),

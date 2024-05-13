@@ -1,5 +1,5 @@
 import sources from '@/lib/uqi-sources'
-import { type UqiMetadata } from '@open-truss/open-truss'
+import { type UqiColumn, type UqiMetadata } from '@open-truss/open-truss'
 
 interface SynchronousQueryResult {
   rows: SynchronousQueryRow[]
@@ -35,7 +35,7 @@ async function synchronousUqiQuery(
   { source, query }: Args,
   _context: unknown,
 ): Promise<SynchronousQueryResult> {
-  const { config, createClient } = sources[source as keyof typeof sources]
+  const { config, createClient } = sources[source]
   const client = await createClient(config)
   const queryIterator = await client.query(query)
   const rows = []
@@ -49,7 +49,9 @@ async function synchronousUqiQuery(
     const values = Object.entries(row).map(([key, value]) => ({
       key,
       // TODO: cache the type mapping?
-      type: m.columns.find((column) => column.name === key)?.type || 'unknown',
+      type:
+        m.columns.find((column: UqiColumn) => column.name === key)?.type ||
+        'unknown',
       value: String(value),
     }))
     rows.push({ values })
