@@ -4,7 +4,19 @@ Model Home is Open Truss's demo application to help showcase how to use OT and h
 
 ## Getting Started
 
-This will ensure you have everything you need installed and boot up the development server:
+This will ensure you have everything you need installed:
+
+```bash
+script/bootstrap
+```
+
+This will create the `demo-app` database (note there are more detailed instructions in [the migrations directory README](https://github.com/open-truss/open-truss/blob/main/demo-app/src/db/migrations/README.md)):
+
+```bash
+mysql -u <username> -p $MYSQL_PASS_FROM_ENV -h <host> <database> < src/db/migrations/2024-05-10-190401-first-migration.sql
+```
+
+Start the demo-app server:
 
 ```bash
 script/server
