@@ -1,0 +1,51 @@
+workflow:
+  version: 1
+  signals:
+    results:
+      - id: number
+        query: string
+        name: string
+        description: string
+        source_name: string
+        source_type: string
+        expire_at: string
+        creator_id: number
+        created_at: string
+        updated_at: string
+        started_at: string
+        completed_at: string
+        archived_at: string
+        failed_at: string
+        failed_reason: string
+  frames:
+    - frame:
+      view:
+        component: OTUqiDataProvider
+        props:
+          source: mysql-demo
+          query: >
+            SELECT
+              id,
+              query,
+              name,
+              description,
+              serialized_config->>'$.source_name' AS source_name,
+              serialized_config->>'$.source_type' AS source_type,
+              expire_at,
+              creator_id,
+              created_at,
+              updated_at,
+              started_at,
+              completed_at,
+              archived_at,
+              failed_at,
+              failed_reason
+            FROM
+              stored_queries
+          output: [:results]
+      frames:
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :results
