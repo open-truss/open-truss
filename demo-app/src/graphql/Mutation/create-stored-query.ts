@@ -1,13 +1,10 @@
 import { type Context } from '@/graphql/context'
 import {
-  formatQuery,
-  type UqiClient,
-  type UqiNamedFieldsRow,
-} from '@open-truss/open-truss'
-import {
-  type StoredQuery,
   type MutationCreateStoredQueryArgs,
+  type StoredQuery,
 } from '@/graphql/generated-types'
+import getOneRow from '@/lib/get-one-row'
+import { formatQuery, type UqiNamedFieldsRow } from '@open-truss/open-truss'
 
 const insertIntoTemplate = `
 INSERT INTO stored_queries (
@@ -26,18 +23,6 @@ INSERT INTO stored_queries (
   :creatorId
 )
 `
-
-async function getOneRow(
-  uqiClient: UqiClient,
-  query: string,
-): Promise<UqiNamedFieldsRow> {
-  let row: UqiNamedFieldsRow = {}
-  const results = await uqiClient.query(query, { namedFields: true })
-  for await (const result of results) {
-    row = result.row as UqiNamedFieldsRow
-  }
-  return row
-}
 
 async function createStoredQuery(
   _: any,
