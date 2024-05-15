@@ -1,6 +1,15 @@
 import { format as sqlFormat, type SqlLanguage } from 'sql-formatter'
 
-export type Param = string | number | string[] | number[]
+export type Param =
+  | string
+  | number
+  | bigint
+  | string[]
+  | number[]
+  | bigint[]
+  | boolean
+  | null
+  | undefined
 
 export interface Config {
   language?: SqlLanguage
@@ -12,6 +21,12 @@ function formatParam(param: Param): string {
     return String(param)
   } else if (typeof param === 'string') {
     return `'${param.replaceAll("'", "''")}'`
+  } else if (typeof param === 'bigint') {
+    return BigInt(param).toString()
+  } else if (typeof param === 'boolean') {
+    return param ? 'TRUE' : 'FALSE'
+  } else if (param === null || param === undefined) {
+    return 'NULL'
   } else if (Array.isArray(param)) {
     return param.map(formatParam).join(',')
   } else {
