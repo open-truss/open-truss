@@ -60,4 +60,49 @@ WHERE
 `.trim()
     expect(actual).toBe(expected)
   })
+
+  it('injects named null values', () => {
+    const actual = formatQuery('SELECT * FROM users WHERE login = :login', {
+      params: { login: null },
+    })
+    const expected = `
+SELECT
+    *
+FROM
+    users
+WHERE
+    login = NULL
+`.trim()
+    expect(actual).toBe(expected)
+  })
+
+  it('injects BigInt values', () => {
+    const actual = formatQuery('SELECT * FROM users WHERE id = :id', {
+      params: { id: BigInt(12345) },
+    })
+    const expected = `
+SELECT
+    *
+FROM
+    users
+WHERE
+    id = 12345
+`.trim()
+    expect(actual).toBe(expected)
+  })
+
+  it('injects boolean values', () => {
+    const actual = formatQuery('SELECT * FROM users WHERE active = :active', {
+      params: { active: true },
+    })
+    const expected = `
+SELECT
+    *
+FROM
+    users
+WHERE
+    active = TRUE
+`.trim()
+    expect(actual).toBe(expected)
+  })
 })
