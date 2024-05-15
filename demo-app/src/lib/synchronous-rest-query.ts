@@ -36,7 +36,7 @@ async function synchronousRestQuery(
     status: response.status,
     headers: response.headers.raw(),
     // TODO: Can we assume the body is always JSON?
-    body: response.json(),
+    body: await response.json(),
   }
 }
 
