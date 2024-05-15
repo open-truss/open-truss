@@ -19,7 +19,7 @@ export interface TrinoConfig {
   source?: string
 }
 
-export default async function (config: TrinoConfig): Promise<UqiClient> {
+async function createTrinoUqiClient(config: TrinoConfig): Promise<UqiClient> {
   const typeMappings: Record<string, UqiMappedType> = {
     boolean: 'Boolean',
     integer: 'Number',
@@ -71,3 +71,8 @@ export default async function (config: TrinoConfig): Promise<UqiClient> {
     query,
   })
 }
+
+createTrinoUqiClient.engine = 'trino'
+createTrinoUqiClient.engine_version = '447'
+
+export { createTrinoUqiClient }
