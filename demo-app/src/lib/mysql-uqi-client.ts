@@ -45,6 +45,7 @@ export default async function (config: MysqlConfig): Promise<UqiClient> {
     '14': 'String', // 'NEWDATE'
     '15': 'String', // 'VARCHAR'
     '16': 'Boolean', // 'BIT'
+    '245': 'JSON', // 'JSON'
     '246': 'Number', // 'NEWDECIMAL'
     '247': 'String', // 'ENUM'
     '248': 'JSON', // 'SET'
