@@ -2,18 +2,21 @@ workflow:
   version: 1
   signals:
     results:
-      - Variable_name: string
+      total_count: string
   frames:
     - frame:
       view:
-        component: OTUqiDataProvider
+        component: OTRestDataProvider
         props:
-          source: mysql-demo
-          query: select Variable_name from sys.metrics
+          source: rest-demo
+          path: /search/issues?q=repo:{repo_nwo}+is:issue&per_page=1
+          method: GET
           output: [:results]
+          headers:
+            - User-Agent: open-truss-rest-demo
       frames:
         - frame:
           view:
             component: DataDemo
             props:
-              results: :results # TrinoDemo takes a colleciton type
+              results: :results

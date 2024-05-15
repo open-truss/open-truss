@@ -2,7 +2,7 @@ workflow:
   version: 1
   signals:
     results:
-      - Variable_name: number
+      - Variable_name: string
   frames:
     - frame:
       view:
