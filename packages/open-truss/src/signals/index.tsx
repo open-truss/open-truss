@@ -14,9 +14,10 @@ export { useSignalEffect, useComputed } from '@preact/signals-react'
 export type SignalsZodType<T = any> = z.ZodDefault<z.ZodType<Signal<T>>>
 export type Signals = Record<string, Signal<any>>
 type ValueShape<T = any> = z.ZodDefault<z.ZodType<T>>
+type WrappedValueShape<T = any> = z.ZodNullable<ValueShape<T | null>>
 interface SignalAndValueShape<T = any> {
   signal: SignalsZodType<T>
-  valueShape: ValueShape<T>
+  valueShape: WrappedValueShape<T>
 }
 export type SignalTypes = Record<string, SignalAndValueShape>
 
@@ -32,7 +33,7 @@ export function getSignalsType(
   return getSignalAndValueShape(possibleZodObject)?.signal
 }
 
-export function signalValueShape(signal: Signal): SignalsZodType {
+export function signalValueShape(signal: Signal): WrappedValueShape {
   return SIGNALS[signal.name]?.valueShape
 }
 
@@ -56,7 +57,8 @@ export function SignalType<T>(
   name: string,
   valueShape: ValueShape<T | null>,
 ): SignalsZodType<T | null> {
-  const defaultValue = valueShape.parse(undefined)
+  const wrappedValueShape = valueShape.nullable()
+  const defaultValue = wrappedValueShape.parse(undefined)
   // Validation is in superRefine so fine to return true
   const validator: (val: unknown) => boolean = () => true
 
@@ -89,7 +91,7 @@ export function SignalType<T>(
     })
     .describe(`Signal<${name}>`)
 
-  SIGNALS[name] = { signal: zodType, valueShape }
+  SIGNALS[name] = { signal: zodType, valueShape: wrappedValueShape }
 
   return zodType
 }
