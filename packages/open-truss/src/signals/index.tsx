@@ -66,10 +66,12 @@ export function SignalType<T>(
     .custom<Signal<T | null>>(validator)
     .superRefine((val, ctx) => {
       const stringedValue = String(val)
+      const yamlName = val.yamlName ?? ''
+      const path = `[${String(ctx.path)}]`
       if (!isSignalLike(val)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: `Expected ${name} signal to be a signal, but instead got ${stringedValue}`,
+          message: `Expected ${yamlName} signal of type=${name}, path=${path} to be a signal, but instead got ${stringedValue}`,
           fatal: true,
         })
       }
