@@ -50,7 +50,7 @@ async function synchronousUqiQuery(
       key,
       // TODO: cache the type mapping?
       type: m.columns.find((column) => column.name === key)?.type || 'unknown',
-      value: value,
+      value,
     }))
     rows.push({ values })
   }
