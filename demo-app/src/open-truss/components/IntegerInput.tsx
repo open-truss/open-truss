@@ -27,7 +27,7 @@ export default function IntegerInput({
   const addInteger = (): void => {
     integer.value = Number(inputValue)
     setInputValue('')
-    if (submit) submit.value()
+    submit.value?.()
   }
 
   return (

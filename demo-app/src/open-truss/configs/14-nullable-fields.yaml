@@ -1,0 +1,44 @@
+workflow:
+  version: 1
+  signals:
+    r1:
+      - value: number
+    r2:
+      - value: string
+  frames:
+    - frame:
+      view:
+        component: OTUqiDataProvider
+        props:
+          source: mysql-demo
+          query: >
+            SELECT 1 AS value
+            UNION ALL
+            SELECT NULL AS value
+            UNION ALL
+            SELECT 3 AS value
+          output: [:r1]
+      frames:
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :r1
+    - frame:
+      view:
+        component: OTUqiDataProvider
+        props:
+          source: mysql-demo
+          query: >
+            SELECT 'one' AS value
+            UNION ALL
+            SELECT NULL AS value
+            UNION ALL
+            SELECT 'three' AS value
+          output: [:r2]
+      frames:
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :r2

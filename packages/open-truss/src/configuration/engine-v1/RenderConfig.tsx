@@ -107,7 +107,7 @@ function createSignals(signalsConfig: SignalsV1, validate: boolean): Signals {
     if (typeof val === 'string' && val in SIGNALS) {
       signal = SIGNALS[val].signal
     } else if (isObject(val) || Array.isArray(val)) {
-      signal = createSignal(val)
+      signal = createSignal(name, val)
     }
 
     if (signal) {
