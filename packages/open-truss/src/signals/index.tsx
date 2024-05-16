@@ -102,8 +102,11 @@ export function SignalType<T>(
 //   string, boolean, and number fields are set with default values of "", false, 0.
 // - It sets the type to unknown given that this is runtime and typescript types don't exist
 // - TODO it accepts predefined higher order types as valid types
-export function createSignal(signal: object | object[]): SignalsZodType {
-  const name = signalNameFromObject(signal)
+export function createSignal(
+  configName: string,
+  signal: object | object[],
+): SignalsZodType {
+  const name = `${configName}-${signalNameFromObject(signal)}`
   if (name in SIGNALS) return SIGNALS[name].signal
 
   const { zodShape, defaultValue } = createZodShape(signal)
