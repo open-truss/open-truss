@@ -50,7 +50,7 @@ export function parseUqiResult(
   return result.rows.map((row) => {
     const rowResult: Record<string, unknown> = {}
     row.values.forEach(({ key, type, value }) => {
-      rowResult[key] = castUqiValue(type, value)
+      rowResult[key] = value === null ? null : castUqiValue(type, value)
     })
     return rowResult
   })
