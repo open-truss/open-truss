@@ -52,7 +52,7 @@ interface KustoConfig {
   endpoint: string
 }
 
-export default async function (config: KustoConfig): Promise<UqiClient> {
+async function createKustoUqiClient(config: KustoConfig): Promise<UqiClient> {
   const typeMappings: Record<string, UqiMappedType> = {
     bool: 'Boolean',
     datetime: 'Date',
@@ -112,3 +112,8 @@ export default async function (config: KustoConfig): Promise<UqiClient> {
     query,
   })
 }
+
+createKustoUqiClient.engine = 'kusto'
+createKustoUqiClient.engine_version = 'v3'
+
+export { createKustoUqiClient }

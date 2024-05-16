@@ -24,7 +24,7 @@ function makeUqiColumnCompatible(fields: FieldPacket[]): UqiColumn[] {
   })
 }
 
-export default async function (config: MysqlConfig): Promise<UqiClient> {
+async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
   const parsedUrl = new URL(config.uri)
 
   const typeMappings: Record<string, UqiMappedType> = {
@@ -118,3 +118,8 @@ export default async function (config: MysqlConfig): Promise<UqiClient> {
     query,
   })
 }
+
+createMysqlUqiClient.engine = 'mysql'
+createMysqlUqiClient.engine_version = '8.0.37'
+
+export { createMysqlUqiClient }
