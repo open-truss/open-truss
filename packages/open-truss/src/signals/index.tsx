@@ -130,7 +130,10 @@ function createZodShape(signal: object | object[]): {
       throw new Error('Array signals must be an object as first and only value')
 
     const { zodShape, defaultValue } = createZodShape(signalObject)
-    return { zodShape: z.array(zodShape), defaultValue: [defaultValue] }
+    return {
+      zodShape: z.array(zodShape).nullable(),
+      defaultValue: [defaultValue],
+    }
   } else {
     const zodSchema: Record<string, ZodTypeAny> = {}
     const defaultValue: Record<
@@ -144,14 +147,14 @@ function createZodShape(signal: object | object[]): {
         zodSchema[key] = zodShape
         defaultValue[key] = defValue
       } else if (typeof value === 'string' && value in typeToZodMap) {
-        zodSchema[key] = typeToZodMap[value]
+        zodSchema[key] = typeToZodMap[value].nullable()
         defaultValue[key] = typeToDefaultValue[value]
       } else {
         throw new Error(`unknown signal value: ${value}`)
       }
     }
 
-    return { zodShape: z.object(zodSchema), defaultValue }
+    return { zodShape: z.object(zodSchema).nullable(), defaultValue }
   }
 }
 
