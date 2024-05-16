@@ -4,7 +4,7 @@ import { typeToZodMap, typeToDefaultValue } from '../utils/describe-zod'
 import { isObject } from '../utils/misc'
 import CryptoJS from 'crypto-js'
 
-export interface Signal<T = any> extends PreactSignal<T> {
+export interface Signal<T = any | null> extends PreactSignal<T | null> {
   name: string // Used to look up the zodShape for a given signal
   yamlName: string // Used to look up the key that was used for the signal in a workflow
 }
@@ -54,17 +54,17 @@ function isSignalLike(obj: unknown): obj is Signal {
 
 export function SignalType<T>(
   name: string,
-  valueShape: ValueShape<T>,
-): SignalsZodType<T> {
+  valueShape: ValueShape<T | null>,
+): SignalsZodType<T | null> {
   const defaultValue = valueShape.parse(undefined)
   const validator = (val: unknown): boolean => {
     return isSignalLike(val) && valueShape.parse(val.value) !== undefined
   }
 
   const zodType = z
-    .custom<Signal<T>>(validator)
+    .custom<Signal<T | null>>(validator)
     .default(() => {
-      const s = useSignal<T>(defaultValue) as Signal<T>
+      const s = useSignal<T | null>(defaultValue) as Signal<T | null>
       s.name = name
       return s
     })

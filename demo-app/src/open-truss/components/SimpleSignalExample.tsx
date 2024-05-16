@@ -26,7 +26,7 @@ export default function SimpleSignalExample({
   }
 
   const addAccountId = (): void => {
-    accountIds.value = [...accountIds.value, Number(inputValue)]
+    accountIds.value = [...(accountIds.value || []), Number(inputValue)]
     setInputValue('')
   }
 
