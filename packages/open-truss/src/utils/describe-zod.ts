@@ -10,6 +10,7 @@ export interface ZodDescriptionObject {
   isSignal?: boolean
   defaultValue?: YamlType
   shape?: ZodShape
+  nullable?: boolean
 }
 
 // describeZod outputs a readable summary of a zod type.
@@ -59,6 +60,12 @@ export function describeZod(
           ...(describeZod({ innerType }).innerType as object),
         }
         description[key] = desc
+      } else if (type === 'ZodNullable') {
+        const innerType = value._def.innerType
+        description[key] = {
+          ...(describeZod({ innerType }).innerType as object),
+          nullable: true,
+        }
       } else {
         description[key] = { type }
       }
