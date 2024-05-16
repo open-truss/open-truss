@@ -43,12 +43,6 @@ module.exports = {
         ignoreMiddleExtensions: true,
       },
     ],
-    'check-file/folder-naming-convention': [
-      'error',
-      {
-        '**/*': 'NEXT_JS_APP_ROUTER_CASE',
-      },
-    ],
     'react/react-in-jsx-scope': 'off',
     'prettier/prettier': 2,
   },
