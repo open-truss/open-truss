@@ -57,12 +57,31 @@ export function SignalType<T>(
   valueShape: ValueShape<T | null>,
 ): SignalsZodType<T | null> {
   const defaultValue = valueShape.parse(undefined)
-  const validator = (val: unknown): boolean => {
-    return isSignalLike(val) && valueShape.parse(val.value) !== undefined
-  }
+  // Validation is in superRefine so fine to return true
+  const validator: (val: unknown) => boolean = () => true
 
   const zodType = z
     .custom<Signal<T | null>>(validator)
+    .superRefine((val, ctx) => {
+      const stringedValue = String(val)
+      if (!isSignalLike(val)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Expected ${name} signal to be a signal, but instead got ${stringedValue}`,
+          fatal: true,
+        })
+      }
+
+      const parsedValue = wrappedValueShape.safeParse(val.value)
+      // We consider null a valid signal value since all values with be nullable
+      if (!parsedValue.success) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `${name} signal was set to value of incorrect type. value=${stringedValue}`,
+          fatal: true,
+        })
+      }
+    })
     .default(() => {
       const s = useSignal<T | null>(defaultValue) as Signal<T | null>
       s.name = name
