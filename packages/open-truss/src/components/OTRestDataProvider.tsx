@@ -71,16 +71,6 @@ const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
 
         for (const signal of output || []) {
           const shape = signalValueShape(signal)
-          // const parsedResults = parseUqiResult(queryResults)
-          const defaultValue = shape.parse(undefined)
-
-          // const result = Array.isArray(defaultValue)
-          //   ? queryResults.body
-          //   : isObject(defaultValue)
-          //   ? queryResults.body[0]
-          //   : queryResults.body[0]?.[signal.yamlName]
-
-          // const validatedResult = shape.parse(result)
           const validatedResult = shape.parse(queryResults.body)
           if (_DEBUG_)
             console.log({
