@@ -12,7 +12,10 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
 export default function ShowIntegerSquared({
   integer,
 }: z.infer<typeof Props>): JSX.Element {
-  const squaredInteger = computed(() => integer.value * integer.value)
+  const squaredInteger = computed(() => {
+    const val = integer.value ?? 0
+    return val * val
+  })
   return (
     <div>
       <h2>Your integer: {integer}</h2>

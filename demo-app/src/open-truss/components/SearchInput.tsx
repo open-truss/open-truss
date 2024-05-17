@@ -22,7 +22,19 @@ const SearchInput: BaseOpenTrussComponentV1<z.infer<typeof Props>> = ({
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
     const value = event.target.value
-    const formattedQuery = formatQuery(template.value, {
+
+    // This null check been added because signals can be null
+    // I set this value to '' to get around the compiler issues
+    // but a more valid handling of might include:
+    //   - exposing a defaultQuery prop and use that instead
+    //   - showing an error to the user
+    //   - changing this type to be a static string instead of a signal
+    //     since the template would likely be static anyway
+    //
+    // Option 3 makes the most sense, but instead of implementing that
+    // I left this as is so that it can be a useful example to consider.
+    const templateValue = template.value ?? ''
+    const formattedQuery = formatQuery(templateValue, {
       params: { value: `%${value.trim()}%` },
     })
     query.value = formattedQuery

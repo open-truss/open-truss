@@ -4,7 +4,7 @@ import { typeToZodMap, typeToDefaultValue } from '../utils/describe-zod'
 import { isObject } from '../utils/misc'
 import CryptoJS from 'crypto-js'
 
-export interface Signal<T = any> extends PreactSignal<T> {
+export interface Signal<T = any | null> extends PreactSignal<T | null> {
   name: string // Used to look up the zodShape for a given signal
   yamlName: string // Used to look up the key that was used for the signal in a workflow
 }
@@ -14,9 +14,10 @@ export { useSignalEffect, useComputed } from '@preact/signals-react'
 export type SignalsZodType<T = any> = z.ZodDefault<z.ZodType<Signal<T>>>
 export type Signals = Record<string, Signal<any>>
 type ValueShape<T = any> = z.ZodDefault<z.ZodType<T>>
+type WrappedValueShape<T = any> = z.ZodNullable<ValueShape<T | null>>
 interface SignalAndValueShape<T = any> {
   signal: SignalsZodType<T>
-  valueShape: ValueShape<T>
+  valueShape: WrappedValueShape<T>
 }
 export type SignalTypes = Record<string, SignalAndValueShape>
 
@@ -32,7 +33,7 @@ export function getSignalsType(
   return getSignalAndValueShape(possibleZodObject)?.signal
 }
 
-export function signalValueShape(signal: Signal): SignalsZodType {
+export function signalValueShape(signal: Signal): WrappedValueShape {
   return SIGNALS[signal.name]?.valueShape
 }
 
@@ -54,23 +55,45 @@ function isSignalLike(obj: unknown): obj is Signal {
 
 export function SignalType<T>(
   name: string,
-  valueShape: ValueShape<T>,
-): SignalsZodType<T> {
-  const defaultValue = valueShape.parse(undefined)
-  const validator = (val: unknown): boolean => {
-    return isSignalLike(val) && valueShape.parse(val.value) !== undefined
-  }
+  valueShape: ValueShape<T | null>,
+): SignalsZodType<T | null> {
+  const wrappedValueShape = valueShape.nullable()
+  const defaultValue = wrappedValueShape.parse(undefined)
+  // Validation is in superRefine so fine to return true
+  const validator: (val: unknown) => boolean = () => true
 
   const zodType = z
-    .custom<Signal<T>>(validator)
+    .custom<Signal<T | null>>(validator)
+    .superRefine((val, ctx) => {
+      const stringedValue = String(val)
+      const yamlName = val.yamlName ?? ''
+      const path = `[${String(ctx.path)}]`
+      if (!isSignalLike(val)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Expected ${yamlName} signal of type=${name}, path=${path} to be a signal, but instead got ${stringedValue}`,
+          fatal: true,
+        })
+      }
+
+      const parsedValue = wrappedValueShape.safeParse(val.value)
+      // We consider null a valid signal value since all values with be nullable
+      if (!parsedValue.success) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `${name} signal was set to value of incorrect type. value=${stringedValue}`,
+          fatal: true,
+        })
+      }
+    })
     .default(() => {
-      const s = useSignal<T>(defaultValue) as Signal<T>
+      const s = useSignal<T | null>(defaultValue) as Signal<T | null>
       s.name = name
       return s
     })
     .describe(`Signal<${name}>`)
 
-  SIGNALS[name] = { signal: zodType, valueShape }
+  SIGNALS[name] = { signal: zodType, valueShape: wrappedValueShape }
 
   return zodType
 }
@@ -81,8 +104,11 @@ export function SignalType<T>(
 //   string, boolean, and number fields are set with default values of "", false, 0.
 // - It sets the type to unknown given that this is runtime and typescript types don't exist
 // - TODO it accepts predefined higher order types as valid types
-export function createSignal(signal: object | object[]): SignalsZodType {
-  const name = signalNameFromObject(signal)
+export function createSignal(
+  configName: string,
+  signal: object | object[],
+): SignalsZodType {
+  const name = `${configName}-${signalNameFromObject(signal)}`
   if (name in SIGNALS) return SIGNALS[name].signal
 
   const { zodShape, defaultValue } = createZodShape(signal)
@@ -104,7 +130,10 @@ function createZodShape(signal: object | object[]): {
       throw new Error('Array signals must be an object as first and only value')
 
     const { zodShape, defaultValue } = createZodShape(signalObject)
-    return { zodShape: z.array(zodShape), defaultValue: [defaultValue] }
+    return {
+      zodShape: z.array(zodShape).nullable(),
+      defaultValue: [defaultValue],
+    }
   } else {
     const zodSchema: Record<string, ZodTypeAny> = {}
     const defaultValue: Record<
@@ -118,14 +147,14 @@ function createZodShape(signal: object | object[]): {
         zodSchema[key] = zodShape
         defaultValue[key] = defValue
       } else if (typeof value === 'string' && value in typeToZodMap) {
-        zodSchema[key] = typeToZodMap[value]
+        zodSchema[key] = typeToZodMap[value].nullable()
         defaultValue[key] = typeToDefaultValue[value]
       } else {
         throw new Error(`unknown signal value: ${value}`)
       }
     }
 
-    return { zodShape: z.object(zodSchema), defaultValue }
+    return { zodShape: z.object(zodSchema).nullable(), defaultValue }
   }
 }
 

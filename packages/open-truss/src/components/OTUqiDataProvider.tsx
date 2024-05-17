@@ -45,7 +45,8 @@ const OTUqiDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
         body: JSON.stringify({ query, source }),
       })
       const deserialized = await result.json()
-      if (_DEBUG_) console.log({ m: 'UQI API response', response: result })
+      if (_DEBUG_)
+        console.log({ m: 'UQI API response', response: deserialized })
       queryResults = deserialized
     }
 

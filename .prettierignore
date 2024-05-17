@@ -1,3 +1,4 @@
 demo-app/.next
+demo-app/src/graphql/generated-types.ts
 packages/open-truss/dist
 packages/open-truss/nextjs/.next

@@ -1,0 +1,19 @@
+input HelloInput {
+  name: String!
+}
+
+type HelloResponse {
+  message: String!
+}
+
+type Mutation {
+  hello(input: HelloInput!): HelloResponse!
+}
+
+type Query {
+  hello: HelloResponse!
+}
+
+type Subscription {
+  hello(names: [String!]!): HelloResponse!
+}

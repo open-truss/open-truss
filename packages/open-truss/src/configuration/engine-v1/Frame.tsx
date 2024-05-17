@@ -247,6 +247,10 @@ function processProps(props: ComponentPropsShape): ComponentPropsReturnShape {
     if (isSymbol(viewPropVal)) {
       const signalName = parseSignalName(viewPropVal) ?? ''
       signal = signals[signalName]
+      if (signal === undefined) {
+        const mes = `Signal ${signalName} is used by Component ${componentName} but was not declared`
+        throw new Error(mes)
+      }
     } else if (viewPropVal !== undefined) {
       // TODO This condition is for viewProps that are hard coded values (not signals)
       // We need to transform them into a signal so that the component can use them.
