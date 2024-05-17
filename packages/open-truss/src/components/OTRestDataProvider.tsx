@@ -35,14 +35,30 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
 const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
   props,
 ) => {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { source, path: templatePath, path_values, method, headers, force_query, children, output, _DEBUG_ } = props
+  const {
+    source,
+    path: templatePath,
+    path_values, // eslint-disable-line @typescript-eslint/naming-convention
+    method,
+    headers,
+    force_query, // eslint-disable-line @typescript-eslint/naming-convention
+    children,
+    output,
+    _DEBUG_,
+  } = props
 
   useSignalEffect(() => {
-    if (_DEBUG_) console.log({ m: 'REST values', source, path: templatePath, method, headers })
+    if (_DEBUG_)
+      console.log({
+        m: 'REST values',
+        source,
+        path: templatePath,
+        method,
+        headers,
+      })
 
     const stringifiedPathValues = mapValues(path_values, String)
-    const resolvedPath = template(String(templatePath))(stringifiedPathValues);
+    const resolvedPath = template(String(templatePath))(stringifiedPathValues)
 
     let queryResults: SynchronousRestResult
     const fetchData = async function (): Promise<undefined> {

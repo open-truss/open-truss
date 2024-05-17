@@ -7,5 +7,5 @@ export const OTRestDataProvider = _OTRestDataProvider
 export const OT_COMPONENTS = {
   OTExampleComponent,
   OTUqiDataProvider,
-  OTRestDataProvider
+  OTRestDataProvider,
 }

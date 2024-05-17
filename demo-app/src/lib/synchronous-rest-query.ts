@@ -14,10 +14,13 @@ interface Args {
   headers: Record<string, string>
 }
 
-async function synchronousRestQuery(
-  { source, path, method, headers }: Args,
-): Promise<SynchronousRestResult> {
-  const {protocol, host, headers: defaultHeaders} = sources[source].config
+async function synchronousRestQuery({
+  source,
+  path,
+  method,
+  headers,
+}: Args): Promise<SynchronousRestResult> {
+  const { protocol, host, headers: defaultHeaders } = sources[source].config
 
   const prefixedPath = path.startsWith('/') ? path : `/${path}`
   const url = `${protocol}://${host}${prefixedPath}`

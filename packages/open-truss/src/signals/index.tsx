@@ -186,8 +186,14 @@ export const BooleanSignal = SignalType<boolean>(
   'boolean',
   z.boolean().default(false),
 )
-export const ObjectsSignal = SignalType<Record<string, unknown>[]>('object[]', z.array(z.object({})).default([]))
-export const ObjectSignal = SignalType<Record<string, unknown>>('object', z.object({}).default({}))
+export const ObjectsSignal = SignalType<Array<Record<string, unknown>>>(
+  'object[]',
+  z.array(z.object({})).default([]),
+)
+export const ObjectSignal = SignalType<Record<string, unknown>>(
+  'object',
+  z.object({}).default({}),
+)
 
 // Collection types
 export const UnknownSignal = SignalType<unknown>(
