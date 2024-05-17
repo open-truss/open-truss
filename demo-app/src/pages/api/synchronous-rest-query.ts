@@ -12,7 +12,6 @@ export default async function handler(
           ? request.body
           : JSON.parse(request.body)
       const result = await synchronousRestQuery(null, data, null)
-      console.log('RESULT:', result)
       // TODO: Should we proxy the status code instead of always returning 200?
       response.status(200).json({
         status: result.status,
