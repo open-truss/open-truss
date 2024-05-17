@@ -1,9 +1,11 @@
+import { mapValues, template } from 'lodash'
+
 import {
   withChildren,
   BaseOpenTrussComponentV1PropsShape,
   type BaseOpenTrussComponentV1,
 } from '../configuration/engine-v1'
-// import { isObject } from '../utils/misc'
+import { isObject } from '../utils/misc'
 import {
   // NumberSignal,
   ObjectSignal,
@@ -11,6 +13,8 @@ import {
   UnknownSignal,
   signalValueShape,
   useSignalEffect,
+  createSignal,
+  SIGNALS,
 } from '../signals'
 import { z } from 'zod'
 
@@ -26,6 +30,7 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   path: StringSignal,
   method: StringSignal,
   headers: ObjectSignal,
+  pathValues: z.object({}).default({}),
   // force_query: NumberSignal, // TODO
   output: z.array(UnknownSignal).optional(),
 })
@@ -34,10 +39,14 @@ const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
   props,
 ) => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { source, path, method, headers, /* force_query, */ children, output, _DEBUG_ } = props
+  const { source, path, pathValues, method, headers, /* force_query, */ children, output, _DEBUG_ } = props
 
   useSignalEffect(() => {
     if (_DEBUG_) console.log({ m: 'Rest values', source, path, method, headers })
+
+    const stringifiedPathValues = mapValues(pathValues, String)
+    const resolvedPath = template(path.value)(stringifiedPathValues);
+
     let queryResults: SynchronousRestResult
     const fetchData = async function (): Promise<undefined> {
       const result = await fetch('/api/synchronous-rest-query', {
@@ -49,7 +58,7 @@ const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
           // application which triggers a re-rendering of this component.
           // TODO: 'uqi-force-query': String(force_query?.value),
         },
-        body: JSON.stringify({ source, path, method, headers }),
+        body: JSON.stringify({ source, path: resolvedPath, method, headers }),
       })
       const deserialized = await result.json()
       if (_DEBUG_) console.log({ m: 'REST API response', response: result })
@@ -66,10 +75,10 @@ const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
           const defaultValue = shape.parse(undefined)
 
           // const result = Array.isArray(defaultValue)
-          //   ? parsedResults
+          //   ? queryResults.body
           //   : isObject(defaultValue)
-          //   ? parsedResults[0]
-          //   : parsedResults[0]?.[signal.yamlName]
+          //   ? queryResults.body[0]
+          //   : queryResults.body[0]?.[signal.yamlName]
 
           // const validatedResult = shape.parse(result)
           const validatedResult = shape.parse(queryResults.body)
