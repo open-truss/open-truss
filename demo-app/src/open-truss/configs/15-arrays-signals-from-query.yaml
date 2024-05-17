@@ -1,5 +1,6 @@
 workflow:
   version: 1
+  debug: true
   signals:
     r1:
       value: number[]
