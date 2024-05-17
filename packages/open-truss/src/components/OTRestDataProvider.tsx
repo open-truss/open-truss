@@ -15,6 +15,7 @@ import {
   useSignalEffect,
   createSignal,
   SIGNALS,
+  NumberSignal,
 } from '../signals'
 import { z } from 'zod'
 
@@ -27,11 +28,11 @@ interface SynchronousRestResult {
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   ...withChildren,
   source: StringSignal,
-  path: StringSignal,
+  path: z.string(), // TODO: How to handle cases where value could be a `Signal` OR a `String`?
   method: StringSignal,
   headers: ObjectSignal,
   pathValues: z.object({}).default({}),
-  // force_query: NumberSignal, // TODO
+  force_query: NumberSignal,
   output: z.array(UnknownSignal).optional(),
 })
 
@@ -39,13 +40,13 @@ const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
   props,
 ) => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { source, path, pathValues, method, headers, /* force_query, */ children, output, _DEBUG_ } = props
+  const { source, path, pathValues, method, headers, force_query, children, output, _DEBUG_ } = props
 
   useSignalEffect(() => {
     if (_DEBUG_) console.log({ m: 'Rest values', source, path, method, headers })
 
     const stringifiedPathValues = mapValues(pathValues, String)
-    const resolvedPath = template(path.value)(stringifiedPathValues);
+    const resolvedPath = template(String(path))(stringifiedPathValues);
 
     let queryResults: SynchronousRestResult
     const fetchData = async function (): Promise<undefined> {
@@ -56,7 +57,7 @@ const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
           // The uqi-force-query header is a hack to make it easy to force a query
           // that works by including a NumberSignal that can be incremented by the
           // application which triggers a re-rendering of this component.
-          // TODO: 'uqi-force-query': String(force_query?.value),
+          'uqi-force-query': String(force_query?.value),
         },
         body: JSON.stringify({ source, path: resolvedPath, method, headers }),
       })
