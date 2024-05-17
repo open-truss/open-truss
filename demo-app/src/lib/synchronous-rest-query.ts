@@ -15,9 +15,7 @@ interface Args {
 }
 
 async function synchronousRestQuery(
-  _object: unknown,
   { source, path, method, headers }: Args,
-  _context: unknown,
 ): Promise<SynchronousRestResult> {
   const {protocol, host, headers: defaultHeaders} = sources[source].config
 

@@ -13,7 +13,7 @@ workflow:
           _DEBUG_: true
           source: rest-demo
           path: /search/issues?q=repo:${repo_nwo}+is:issue
-          pathValues:
+          path_values:
             repo_nwo: :repo_nwo_input
           method: GET
           output: [:results]
