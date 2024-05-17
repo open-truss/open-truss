@@ -5,17 +5,13 @@ import {
   BaseOpenTrussComponentV1PropsShape,
   type BaseOpenTrussComponentV1,
 } from '../configuration/engine-v1'
-import { isObject } from '../utils/misc'
 import {
-  // NumberSignal,
   ObjectSignal,
+  NumberSignal,
   StringSignal,
   UnknownSignal,
   signalValueShape,
   useSignalEffect,
-  createSignal,
-  SIGNALS,
-  NumberSignal,
 } from '../signals'
 import { z } from 'zod'
 
@@ -43,7 +39,7 @@ const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
   const { source, path, pathValues, method, headers, force_query, children, output, _DEBUG_ } = props
 
   useSignalEffect(() => {
-    if (_DEBUG_) console.log({ m: 'Rest values', source, path, method, headers })
+    if (_DEBUG_) console.log({ m: 'REST values', source, path, method, headers })
 
     const stringifiedPathValues = mapValues(pathValues, String)
     const resolvedPath = template(String(path))(stringifiedPathValues);
