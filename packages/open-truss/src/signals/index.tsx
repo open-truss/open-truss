@@ -171,17 +171,17 @@ export const NavigateFrameSignal = SignalType<NavigateFrame>(
 export type NavigateFrameSignalType = z.infer<typeof NavigateFrameSignal>
 
 // Scalar types
-export const NumbersSignal = SignalType<(number | null)[]>(
+export const NumbersSignal = SignalType<Array<number | null>>(
   'number[]',
   z.array(z.number().nullable()).default([]),
 )
 export const NumberSignal = SignalType<number>('number', z.number().default(0))
-export const StringsSignal = SignalType<(string | null)[]>(
+export const StringsSignal = SignalType<Array<string | null>>(
   'string[]',
   z.array(z.string().nullable()).default([]),
 )
 export const StringSignal = SignalType<string>('string', z.string().default(''))
-export const BooleansSignal = SignalType<(boolean | null)[]>(
+export const BooleansSignal = SignalType<Array<boolean | null>>(
   'boolean[]',
   z.array(z.boolean().nullable()).default([]),
 )
