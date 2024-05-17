@@ -146,6 +146,9 @@ function createZodShape(signal: object | object[]): {
         const { zodShape, defaultValue: defValue } = createZodShape(value)
         zodSchema[key] = zodShape
         defaultValue[key] = defValue
+      } else if (typeof value === 'string' && value in SIGNALS) {
+        zodSchema[key] = SIGNALS[value].valueShape
+        defaultValue[key] = SIGNALS[value].valueShape.parse(undefined)
       } else if (typeof value === 'string' && value in typeToZodMap) {
         zodSchema[key] = typeToZodMap[value].nullable()
         defaultValue[key] = typeToDefaultValue[value]
@@ -168,19 +171,19 @@ export const NavigateFrameSignal = SignalType<NavigateFrame>(
 export type NavigateFrameSignalType = z.infer<typeof NavigateFrameSignal>
 
 // Scalar types
-export const NumbersSignal = SignalType<number[]>(
+export const NumbersSignal = SignalType<(number | null)[]>(
   'number[]',
-  z.array(z.number()).default([]),
+  z.array(z.number().nullable()).default([]),
 )
 export const NumberSignal = SignalType<number>('number', z.number().default(0))
-export const StringsSignal = SignalType<string[]>(
+export const StringsSignal = SignalType<(string | null)[]>(
   'string[]',
-  z.array(z.string()).default([]),
+  z.array(z.string().nullable()).default([]),
 )
 export const StringSignal = SignalType<string>('string', z.string().default(''))
-export const BooleansSignal = SignalType<boolean[]>(
+export const BooleansSignal = SignalType<(boolean | null)[]>(
   'boolean[]',
-  z.array(z.boolean()).default([]),
+  z.array(z.boolean().nullable()).default([]),
 )
 export const BooleanSignal = SignalType<boolean>(
   'boolean',
