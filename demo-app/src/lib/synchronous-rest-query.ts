@@ -20,10 +20,10 @@ async function synchronousRestQuery({
   method,
   headers,
 }: Args): Promise<SynchronousRestResult> {
-  const { protocol, host, headers: defaultHeaders } = sources[source].config
+  const { uri, headers: defaultHeaders } = sources[source].config
 
   const prefixedPath = path.startsWith('/') ? path : `/${path}`
-  const url = `${protocol}://${host}${prefixedPath}`
+  const url = `${uri}${prefixedPath}`
   const response = await fetch(url, {
     method,
     headers: {

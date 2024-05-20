@@ -1,8 +1,7 @@
 const sources = {
   'rest-demo': {
     config: {
-      protocol: 'https',
-      host: 'api.github.com',
+      uri: 'https://api.github.com',
       headers: {
         'Content-Type': 'application/json',
       },
