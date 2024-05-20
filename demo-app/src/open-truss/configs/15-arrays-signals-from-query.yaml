@@ -25,9 +25,9 @@ workflow:
       view:
         component: OTUqiDataProvider
         props:
-          source: trino-demo
+          source: mysql-demo
           query: >
-            SELECT ARRAY[ 'one', NULL, 'three' ] AS value
+            SELECT JSON_ARRAY( 'one', NULL, 'three' ) AS value
           output: [:r2]
       frames:
         - frame:
