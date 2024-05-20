@@ -27,6 +27,7 @@ async function createTrinoUqiClient(config: TrinoConfig): Promise<UqiClient> {
     bigint: 'BigInt',
     varchar: 'String',
     row: 'JSON',
+    array: 'JSON',
   }
 
   async function query(
