@@ -33,7 +33,6 @@ async function synchronousRestQuery({
   })
 
   return {
-    // TODO: Should we automatically handle error statuses? How does the framework handle uqi errors?
     status: response.status,
     headers: response.headers.raw(),
     body: await response.json(), // assume the response is JSON
