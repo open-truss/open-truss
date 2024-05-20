@@ -6,7 +6,6 @@ import {
   type BaseOpenTrussComponentV1,
 } from '../configuration/engine-v1'
 import {
-  ObjectSignal,
   NumberSignal,
   StringSignal,
   UnknownSignal,
@@ -21,13 +20,15 @@ interface SynchronousRestResult {
   body: any
 }
 
+const StringOrSignal = z.union([z.string(), StringSignal])
+
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   ...withChildren,
-  source: StringSignal,
-  path: z.string(), // TODO: How to handle cases where value could be a `Signal` OR a `String`?
-  method: StringSignal,
-  headers: ObjectSignal,
-  path_values: z.object({}).default({}),
+  source: z.string(),
+  path: StringOrSignal,
+  method: StringOrSignal,
+  headers: z.record(StringOrSignal).optional(),
+  path_values: z.record(StringSignal).optional(),
   force_query: NumberSignal,
   output: z.array(UnknownSignal).optional(),
 })
