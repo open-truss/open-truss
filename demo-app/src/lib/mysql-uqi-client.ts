@@ -5,6 +5,7 @@ import {
   type UqiContext,
   type UqiMappedType,
   type UqiResult,
+  type UqiScalar,
 } from '@open-truss/open-truss'
 import mysql, { type Connection, type FieldPacket } from 'mysql2/promise'
 import { URL } from 'url'
@@ -67,7 +68,7 @@ async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
       // Type 'RowDataPacket[] | RowDataPacket[][] | ResultSetHeader'
       if (Array.isArray(rows) && rows.length > 0 && !Array.isArray(rows[0])) {
         yield {
-          row: rows as unknown as any,
+          row: rows as unknown as UqiScalar[],
           metadata: {
             columns: makeUqiColumnCompatible(fields),
           },
@@ -79,7 +80,7 @@ async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
       ) {
         for (const row of rows) {
           yield {
-            row: row as unknown as any,
+            row: row as unknown as UqiScalar[],
             metadata: {
               columns: makeUqiColumnCompatible(fields),
             },
@@ -87,7 +88,7 @@ async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
         }
       } else {
         yield {
-          row: rows as unknown as any,
+          row: rows as unknown as UqiScalar[],
           metadata: {
             columns: makeUqiColumnCompatible(fields),
           },

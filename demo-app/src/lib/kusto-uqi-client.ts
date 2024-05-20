@@ -5,6 +5,7 @@ import {
   type UqiContext,
   type UqiMappedType,
   type UqiResult,
+  type UqiScalar,
 } from '@open-truss/open-truss'
 import { Client, KustoConnectionStringBuilder } from 'azure-kusto-data'
 
@@ -86,7 +87,7 @@ async function createKustoUqiClient(config: KustoConfig): Promise<UqiClient> {
 
     async function* asyncGenerator(): AsyncGenerator<UqiResult> {
       for await (const kustoResultRow of kustoResponseDataSet.primaryResults[0].rows()) {
-        const row = []
+        const row: UqiScalar[] = []
         for await (const column of kustoResultRow.values()) {
           row.push(column)
         }
