@@ -13,7 +13,7 @@ export default function PropInput({
   name: string
   onChange: (value: YamlType) => void
   type: ZodDescriptionObject
-  value?: string
+  value?: string | string[]
 }): JSX.Element | null {
   const defaultValue = type.defaultValue as string
   value = value ?? defaultValue
@@ -88,6 +88,26 @@ export default function PropInput({
           </div>
         ))
         return <>{enumOptions}</>
+      }
+    case 'ZodArray':
+      if (type?.shape && 'shape' in type.shape && Array.isArray(type.shape.shape)) {
+        const options = type.shape.shape.map((option: string) => (
+          <div key={option}>
+            <label htmlFor={option}>{option}</label>
+            <input
+              type="checkbox"
+              id={option}
+              name={option}
+              value={option}
+              checked={value?.includes(option)}
+              onChange={(e) => {
+                const newValue = e.target.checked ? [...value, e.target.value] : Array.from(value).filter((v) => v !== e.target.value)
+                onChange(newValue)
+              }}
+            />
+          </div>
+        ))
+        return <>{options}</>
       }
   }
 
