@@ -36,8 +36,7 @@ async function synchronousRestQuery({
     // TODO: Should we automatically handle error statuses? How does the framework handle uqi errors?
     status: response.status,
     headers: response.headers.raw(),
-    // TODO: Can we assume the body is always JSON?
-    body: await response.json(),
+    body: await response.json(), // assume the response is JSON
   }
 }
 
