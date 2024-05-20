@@ -32,10 +32,10 @@ async function createTrinoUqiClient(config: TrinoConfig): Promise<UqiClient> {
 
   async function query(
     context: UqiContext<TrinoConfig, Trino>,
-    query: string,
+    q: string,
   ): Promise<AsyncIterableIterator<UqiResult>> {
     const queryIterator: TrinoIterator<QueryResult> =
-      await context.client.query(query)
+      await context.client.query(q)
 
     async function* asyncGenerator(): AsyncGenerator<UqiResult> {
       for await (const queryResult of queryIterator) {

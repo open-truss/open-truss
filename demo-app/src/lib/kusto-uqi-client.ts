@@ -68,11 +68,11 @@ async function createKustoUqiClient(config: KustoConfig): Promise<UqiClient> {
 
   async function query(
     context: UqiContext<KustoConfig, Client>,
-    query: string,
+    q: string,
   ): Promise<AsyncIterableIterator<UqiResult>> {
-    const { database } = dataFromKustoQuery(query)
+    const { database } = dataFromKustoQuery(q)
 
-    const kustoResponseDataSet = await context.client.execute(database, query)
+    const kustoResponseDataSet = await context.client.execute(database, q)
 
     // TODO: handle failed query
     // if (kustoResponseDataSet.statusTable) {

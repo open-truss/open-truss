@@ -60,9 +60,9 @@ async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
 
   async function query(
     context: UqiContext<MysqlConfig, Connection>,
-    query: string,
+    q: string,
   ): Promise<AsyncIterableIterator<UqiResult>> {
-    const [rows, fields] = await context.client.execute(query)
+    const [rows, fields] = await context.client.execute(q)
 
     async function* asyncGenerator(): AsyncGenerator<UqiResult> {
       // Type 'RowDataPacket[] | RowDataPacket[][] | ResultSetHeader'
