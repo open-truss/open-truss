@@ -1,3 +1,5 @@
+/* eslint-disable quote-props */
+
 import {
   uqi,
   type UqiClient,
