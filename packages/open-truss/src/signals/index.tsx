@@ -106,7 +106,7 @@ export function SignalType<T>(
 // - TODO it accepts predefined higher order types as valid types
 export function createSignal(
   configName: string,
-  signal: object | object[],
+  signal: object,
 ): SignalsZodType {
   const name = `${configName}-${signalNameFromObject(signal)}`
   if (name in SIGNALS) return SIGNALS[name].signal
@@ -120,41 +120,40 @@ function signalNameFromObject(signal: object | object[]): string {
   return CryptoJS.SHA256(s).toString()
 }
 
-function createZodShape(signal: object | object[]): {
-  zodShape: ZodTypeAny
-  defaultValue: object | object[]
-} {
-  if (Array.isArray(signal)) {
-    const signalObject = signal?.[0]
-    if (!isObject(signalObject))
-      throw new Error('Array signals must be an object as first and only value')
+type DefaultValue = object | object[] | string | boolean | number
 
-    const { zodShape, defaultValue } = createZodShape(signalObject)
+interface createZodShapeReturn {
+  zodShape: ZodTypeAny
+  defaultValue: DefaultValue
+}
+
+function createZodShape(signal: object): createZodShapeReturn {
+  if (Array.isArray(signal)) {
+    const { zodShape, defaultValue } = createZodShape(signal[0])
     return {
       zodShape: z.array(zodShape).nullable(),
       defaultValue: [defaultValue],
     }
-  } else {
+  } else if (isObject(signal)) {
     const zodSchema: Record<string, ZodTypeAny> = {}
-    const defaultValue: Record<
-      string,
-      string | boolean | number | object | object[]
-    > = {}
+    const defaultValue: Record<string, DefaultValue> = {}
 
     for (const [key, value] of Object.entries(signal)) {
-      if (isObject(value)) {
-        const { zodShape, defaultValue: defValue } = createZodShape(value)
-        zodSchema[key] = zodShape
-        defaultValue[key] = defValue
-      } else if (typeof value === 'string' && value in typeToZodMap) {
-        zodSchema[key] = typeToZodMap[value].nullable()
-        defaultValue[key] = typeToDefaultValue[value]
-      } else {
-        throw new Error(`unknown signal value: ${value}`)
-      }
+      const { zodShape, defaultValue: defValue } = createZodShape(value)
+      zodSchema[key] = zodShape
+      defaultValue[key] = defValue
     }
-
     return { zodShape: z.object(zodSchema).nullable(), defaultValue }
+  } else if (typeof signal === 'string' && signal in SIGNALS) {
+    const zodShape = SIGNALS[signal].valueShape
+    const defaultValue = SIGNALS[signal].valueShape.parse(undefined)
+    return { zodShape, defaultValue }
+  } else if (typeof signal === 'string' && signal in typeToZodMap) {
+    const zodShape = typeToZodMap[signal].nullable()
+    const defaultValue = typeToDefaultValue[signal]
+    return { zodShape, defaultValue }
+  } else {
+    throw new Error(`unknown signal value: ${String(signal)}`)
   }
 }
 
@@ -168,19 +167,19 @@ export const NavigateFrameSignal = SignalType<NavigateFrame>(
 export type NavigateFrameSignalType = z.infer<typeof NavigateFrameSignal>
 
 // Scalar types
-export const NumbersSignal = SignalType<number[]>(
+export const NumbersSignal = SignalType<Array<number | null>>(
   'number[]',
-  z.array(z.number()).default([]),
+  z.array(z.number().nullable()).default([]),
 )
 export const NumberSignal = SignalType<number>('number', z.number().default(0))
-export const StringsSignal = SignalType<string[]>(
+export const StringsSignal = SignalType<Array<string | null>>(
   'string[]',
-  z.array(z.string()).default([]),
+  z.array(z.string().nullable()).default([]),
 )
 export const StringSignal = SignalType<string>('string', z.string().default(''))
-export const BooleansSignal = SignalType<boolean[]>(
+export const BooleansSignal = SignalType<Array<boolean | null>>(
   'boolean[]',
-  z.array(z.boolean()).default([]),
+  z.array(z.boolean().nullable()).default([]),
 )
 export const BooleanSignal = SignalType<boolean>(
   'boolean',

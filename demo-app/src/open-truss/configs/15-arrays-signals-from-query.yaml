@@ -1,0 +1,62 @@
+workflow:
+  version: 1
+  debug: true
+  signals:
+    r1:
+      value: number[]
+    r2:
+      value: string[]
+    multiDimensionalArray:
+      value:
+        - number[]
+    multiDimensionalArray2:
+      value:
+        - - number
+  frames:
+    - frame:
+      view:
+        component: OTUqiDataProvider
+        props:
+          source: trino-demo
+          query: >
+            SELECT ARRAY[ 1, NULL, 3 ] AS value
+          output: [:r1]
+      frames:
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :r1
+    - frame:
+      view:
+        component: OTUqiDataProvider
+        props:
+          source: mysql-demo
+          query: >
+            SELECT JSON_ARRAY( 'one', NULL, 'three' ) AS value
+          output: [:r2]
+      frames:
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :r2
+    - frame:
+      view:
+        component: OTUqiDataProvider
+        props:
+          source: trino-demo
+          query: >
+            SELECT ARRAY[ ARRAY[1], NULL, ARRAY[3] ] AS value
+          output: [:multiDimensionalArray, :multiDimensionalArray2]
+      frames:
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :multiDimensionalArray
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :multiDimensionalArray2

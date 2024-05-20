@@ -20,8 +20,11 @@ export function castUqiValue(type: UqiMappedType, value: string): unknown {
       return BigInt(value)
     case 'Date':
       return Date.parse(value)
-    case 'JSON':
+    case 'JSON': {
+      // Case when JSON is already parsed
+      if (typeof value === 'object' || Array.isArray(value)) return value
       return JSON.parse(value)
+    }
     default:
       return value
   }
