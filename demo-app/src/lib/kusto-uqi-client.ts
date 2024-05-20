@@ -1,8 +1,7 @@
 import {
-  Iterator,
-  type UqiColumn,
   uqi,
   type UqiClient,
+  type UqiColumn,
   type UqiContext,
   type UqiMappedType,
   type UqiResult,
@@ -100,7 +99,7 @@ async function createKustoUqiClient(config: KustoConfig): Promise<UqiClient> {
       }
     }
 
-    return new Iterator(asyncGenerator())
+    return asyncGenerator()
   }
 
   const client = buildClient(config)

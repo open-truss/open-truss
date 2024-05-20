@@ -1,5 +1,4 @@
 import {
-  Iterator,
   uqi,
   type UqiClient,
   type UqiColumn,
@@ -96,7 +95,7 @@ async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
       }
     }
 
-    return new Iterator(asyncGenerator())
+    return asyncGenerator()
   }
 
   const client = mysql.createPool({

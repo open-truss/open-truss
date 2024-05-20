@@ -1,5 +1,4 @@
 import {
-  Iterator,
   uqi,
   type UqiClient,
   type UqiContext,
@@ -56,7 +55,7 @@ async function createTrinoUqiClient(config: TrinoConfig): Promise<UqiClient> {
       }
     }
 
-    return new Iterator(asyncGenerator())
+    return asyncGenerator()
   }
 
   const client = Trino.create({
