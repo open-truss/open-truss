@@ -15,6 +15,7 @@ import { URL } from 'url'
 export interface MysqlConfig {
   uri: string
   socketPath?: string
+  ssl?: { cert: Buffer }
 }
 
 function makeUqiColumnCompatible(fields: FieldPacket[]): UqiColumn[] {
@@ -111,6 +112,7 @@ async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
     password: parsedUrl.password,
     socketPath: config.socketPath,
     rowsAsArray: true,
+    ssl: config.ssl,
   })
 
   return uqi({
