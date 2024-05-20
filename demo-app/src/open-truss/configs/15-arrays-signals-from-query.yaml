@@ -6,6 +6,9 @@ workflow:
       value: number[]
     r2:
       value: string[]
+    r3:
+      value:
+        - number[]
   frames:
     - frame:
       view:
@@ -35,3 +38,17 @@ workflow:
             component: DataDemo
             props:
               results: :r2
+    - frame:
+      view:
+        component: OTUqiDataProvider
+        props:
+          source: trino-demo
+          query: >
+            SELECT ARRAY[ ARRAY[1], NULL, ARRAY[3] ] AS value
+          output: [:r3]
+      frames:
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :r3
