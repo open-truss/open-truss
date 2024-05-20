@@ -6,9 +6,12 @@ workflow:
       value: number[]
     r2:
       value: string[]
-    r3:
+    multiDimensionalArray:
       value:
         - number[]
+    multiDimensionalArray2:
+      value:
+        - - number
   frames:
     - frame:
       view:
@@ -45,10 +48,15 @@ workflow:
           source: trino-demo
           query: >
             SELECT ARRAY[ ARRAY[1], NULL, ARRAY[3] ] AS value
-          output: [:r3]
+          output: [:multiDimensionalArray, :multiDimensionalArray2]
       frames:
         - frame:
           view:
             component: DataDemo
             props:
-              results: :r3
+              results: :multiDimensionalArray
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :multiDimensionalArray2
