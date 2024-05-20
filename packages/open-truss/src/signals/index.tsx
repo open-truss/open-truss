@@ -13,7 +13,9 @@ export { useSignalEffect, useComputed } from '@preact/signals-react'
 
 export type SignalsZodType<T = any> = z.ZodDefault<z.ZodType<Signal<T>>>
 export type Signals = Record<string, Signal<any>>
-type ValueShape<T = any> = z.ZodDefault<z.ZodType<T>>
+type ValueShape<Output = any, Input = any> = z.ZodDefault<
+  z.ZodType<Output, z.ZodTypeDef, Input>
+>
 type WrappedValueShape<T = any> = z.ZodNullable<ValueShape<T | null>>
 interface SignalAndValueShape<T = any> {
   signal: SignalsZodType<T>
@@ -53,9 +55,9 @@ function isSignalLike(obj: unknown): obj is Signal {
   return typeof obj === 'object' && obj !== null && 'value' in obj
 }
 
-export function SignalType<T>(
+export function SignalType<T, Input = any>(
   name: string,
-  valueShape: ValueShape<T | null>,
+  valueShape: ValueShape<T | null, Input>,
 ): SignalsZodType<T | null> {
   const wrappedValueShape = valueShape.nullable()
   const defaultValue = wrappedValueShape.parse(undefined)
@@ -190,4 +192,36 @@ export const BooleanSignal = SignalType<boolean>(
 export const UnknownSignal = SignalType<unknown>(
   'unknown',
   z.unknown().default(''),
+)
+
+export const StringArrayFromJsonString = SignalType<
+  Array<string | null>,
+  Array<string | null> | string
+>(
+  'StringArrayFromJsonString',
+  z
+    .string()
+    .or(z.array(z.string()))
+    .transform((val, { path }) => {
+      const strVal = String(val)
+      const strPath = String(path)
+      const errMessage = `Expected ${strVal} in ${strPath} to be a json string or string[]`
+      const isStringOrNull = (e: unknown): boolean =>
+        ['string', null].includes(typeof e)
+
+      if (Array.isArray(val)) {
+        if (val.every(isStringOrNull)) return val
+        throw new Error(errMessage)
+      }
+
+      try {
+        const result = JSON.parse(val)
+        if (Array.isArray(result) && result.every(isStringOrNull)) return result
+
+        throw new Error(errMessage)
+      } catch (e) {
+        throw new Error(errMessage)
+      }
+    })
+    .default('[]'),
 )

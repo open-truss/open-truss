@@ -12,6 +12,10 @@ workflow:
     multiDimensionalArray2:
       value:
         - - number
+    arraySignal:
+      # This zod type has a transform that takes a string
+      # and json parses it to an array
+      jsonColumn: StringArrayFromJsonString
   frames:
     - frame:
       view:
@@ -60,3 +64,16 @@ workflow:
             component: DataDemo
             props:
               results: :multiDimensionalArray2
+    - frame:
+      view:
+        component: OTUqiDataProvider
+        props:
+          source: trino-demo
+          query: SELECT '["a", "b"]' AS jsonColumn
+          output: [:arraySignal]
+      frames:
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :arraySignal
