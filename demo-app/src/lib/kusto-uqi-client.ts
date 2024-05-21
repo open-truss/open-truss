@@ -53,18 +53,21 @@ interface KustoConfig {
 }
 
 async function createKustoUqiClient(config: KustoConfig): Promise<UqiClient> {
+  /* eslint-disable quote-props */
+  // prettier-ignore
   const typeMappings: Record<string, UqiMappedType> = {
-    bool: 'Boolean',
-    datetime: 'Date',
-    decimal: 'Number',
-    dynamic: 'JSON',
-    guid: 'String',
-    int: 'Number',
-    long: 'BigInt',
-    real: 'Number',
-    string: 'String',
-    timespan: 'String',
+    'bool': 'Boolean',
+    'datetime': 'Date',
+    'decimal': 'Number',
+    'dynamic': 'JSON',
+    'guid': 'String',
+    'int': 'Number',
+    'long': 'BigInt',
+    'real': 'Number',
+    'string': 'String',
+    'timespan': 'String',
   }
+  /* eslint-enable quote-props */
 
   async function query(
     context: UqiContext<KustoConfig, Client>,

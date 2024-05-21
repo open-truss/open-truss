@@ -19,15 +19,20 @@ export interface TrinoConfig {
 }
 
 async function createTrinoUqiClient(config: TrinoConfig): Promise<UqiClient> {
+  /* eslint-disable quote-props */
+  // prettier-ignore
   const typeMappings: Record<string, UqiMappedType> = {
-    boolean: 'Boolean',
-    integer: 'Number',
-    double: 'Number',
-    bigint: 'BigInt',
-    varchar: 'String',
-    row: 'JSON',
-    array: 'JSON',
+    'array': 'JSON',
+    'bigint': 'BigInt',
+    'boolean': 'Boolean',
+    'double': 'Number',
+    'integer': 'Number',
+    'row': 'JSON',
+    'timestamp with time zone': 'Date',
+    'timestamp': 'Date',
+    'varchar': 'String',
   }
+  /* eslint-enable quote-props */
 
   async function query(
     context: UqiContext<TrinoConfig, Trino>,

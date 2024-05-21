@@ -1,5 +1,3 @@
-/* eslint-disable quote-props */
-
 import {
   uqi,
   type UqiClient,
@@ -30,6 +28,8 @@ function makeUqiColumnCompatible(fields: FieldPacket[]): UqiColumn[] {
 async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
   const parsedUrl = new URL(config.uri)
 
+  /* eslint-disable quote-props */
+  // prettier-ignore
   const typeMappings: Record<string, UqiMappedType> = {
     '0': 'Number', // 'DECIMAL'
     '1': 'Number', // 'TINY'
@@ -60,6 +60,7 @@ async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
     '254': 'String', // 'STRING'
     '255': 'String', // 'GEOMETRY'
   }
+  /* eslint-enable quote-props */
 
   async function query(
     context: UqiContext<MysqlConfig, Connection>,
