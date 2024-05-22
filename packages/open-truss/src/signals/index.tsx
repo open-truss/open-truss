@@ -49,7 +49,7 @@ export function getSignalAndValueShape(
   }
 }
 
-function isSignalLike(obj: unknown): obj is Signal {
+export function isSignalLike(obj: unknown): obj is Signal {
   return typeof obj === 'object' && obj !== null && 'value' in obj
 }
 

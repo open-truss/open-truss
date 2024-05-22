@@ -1,4 +1,4 @@
-import { mapValues, template } from 'lodash'
+import { omit, mapValues, template, isString } from 'lodash'
 
 import {
   withChildren,
@@ -9,6 +9,7 @@ import {
   NumberSignal,
   StringSignal,
   UnknownSignal,
+  isSignalLike,
   signalValueShape,
   useSignalEffect,
 } from '../signals'
@@ -21,15 +22,16 @@ interface SynchronousRestResult {
 }
 
 const StringOrSignal = z.union([z.string(), StringSignal])
+const TemplateString = z.object({ template: z.string() }).passthrough()
 
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   ...withChildren,
   source: z.string(),
-  path: StringOrSignal,
+  path: z.union([StringOrSignal, TemplateString]),
   method: StringOrSignal,
   headers: z.record(StringOrSignal).optional(),
   path_values: z.record(StringSignal).optional(),
-  force_query: NumberSignal,
+  forceQuery: NumberSignal,
   output: z.array(UnknownSignal).optional(),
 })
 
@@ -39,10 +41,9 @@ const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
   const {
     source,
     path: templatePath,
-    path_values, // eslint-disable-line @typescript-eslint/naming-convention
     method,
     headers,
-    force_query, // eslint-disable-line @typescript-eslint/naming-convention
+    forceQuery, // eslint-disable-line @typescript-eslint/naming-convention
     children,
     output,
     _DEBUG_,
@@ -58,8 +59,14 @@ const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
         headers,
       })
 
-    const stringifiedPathValues = mapValues(path_values, String)
-    const resolvedPath = template(String(templatePath))(stringifiedPathValues)
+    let resolvedPath: string
+    if (isString(templatePath) || isSignalLike(templatePath)) {
+      resolvedPath = String(templatePath)
+    } else {
+      const pathValues = omit(templatePath, 'template')
+      const stringifiedPathValues = mapValues(pathValues, String)
+      resolvedPath = template(String(templatePath.template))(stringifiedPathValues)
+    }
 
     let queryResults: SynchronousRestResult
     const fetchData = async function (): Promise<undefined> {
@@ -70,7 +77,7 @@ const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
           // The uqi-force-query header is a hack to make it easy to force a query
           // that works by including a NumberSignal that can be incremented by the
           // application which triggers a re-rendering of this component.
-          'uqi-force-query': String(force_query?.value),
+          'uqi-force-query': String(forceQuery?.value),
         },
         body: JSON.stringify({ source, path: resolvedPath, method, headers }),
       })

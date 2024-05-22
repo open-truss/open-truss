@@ -12,9 +12,10 @@ workflow:
         props:
           _DEBUG_: true
           source: rest-demo
-          path: /search/issues?q=repo:${repo_nwo}+is:issue
-          path_values:
+          path:
+            template: /search/issues?q=repo:${repo_nwo}+is:${issue_or_pr}
             repo_nwo: :repo_nwo_input
+            issue_or_pr: issue
           method: GET
           output: [:results]
           headers: 
