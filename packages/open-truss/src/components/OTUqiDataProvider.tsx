@@ -18,15 +18,14 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   ...withChildren,
   source: StringSignal,
   query: StringSignal,
-  force_query: NumberSignal,
+  forceQuery: NumberSignal,
   output: z.array(UnknownSignal).optional(),
 })
 
 const OTUqiDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
   props,
 ) => {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { query, force_query, children, output, source, _DEBUG_ } = props
+  const { query, forceQuery, children, output, source, _DEBUG_ } = props
 
   useSignalEffect(() => {
     if (_DEBUG_) console.log({ m: 'Query values', query, source })
@@ -40,7 +39,7 @@ const OTUqiDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
           // The uqi-force-query header is a hack to make it easy to force a query
           // that works by including a NumberSignal that can be incremented by the
           // application which triggers a re-rendering of this component.
-          'uqi-force-query': String(force_query?.value),
+          'uqi-force-query': String(forceQuery?.value),
         },
         body: JSON.stringify({ query, source }),
       })
