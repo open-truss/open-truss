@@ -59,6 +59,8 @@ const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
         headers,
       })
 
+    // If the path is a string or a signal, then use it as a string.
+    // If it's an object, then resolve the template object to a string.
     let resolvedPath: string
     if (isString(templatePath) || isSignalLike(templatePath)) {
       resolvedPath = String(templatePath)
