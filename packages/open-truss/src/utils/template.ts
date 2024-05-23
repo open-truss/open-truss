@@ -13,10 +13,12 @@ export function resolveTemplate(template: TemplateObjectType): string {
 
 export const StringOrTemplate = z.union([StringSignal, TemplateObject])
 export type StringOrTemplateType = z.infer<typeof StringOrTemplate>
-export function resolveStringOrTemplate(template: StringOrTemplateType): string {
+export function resolveStringOrTemplate(
+  template: StringOrTemplateType,
+): string {
   // If the path is a string or a signal, then use it as a string.
   // If it's an object, then resolve the template object to a string.
-  return isString(template) || isSignalLike(template) 
+  return isString(template) || isSignalLike(template)
     ? String(template)
     : resolveTemplate(template)
 }

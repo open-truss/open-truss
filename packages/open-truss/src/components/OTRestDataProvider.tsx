@@ -43,9 +43,9 @@ const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = ({
         headers,
       })
 
-    const resolvedPath = resolveStringOrTemplate(templatePath);
+    const resolvedPath = resolveStringOrTemplate(templatePath)
 
-    (async () => {
+    void (async () => {
       const result = await fetch('/api/synchronous-rest-query', {
         method: 'POST',
         headers: {
