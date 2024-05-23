@@ -162,7 +162,6 @@ export function uqi<C, T>(og: UqiSettings<C, T>): UqiClient {
 
   function typeMapping(type: string): UqiMappedType {
     type = type.split('(')[0].trim()
-
     const mappedType = context.typeMappings[type]
     if (!mappedType) {
       throw new Error(`Type ${type} is not mapped`)
@@ -172,9 +171,6 @@ export function uqi<C, T>(og: UqiSettings<C, T>): UqiClient {
 
   function buildField(columnType: string, value: UqiScalar): UqiScalar {
     const type = typeMapping(columnType)
-    if (!type) {
-      throw new Error(`Type ${columnType} is not mapped`)
-    }
     if (value === null) {
       return null
     }

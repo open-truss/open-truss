@@ -1,11 +1,11 @@
 import {
-  Iterator,
   uqi,
   type UqiClient,
   type UqiColumn,
   type UqiContext,
   type UqiMappedType,
   type UqiResult,
+  type UqiScalar,
 } from '@open-truss/open-truss'
 import mysql, { type Connection, type FieldPacket } from 'mysql2/promise'
 import { URL } from 'url'
@@ -13,6 +13,7 @@ import { URL } from 'url'
 export interface MysqlConfig {
   uri: string
   socketPath?: string
+  ssl?: { cert: Buffer }
 }
 
 function makeUqiColumnCompatible(fields: FieldPacket[]): UqiColumn[] {
@@ -27,6 +28,8 @@ function makeUqiColumnCompatible(fields: FieldPacket[]): UqiColumn[] {
 async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
   const parsedUrl = new URL(config.uri)
 
+  /* eslint-disable quote-props */
+  // prettier-ignore
   const typeMappings: Record<string, UqiMappedType> = {
     '0': 'Number', // 'DECIMAL'
     '1': 'Number', // 'TINY'
@@ -57,18 +60,19 @@ async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
     '254': 'String', // 'STRING'
     '255': 'String', // 'GEOMETRY'
   }
+  /* eslint-enable quote-props */
 
   async function query(
     context: UqiContext<MysqlConfig, Connection>,
-    query: string,
+    q: string,
   ): Promise<AsyncIterableIterator<UqiResult>> {
-    const [rows, fields] = await context.client.execute(query)
+    const [rows, fields] = await context.client.execute(q)
 
     async function* asyncGenerator(): AsyncGenerator<UqiResult> {
       // Type 'RowDataPacket[] | RowDataPacket[][] | ResultSetHeader'
       if (Array.isArray(rows) && rows.length > 0 && !Array.isArray(rows[0])) {
         yield {
-          row: rows as unknown as any,
+          row: rows as unknown as UqiScalar[],
           metadata: {
             columns: makeUqiColumnCompatible(fields),
           },
@@ -80,7 +84,7 @@ async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
       ) {
         for (const row of rows) {
           yield {
-            row: row as unknown as any,
+            row: row as unknown as UqiScalar[],
             metadata: {
               columns: makeUqiColumnCompatible(fields),
             },
@@ -88,7 +92,7 @@ async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
         }
       } else {
         yield {
-          row: rows as unknown as any,
+          row: rows as unknown as UqiScalar[],
           metadata: {
             columns: makeUqiColumnCompatible(fields),
           },
@@ -96,7 +100,7 @@ async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
       }
     }
 
-    return new Iterator(asyncGenerator())
+    return asyncGenerator()
   }
 
   const client = mysql.createPool({
@@ -109,6 +113,7 @@ async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
     password: parsedUrl.password,
     socketPath: config.socketPath,
     rowsAsArray: true,
+    ssl: config.ssl,
   })
 
   return uqi({
