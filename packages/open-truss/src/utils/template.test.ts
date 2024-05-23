@@ -1,5 +1,11 @@
-import { StringOrTemplate, resolveStringOrTemplate, resolveTemplate } from './template'
+/* eslint-disable no-template-curly-in-string */
+import {
+  StringOrTemplate,
+  resolveStringOrTemplate,
+  resolveTemplate,
+} from './template'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const signal = (value: any) => ({ value, toString: () => String(value) })
 
 test('resolveTemplate', () => {
@@ -12,7 +18,6 @@ test('resolveTemplate', () => {
   expect(expected).toBe(actual)
 })
 
-
 test('resolveStringOrTemplate', () => {
   const actual = resolveStringOrTemplate({
     template: '/search/issues?q=repo:${repo_nwo}+is:${issue_or_pr}',
@@ -22,5 +27,7 @@ test('resolveStringOrTemplate', () => {
   const expected = '/search/issues?q=repo:open-truss/open-truss+is:issue'
   expect(expected).toBe(actual)
 
-  expect(resolveStringOrTemplate(StringOrTemplate.parse(signal('hello')))).toBe('hello')
+  expect(resolveStringOrTemplate(StringOrTemplate.parse(signal('hello')))).toBe(
+    'hello',
+  )
 })
