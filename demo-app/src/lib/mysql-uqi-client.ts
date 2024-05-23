@@ -137,6 +137,5 @@ async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
 }
 
 createMysqlUqiClient.engine = 'mysql'
-createMysqlUqiClient.engine_version = '8.0.37'
 
 export { createMysqlUqiClient }

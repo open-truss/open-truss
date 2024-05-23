@@ -120,6 +120,5 @@ async function createKustoUqiClient(config: KustoConfig): Promise<UqiClient> {
 }
 
 createKustoUqiClient.engine = 'kusto'
-createKustoUqiClient.engine_version = 'v3'
 
 export { createKustoUqiClient }

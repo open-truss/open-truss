@@ -175,6 +175,5 @@ function trinoColumnParser(
 }
 
 createTrinoUqiClient.engine = 'trino'
-createTrinoUqiClient.engine_version = '447'
 
 export { createTrinoUqiClient }
