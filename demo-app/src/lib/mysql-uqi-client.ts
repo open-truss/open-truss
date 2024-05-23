@@ -103,13 +103,23 @@ async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
     return asyncGenerator()
   }
 
+  let user = parsedUrl.username
+
+  if (parsedUrl.hostname.endsWith('mysql.database.azure.com')) {
+    const host = parsedUrl.hostname.slice(
+      0,
+      parsedUrl.hostname.indexOf('.mysql'),
+    )
+    user = `${parsedUrl.username}@${host}`
+  }
+
   const client = mysql.createPool({
     host: parsedUrl.hostname,
     port: Number(parsedUrl.port),
     database: parsedUrl.pathname.slice(1),
     connectionLimit: 10, // will make up to this number of concurrent connections to mysql. subsequent requests are queued
     waitForConnections: true,
-    user: parsedUrl.username,
+    user,
     password: parsedUrl.password,
     socketPath: config.socketPath,
     rowsAsArray: true,
