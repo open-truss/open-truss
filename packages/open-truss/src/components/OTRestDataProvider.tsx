@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 import {
   withChildren,
   BaseOpenTrussComponentV1PropsShape,
@@ -10,8 +12,7 @@ import {
   signalValueShape,
   useSignalEffect,
 } from '../signals'
-import { z } from 'zod'
-import { StringOrTemplate, resolveStringOrTemplate } from '@/utils/template'
+import { StringOrTemplate, resolveStringOrTemplate } from '../utils/template'
 
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   ...withChildren,
