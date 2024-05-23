@@ -113,6 +113,9 @@ async function createKustoUqiClient(config: KustoConfig): Promise<UqiClient> {
     config,
     client,
     query,
+    teardown: async (context) => {
+      context.client.close()
+    },
   })
 }
 

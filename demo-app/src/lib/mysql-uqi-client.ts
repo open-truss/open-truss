@@ -130,6 +130,9 @@ async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
     config,
     client,
     query,
+    teardown: async (context) => {
+      await context.client.end()
+    },
   })
 }
 
