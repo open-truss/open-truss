@@ -1,5 +1,6 @@
 workflow:
   version: 1
+  _DEBUG_: true
   signals:
     repo_nwo_input: string
     results:
@@ -10,7 +11,6 @@ workflow:
       view:
         component: OTRestDataProvider
         props:
-          _DEBUG_: true
           source: rest-demo
           path:
             template: /search/issues?q=repo:${repo_nwo}+is:${issue_or_pr}
