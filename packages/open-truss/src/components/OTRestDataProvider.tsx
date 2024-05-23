@@ -1,5 +1,3 @@
-import { omit, mapValues, template, isString } from 'lodash'
-
 import {
   withChildren,
   BaseOpenTrussComponentV1PropsShape,
@@ -9,39 +7,32 @@ import {
   NumberSignal,
   StringSignal,
   UnknownSignal,
-  isSignalLike,
   signalValueShape,
   useSignalEffect,
 } from '../signals'
 import { z } from 'zod'
-
-const TemplateString = z.object({ template: z.string() }).passthrough()
+import { StringOrTemplate, resolveStringOrTemplate } from '@/utils/template'
 
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   ...withChildren,
   source: z.string(),
-  path: z.union([StringSignal, TemplateString]),
+  path: StringOrTemplate,
   method: StringSignal,
   headers: z.record(StringSignal).optional(),
-  path_values: z.record(StringSignal).optional(),
   forceQuery: NumberSignal,
   output: z.array(UnknownSignal).optional(),
 })
 
-const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
-  props,
-) => {
-  const {
-    source,
-    path: templatePath,
-    method,
-    headers,
-    forceQuery, // eslint-disable-line @typescript-eslint/naming-convention
-    children,
-    output,
-    _DEBUG_,
-  } = props
-
+const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = ({
+  source,
+  path: templatePath,
+  method,
+  headers,
+  forceQuery,
+  children,
+  output,
+  _DEBUG_,
+}) => {
   useSignalEffect(() => {
     if (_DEBUG_)
       console.log({
@@ -52,16 +43,7 @@ const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
         headers,
       })
 
-    // If the path is a string or a signal, then use it as a string.
-    // If it's an object, then resolve the template object to a string.
-    let resolvedPath: string
-    if (isString(templatePath) || isSignalLike(templatePath)) {
-      resolvedPath = String(templatePath)
-    } else {
-      const pathValues = omit(templatePath, 'template')
-      const stringifiedPathValues = mapValues(pathValues, String)
-      resolvedPath = template(String(templatePath.template))(stringifiedPathValues)
-    }
+    const resolvedPath = resolveStringOrTemplate(templatePath);
 
     (async () => {
       const result = await fetch('/api/synchronous-rest-query', {
