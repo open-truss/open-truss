@@ -20,7 +20,10 @@ async function synchronousRestQuery({
   method,
   headers,
 }: Args): Promise<SynchronousRestResult> {
-  const { uri, headers: defaultHeaders } = sources[source].config
+  const config = sources[source]?.config
+  if (!config) throw new Error(`No such source: ${source}`)
+
+  const { uri, headers: defaultHeaders } = config
 
   const prefixedPath = path.startsWith('/') ? path : `/${path}`
   const url = `${uri}${prefixedPath}`
