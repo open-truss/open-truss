@@ -70,8 +70,7 @@ const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
       resolvedPath = template(String(templatePath.template))(stringifiedPathValues)
     }
 
-    let queryResults: SynchronousRestResult
-    const fetchData = async function (): Promise<undefined> {
+    (async () => {
       const result = await fetch('/api/synchronous-rest-query', {
         method: 'POST',
         headers: {
@@ -83,15 +82,13 @@ const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
         },
         body: JSON.stringify({ source, path: resolvedPath, method, headers }),
       })
-      const deserialized = await result.json()
       if (_DEBUG_) console.log({ m: 'REST API response', response: result })
-      queryResults = deserialized
-    }
 
-    fetchData()
-      .then(() => {
-        if (queryResults === undefined) return
+      const queryResults = await result.json()
 
+      if (queryResults === undefined) return
+
+      try {
         for (const signal of output || []) {
           const shape = signalValueShape(signal)
           const validatedResult = shape.parse(queryResults.body)
@@ -103,8 +100,10 @@ const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
             })
           signal.value = validatedResult
         }
-      })
-      .catch(console.error)
+      } catch (err) {
+        console.error(err)
+      }
+    })()
   })
 
   return children
