@@ -15,21 +15,14 @@ import {
 } from '../signals'
 import { z } from 'zod'
 
-interface SynchronousRestResult {
-  status: number
-  headers: Record<string, string[]>
-  body: any
-}
-
-const StringOrSignal = z.union([z.string(), StringSignal])
 const TemplateString = z.object({ template: z.string() }).passthrough()
 
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   ...withChildren,
   source: z.string(),
-  path: z.union([StringOrSignal, TemplateString]),
-  method: StringOrSignal,
-  headers: z.record(StringOrSignal).optional(),
+  path: z.union([StringSignal, TemplateString]),
+  method: StringSignal,
+  headers: z.record(StringSignal).optional(),
   path_values: z.record(StringSignal).optional(),
   forceQuery: NumberSignal,
   output: z.array(UnknownSignal).optional(),
