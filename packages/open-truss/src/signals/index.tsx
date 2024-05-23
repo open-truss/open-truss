@@ -2,7 +2,7 @@ import { z, type ZodTypeAny } from 'zod'
 import { useSignal, type Signal as PreactSignal } from '@preact/signals-react'
 import { typeToZodMap, typeToDefaultValue } from '../utils/describe-zod'
 import { isObject } from '../utils/misc'
-import CryptoJS from 'crypto-js'
+import hash from 'object-hash'
 
 export interface Signal<T = any | null> extends PreactSignal<T | null> {
   name: string // Used to look up the zodShape for a given signal
@@ -116,8 +116,7 @@ export function createSignal(
 }
 
 function signalNameFromObject(signal: object | object[]): string {
-  const s = JSON.stringify(signal)
-  return CryptoJS.SHA256(s).toString()
+  return hash(signal)
 }
 
 type DefaultValue = object | object[] | string | boolean | number
