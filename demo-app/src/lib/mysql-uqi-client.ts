@@ -26,8 +26,6 @@ function makeUqiColumnCompatible(fields: FieldPacket[]): UqiColumn[] {
 }
 
 async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
-  const parsedUrl = new URL(config.uri)
-
   /* eslint-disable quote-props */
   // prettier-ignore
   const typeMappings: Record<string, UqiMappedType> = {
@@ -41,9 +39,9 @@ async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
     '7': 'String', // 'TIMESTAMP'
     '8': 'Number', // 'LONGLONG'
     '9': 'Number', // 'INT24'
-    '10': 'String', // 'DATE'
-    '11': 'String', // 'TIME'
-    '12': 'String', // 'DATETIME'
+    '10': 'Date', // 'DATE'
+    '11': 'Date', // 'TIME'
+    '12': 'Date', // 'DATETIME'
     '13': 'String', // 'YEAR'
     '14': 'String', // 'NEWDATE'
     '15': 'String', // 'VARCHAR'
@@ -103,14 +101,17 @@ async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
     return asyncGenerator()
   }
 
+  const parsedUri = new URL(config.uri)
+  const user = azureUserFromUri(parsedUri)
+
   const client = mysql.createPool({
-    host: parsedUrl.hostname,
-    port: Number(parsedUrl.port),
-    database: parsedUrl.pathname.slice(1),
-    connectionLimit: 10, // will make up to this number of concurrent connections to mysql. subsequent requests are queued
+    host: parsedUri.hostname,
+    port: Number(parsedUri.port),
+    database: parsedUri.pathname.slice(1),
+    connectionLimit: 1,
     waitForConnections: true,
-    user: parsedUrl.username,
-    password: parsedUrl.password,
+    user,
+    password: parsedUri.password,
     socketPath: config.socketPath,
     rowsAsArray: true,
     ssl: config.ssl,
@@ -121,10 +122,25 @@ async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
     config,
     client,
     query,
+    teardown: async (context) => {
+      await context.client.end()
+    },
   })
 }
 
+function azureUserFromUri(parsedUri: URL): string {
+  let user = parsedUri.username
+  const azureMySqlHostPattern = /^([a-z0-9-]+)\.mysql\.database\.azure\.com$/
+  const match = parsedUri.hostname.match(azureMySqlHostPattern)
+
+  if (match) {
+    const host = match[1]
+    user = `${parsedUri.username}@${host}`
+  }
+
+  return user
+}
+
 createMysqlUqiClient.engine = 'mysql'
-createMysqlUqiClient.engine_version = '8.0.37'
 
 export { createMysqlUqiClient }

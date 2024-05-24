@@ -82,6 +82,7 @@ async function createTrinoUqiClient(config: TrinoConfig): Promise<UqiClient> {
     config,
     client,
     query,
+    // Trino has no teardown function
   })
 }
 
@@ -174,6 +175,5 @@ function trinoColumnParser(
 }
 
 createTrinoUqiClient.engine = 'trino'
-createTrinoUqiClient.engine_version = '447'
 
 export { createTrinoUqiClient }
