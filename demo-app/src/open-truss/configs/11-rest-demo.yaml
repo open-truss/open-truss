@@ -1,0 +1,33 @@
+workflow:
+  version: 1
+  _DEBUG_: true
+  signals:
+    repo_nwo_input: string
+    results:
+      total_count: number
+      incomplete_results: boolean
+  frames:
+    - frame:
+      view:
+        component: OTRestDataProvider
+        props:
+          source: rest-demo
+          path:
+            template: /search/issues?q=repo:${repo_nwo}+is:${issue_or_pr}
+            repo_nwo: :repo_nwo_input
+            issue_or_pr: issue
+          method: GET
+          output: [:results]
+          headers: 
+            User-Agent: open-truss-rest-demo
+      frames:
+        - frame:
+          view:
+            component: StringInput
+            props:
+              string: :repo_nwo_input
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :results
