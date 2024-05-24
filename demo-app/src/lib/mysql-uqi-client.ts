@@ -108,7 +108,7 @@ async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
     host: parsedUri.hostname,
     port: Number(parsedUri.port),
     database: parsedUri.pathname.slice(1),
-    connectionLimit: 10, // will make up to this number of concurrent connections to mysql. subsequent requests are queued
+    connectionLimit: 1,
     waitForConnections: true,
     user,
     password: parsedUri.password,
