@@ -1,10 +1,9 @@
+import { z } from 'zod'
 import {
-  withChildren,
   BaseOpenTrussComponentV1PropsShape,
+  withChildren,
   type BaseOpenTrussComponentV1,
 } from '../configuration/engine-v1'
-import { parseUqiResult, type SynchronousQueryResult } from '../uqi/uqi'
-import { isObject } from '../utils/misc'
 import {
   NumberSignal,
   StringSignal,
@@ -12,7 +11,13 @@ import {
   signalValueShape,
   useSignalEffect,
 } from '../signals'
-import { z } from 'zod'
+import { type UqiMetadata, type UqiNamedFieldsRow } from '../uqi/uqi'
+import { isObject } from '../utils/misc'
+
+interface SynchronousUqiQueryResult {
+  metadata: UqiMetadata
+  rows: UqiNamedFieldsRow[]
+}
 
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   ...withChildren,
@@ -29,7 +34,7 @@ const OTUqiDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
 
   useSignalEffect(() => {
     if (_DEBUG_) console.log({ m: 'Query values', query, source })
-    let queryResults: SynchronousQueryResult
+    let queryResults: SynchronousUqiQueryResult
     if (query.value === '') return
     const fetchData = async function (): Promise<undefined> {
       const result = await fetch('/api/synchronous-uqi-query', {
@@ -55,14 +60,13 @@ const OTUqiDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
 
         for (const signal of output || []) {
           const shape = signalValueShape(signal)
-          const parsedResults = parseUqiResult(queryResults)
           const defaultValue = shape.parse(undefined)
 
           const result = Array.isArray(defaultValue)
-            ? parsedResults
+            ? queryResults.rows
             : isObject(defaultValue)
-            ? parsedResults[0]
-            : parsedResults[0]?.[signal.yamlName]
+            ? queryResults.rows[0]
+            : queryResults.rows[0]?.[signal.yamlName]
 
           const validatedResult = shape.parse(result)
           if (_DEBUG_)
