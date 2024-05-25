@@ -11,7 +11,7 @@ export default async function handler(
         request.headers['content-type'] === 'application/json'
           ? request.body
           : JSON.parse(request.body)
-      const result = await synchronousUqiQuery(null, data, null)
+      const result = await synchronousUqiQuery(null, data)
       response.status(200).json(result)
     } catch (error) {
       response.status(500).json({ error: (error as Error).message })
