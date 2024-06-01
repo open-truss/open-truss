@@ -1,0 +1,6 @@
+workflow:
+  version: 1
+  frames:
+    - frame:
+      view:
+        component: OTConfigBuilder
