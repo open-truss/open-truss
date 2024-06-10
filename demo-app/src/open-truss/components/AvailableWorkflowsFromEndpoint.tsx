@@ -12,6 +12,33 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   ...withChildren,
 })
 
+const WorkflowLink = ({ workflowId }: { workflowId: string }): JSX.Element => {
+  const [inputValue, setInputValue] = React.useState<string>('')
+  console.log({ workflowId })
+  let input = null
+  let href = `/ot/playground/${workflowId}`
+
+  if (workflowId.endsWith('initial-value')) {
+    console.log(true)
+    input = (
+      <input
+        style={{ marginLeft: '10px', border: '1px solid black' }}
+        type="string"
+        onChange={(e) => {
+          setInputValue(e.target.value)
+        }}
+      />
+    )
+    href = `/ot/playground/${workflowId}?initialValue=${inputValue}`
+  }
+  return (
+    <li key={workflowId}>
+      <Link href={href}>{workflowId}</Link>
+      {input}
+    </li>
+  )
+}
+
 const AvailableWorkflowsFromEndpoint: BaseOpenTrussComponentV1<
   z.infer<typeof Props>
 > = () => {
@@ -45,14 +72,7 @@ const AvailableWorkflowsFromEndpoint: BaseOpenTrussComponentV1<
       <CardContent>
         <ul>
           {workflowIds.map((workflowId) => (
-            <li key={workflowId} className="list-none">
-              <Link
-                className="text-blue-500 hover:underline"
-                href={`/ot/playground/${workflowId}`}
-              >
-                {workflowId}
-              </Link>
-            </li>
+            <WorkflowLink key={workflowId} workflowId={workflowId} />
           ))}
         </ul>
       </CardContent>
