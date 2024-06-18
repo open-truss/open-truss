@@ -8,7 +8,7 @@ workflow:
       view:
         component: OTUqiDataProvider
         props:
-        source: kusto-demo
+          source: kusto-demo
           query: cluster("acme").database("widgets").RawEvent | limit 1
           output: [:results]
       frames:

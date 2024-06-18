@@ -56,6 +56,7 @@ async function createTrinoUqiClient(config: TrinoConfig): Promise<UqiClient> {
             queryResult?.columns?.forEach((column, idx) => {
               row.push(trinoColumnParser(rawRow[idx], column.type))
             })
+            context.status.recordsReturned += 1
 
             yield {
               row,

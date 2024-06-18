@@ -67,6 +67,7 @@ export interface UqiStatus {
   completedAt: Date | null
   failedAt: Date | null
   failedReason: string | null
+  percentageComplete: number
   recordsReturned: number
   startedAt: Date | null
 }
@@ -79,6 +80,7 @@ export function uqi<C, T>(og: UqiSettings<C, T>): UqiClient {
       completedAt: null,
       failedAt: null,
       failedReason: null,
+      percentageComplete: 0,
       recordsReturned: 0,
       startedAt: null,
     },
