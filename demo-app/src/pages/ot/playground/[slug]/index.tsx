@@ -23,7 +23,7 @@ export default function Page(): JSX.Element {
         configName={sanitizedSlug}
         components={components}
         validateConfig={false}
-        initializedSignals={{ accountId: initialValue }}
+        initialSignalValues={{ accountId: Number(initialValue) }}
       />
     </>
   )

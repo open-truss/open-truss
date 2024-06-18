@@ -14,12 +14,10 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
 
 const WorkflowLink = ({ workflowId }: { workflowId: string }): JSX.Element => {
   const [inputValue, setInputValue] = React.useState<string>('')
-  console.log({ workflowId })
   let input = null
   let href = `/ot/playground/${workflowId}`
 
   if (workflowId.endsWith('initial-value')) {
-    console.log(true)
     input = (
       <input
         style={{ marginLeft: '10px', border: '1px solid black' }}

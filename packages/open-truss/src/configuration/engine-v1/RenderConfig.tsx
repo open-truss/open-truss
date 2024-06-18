@@ -3,7 +3,7 @@ import {
   SIGNALS,
   createSignal,
   type Signals,
-  type SignalsZodType
+  type SignalsZodType,
 } from '../../signals'
 import { isObject } from '../../utils/misc'
 import { type COMPONENTS } from '../RenderConfig'
@@ -37,12 +37,12 @@ export function RenderConfig({
   COMPONENTS,
   config: _config,
   validateConfig = true,
-  initializedSignals = {},
+  initialSignalValues = {},
 }: {
   COMPONENTS: COMPONENTS
   config: WorkflowV1
   validateConfig?: boolean
-  initializedSignals?: Record<string, unknown>
+  initialSignalValues?: Record<string, unknown>
 }): JSX.Element {
   COMBINED_COMPONENTS = Object.assign({}, COMPONENTS, { OTDefaultFrameWrapper })
   // Runs validations in config-schemas
@@ -67,7 +67,7 @@ export function RenderConfig({
   const signals = createSignals(
     config.signals,
     validateConfig,
-    initializedSignals,
+    initialSignalValues,
   )
 
   if (validateConfig) {
@@ -108,10 +108,9 @@ export function RenderConfig({
 function createSignals(
   signalsConfig: SignalsV1,
   validate: boolean,
-  initializedSignals: Record<string, unknown>,
+  initialSignalValues: Record<string, unknown>,
 ): Signals {
   const signals: Signals = {}
-  console.log({ initializedSignals })
   if (signalsConfig === undefined) return signals
   Object.entries(signalsConfig).forEach(([name, val]) => {
     let signal: SignalsZodType | undefined
@@ -122,13 +121,16 @@ function createSignals(
     }
 
     if (signal) {
-      const s = signal.parse(undefined)
-      s.yamlName = name
-      signals[name] = s
-
-      if (name in initializedSignals) {
-        console.log(signals[name])
-        signals[name].value = initializedSignals[name]
+      if (name in initialSignalValues) {
+        const initialValue = initialSignalValues[name]
+        const s = signal.parse(undefined)
+        s.yamlName = name
+        s.value = initialValue
+        signals[name] = s
+      } else {
+        const s = signal.parse(undefined)
+        s.yamlName = name
+        signals[name] = s
       }
     }
     if (signal === undefined && validate)
