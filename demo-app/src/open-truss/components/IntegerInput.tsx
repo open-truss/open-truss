@@ -25,8 +25,6 @@ export default function IntegerInput({
   }
 
   const addInteger = (): void => {
-    console.log({ inputValue })
-    console.log({ integer })
     integer.value = Number(inputValue)
     setInputValue('')
     submit.value?.()
