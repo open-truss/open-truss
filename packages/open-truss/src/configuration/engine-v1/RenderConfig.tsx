@@ -1,21 +1,21 @@
-import React, { useEffect } from 'react'
-import { type COMPONENTS } from '../RenderConfig'
+import { useEffect } from 'react'
 import {
-  type FrameWrapper,
-  type WorkflowV1,
+  SIGNALS,
+  createSignal,
+  type Signals,
+  type SignalsZodType,
+} from '../../signals'
+import { isObject } from '../../utils/misc'
+import { type COMPONENTS } from '../RenderConfig'
+import { Frame, eachComponentSignal, getComponent } from './Frame'
+import {
   WorkflowV1Shape,
   type FrameType,
+  type FrameWrapper,
   type FramesV1,
   type SignalsV1,
+  type WorkflowV1,
 } from './config-schemas'
-import { getComponent, Frame, eachComponentSignal } from './Frame'
-import { isObject } from '../../utils/misc'
-import {
-  type Signals,
-  SIGNALS,
-  type SignalsZodType,
-  createSignal,
-} from '../../signals'
 
 export interface GlobalContext {
   config: WorkflowV1
@@ -37,10 +37,12 @@ export function RenderConfig({
   COMPONENTS,
   config: _config,
   validateConfig = true,
+  initialSignalValues = {},
 }: {
   COMPONENTS: COMPONENTS
   config: WorkflowV1
   validateConfig?: boolean
+  initialSignalValues?: Record<string, unknown>
 }): JSX.Element {
   COMBINED_COMPONENTS = Object.assign({}, COMPONENTS, { OTDefaultFrameWrapper })
   // Runs validations in config-schemas
@@ -62,7 +64,11 @@ export function RenderConfig({
   ) as FrameWrapper
   const debug = config.debug ?? false
 
-  const signals = createSignals(config.signals, validateConfig)
+  const signals = createSignals(
+    config.signals,
+    validateConfig,
+    initialSignalValues,
+  )
 
   if (validateConfig) {
     const propErrs = validateComponentProps(
@@ -99,7 +105,11 @@ export function RenderConfig({
   )
 }
 
-function createSignals(signalsConfig: SignalsV1, validate: boolean): Signals {
+function createSignals(
+  signalsConfig: SignalsV1,
+  validate: boolean,
+  initialSignalValues: Record<string, unknown>,
+): Signals {
   const signals: Signals = {}
   if (signalsConfig === undefined) return signals
   Object.entries(signalsConfig).forEach(([name, val]) => {
@@ -114,6 +124,10 @@ function createSignals(signalsConfig: SignalsV1, validate: boolean): Signals {
       const s = signal.parse(undefined)
       s.yamlName = name
       signals[name] = s
+
+      if (name in initialSignalValues) {
+        s.value = initialSignalValues[name]
+      }
     }
     if (signal === undefined && validate)
       throw new Error(`${String(val)} is unknown. Please check ${name} Signal`)

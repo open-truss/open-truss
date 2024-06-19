@@ -1,12 +1,12 @@
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
-  type z,
   BaseOpenTrussComponentV1PropsShape,
   NavigateFrameSignal,
   NumberSignal,
+  type z,
 } from '@open-truss/open-truss'
 import { useState } from 'react'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   integer: NumberSignal,
   submit: NavigateFrameSignal,
