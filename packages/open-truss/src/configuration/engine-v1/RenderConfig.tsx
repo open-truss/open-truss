@@ -121,16 +121,12 @@ function createSignals(
     }
 
     if (signal) {
+      const s = signal.parse(undefined)
+      s.yamlName = name
+      signals[name] = s
+
       if (name in initialSignalValues) {
-        const initialValue = initialSignalValues[name]
-        const s = signal.parse(undefined)
-        s.yamlName = name
-        s.value = initialValue
-        signals[name] = s
-      } else {
-        const s = signal.parse(undefined)
-        s.yamlName = name
-        signals[name] = s
+        s.value = initialSignalValues[name]
       }
     }
     if (signal === undefined && validate)
