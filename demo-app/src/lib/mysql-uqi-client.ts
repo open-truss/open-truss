@@ -69,6 +69,9 @@ async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
     async function* asyncGenerator(): AsyncGenerator<UqiResult> {
       // Type 'RowDataPacket[] | RowDataPacket[][] | ResultSetHeader'
       if (Array.isArray(rows) && rows.length > 0 && !Array.isArray(rows[0])) {
+        context.status.percentageComplete = Math.floor(
+          (context.status.recordsReturned / rows.length) * 100,
+        )
         yield {
           row: rows as unknown as UqiScalar[],
           metadata: {
@@ -81,6 +84,9 @@ async function createMysqlUqiClient(config: MysqlConfig): Promise<UqiClient> {
         Array.isArray(rows[0])
       ) {
         for (const row of rows) {
+          context.status.percentageComplete = Math.floor(
+            (context.status.recordsReturned / rows.length) * 100,
+          )
           yield {
             row: row as unknown as UqiScalar[],
             metadata: {
