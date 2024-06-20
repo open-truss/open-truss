@@ -3,9 +3,17 @@ workflow:
   _DEBUG_: true
   signals:
     repo_nwo_input: string
+    repo_nwo_i: string
     results:
       total_count: number
       incomplete_results: boolean
+    graphql_results:
+      data:
+        publicRepositories:
+          nodes:
+            - issues:
+                totalCount: number
+
   frames:
     - frame:
       view:
@@ -18,7 +26,7 @@ workflow:
             issue_or_pr: issue
           method: GET
           output: [:results]
-          headers: 
+          headers:
             User-Agent: open-truss-rest-demo
       frames:
         - frame:
@@ -31,3 +39,28 @@ workflow:
             component: DataDemo
             props:
               results: :results
+    - frame:
+      view:
+        component: OTRestDataProvider
+        props:
+          source: local-graphql-demo
+          path: /graphql
+          method: POST
+          output: [:graphql_results]
+          headers:
+            Content-Type: application/json
+            User-Agent: open-truss-rest-demo
+          body:
+            template: '{"query": "query { publicRepositories(namesWithOwners: ["open-truss/open-truss"], first: 1) { nodes { issues(first: 1) { totalCount } } } }"}'
+            repo_nwo_i: :repo_nwo_i
+      frames:
+        - frame:
+          view:
+            component: StringInput
+            props:
+              string: :repo_nwo_i
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :graphql_results
