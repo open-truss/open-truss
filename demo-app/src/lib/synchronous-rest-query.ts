@@ -25,12 +25,10 @@ async function synchronousRestQuery({
   const config = sources[source]?.config
   if (!config) throw new Error(`No such source: ${source}`)
 
-  console.log('source:', source, 'path:', path, 'method:', method, 'headers:', headers, 'body:', isString(body) ? body : JSON.stringify(body),)
-
   const { uri, headers: defaultHeaders } = config
-  console.log('uri:', uri, 'body:', body)
   const prefixedPath = path.startsWith('/') ? path : `/${path}`
   const url = `${uri}${prefixedPath}`
+
   const response = await fetch(url, {
     method,
     headers: {
@@ -40,12 +38,12 @@ async function synchronousRestQuery({
     body: isString(body) ? body : JSON.stringify(body),
   })
 
-  console.log('response:', await response.text())
+  const responseText = await response.text()
 
   return {
     status: response.status,
     headers: response.headers.raw(),
-    body: await response.json(), // assume the response is JSON
+    body: JSON.parse(responseText), // assume the response is JSON
   }
 }
 

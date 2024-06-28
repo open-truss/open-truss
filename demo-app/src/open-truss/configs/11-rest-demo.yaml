@@ -2,18 +2,16 @@ workflow:
   version: 1
   _DEBUG_: true
   signals:
-    repo_nwo_input: string
-    repo_nwo_i: string
+    repo_name: string
+    repo_owner: string
     results:
       total_count: number
       incomplete_results: boolean
     graphql_results:
       data:
-        publicRepositories:
-          nodes:
-            - issues:
-                totalCount: number
-
+        repository:
+          issues:
+            totalCount: number
   frames:
     - frame:
       view:
@@ -21,8 +19,9 @@ workflow:
         props:
           source: rest-demo
           path:
-            template: /search/issues?q=repo:${repo_nwo}+is:${issue_or_pr}
-            repo_nwo: :repo_nwo_input
+            template: /search/issues?q=repo:${repo_owner}/${repo_name}+is:${issue_or_pr}
+            repo_name: :repo_name
+            repo_owner: :repo_owner
             issue_or_pr: issue
           method: GET
           output: [:results]
@@ -31,9 +30,10 @@ workflow:
       frames:
         - frame:
           view:
-            component: StringInput
+            component: RepoNameOwnerInput
             props:
-              string: :repo_nwo_input
+              repo_name: :repo_name
+              repo_owner: :repo_owner
         - frame:
           view:
             component: DataDemo
@@ -43,7 +43,7 @@ workflow:
       view:
         component: OTRestDataProvider
         props:
-          source: local-graphql-demo
+          source: auth-github-demo
           path: /graphql
           method: POST
           output: [:graphql_results]
@@ -51,14 +51,10 @@ workflow:
             Content-Type: application/json
             User-Agent: open-truss-rest-demo
           body:
-            template: '{"query": "query { publicRepositories(namesWithOwners: ["open-truss/open-truss"], first: 1) { nodes { issues(first: 1) { totalCount } } } }"}'
-            repo_nwo_i: :repo_nwo_i
+            template: '{"query": "query { repository(name: \"${repo_name}\", owner: \"${repo_owner}\") { issues(first: 1) { totalCount } } }"}'
+            repo_name: :repo_name
+            repo_owner: :repo_owner
       frames:
-        - frame:
-          view:
-            component: StringInput
-            props:
-              string: :repo_nwo_i
         - frame:
           view:
             component: DataDemo
