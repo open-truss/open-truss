@@ -20,6 +20,7 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   path: StringOrTemplate,
   method: StringSignal,
   headers: z.record(StringSignal).optional(),
+  body: StringOrTemplate.optional(),
   forceQuery: NumberSignal,
   output: z.array(UnknownSignal).optional(),
 })
@@ -29,6 +30,7 @@ const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = ({
   path: templatePath,
   method,
   headers,
+  body,
   forceQuery,
   children,
   output,
@@ -42,9 +44,11 @@ const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = ({
         path: templatePath,
         method,
         headers,
+        body,
       })
 
     const resolvedPath = resolveStringOrTemplate(templatePath)
+    const resolvedBody = body && resolveStringOrTemplate(body)
 
     void (async () => {
       const result = await fetch('/api/synchronous-rest-query', {
@@ -56,7 +60,7 @@ const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = ({
           // application which triggers a re-rendering of this component.
           'uqi-force-query': String(forceQuery?.value),
         },
-        body: JSON.stringify({ source, path: resolvedPath, method, headers }),
+        body: JSON.stringify({ source, path: resolvedPath, method, headers, body: resolvedBody }),
       })
       if (_DEBUG_) console.log({ m: 'REST API response', response: result })
 
