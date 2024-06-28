@@ -7,7 +7,7 @@ workflow:
     results:
       total_count: number
       incomplete_results: boolean
-    graphql_results:
+    graphqlResults:
       data:
         repository:
           issues:
@@ -46,7 +46,7 @@ workflow:
           source: auth-github-demo
           path: /graphql
           method: POST
-          output: [:graphql_results]
+          output: [:graphqlResults]
           headers:
             Content-Type: application/json
             User-Agent: open-truss-rest-demo
@@ -59,4 +59,4 @@ workflow:
           view:
             component: DataDemo
             props:
-              results: :graphql_results
+              results: :graphqlResults
