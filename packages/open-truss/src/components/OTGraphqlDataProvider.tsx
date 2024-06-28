@@ -24,7 +24,9 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   output: z.array(UnknownSignal).optional(),
 })
 
-const OTGraphqlDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = ({
+const OTGraphqlDataProvider: BaseOpenTrussComponentV1<
+  z.infer<typeof Props>
+> = ({
   source,
   headers,
   body, // GraphQL query or mutation
@@ -55,7 +57,12 @@ const OTGraphqlDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
           // application which triggers a re-rendering of this component.
           'uqi-force-query': String(forceQuery?.value),
         },
-        body: JSON.stringify({ source, headers, body: resolvedBody, variables, }),
+        body: JSON.stringify({
+          source,
+          headers,
+          body: resolvedBody,
+          variables,
+        }),
       })
       if (_DEBUG_) console.log({ m: 'GraphQL Response', response: result })
 

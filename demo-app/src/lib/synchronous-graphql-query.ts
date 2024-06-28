@@ -43,7 +43,10 @@ async function synchronousGraphqlQuery({
   const variableValues = Object.values(variables)
 
   // Filter out empty variables and don't run mutation if no variables
-  if (variableValues.length !== 0 && variableValues.filter(v => typeof (v) === 'boolean' || !!v).length === 0) {
+  if (
+    variableValues.length !== 0 &&
+    variableValues.filter((v) => typeof v === 'boolean' || !!v).length === 0
+  ) {
     return {
       status: 400,
       headers: {},
@@ -54,7 +57,12 @@ async function synchronousGraphqlQuery({
     }
   }
 
-  const { data, errors, headers: rawHeaders, status } = await graphClient.rawRequest({
+  const {
+    data,
+    errors,
+    headers: rawHeaders,
+    status,
+  } = await graphClient.rawRequest({
     query: body,
     variables,
   })
@@ -63,7 +71,10 @@ async function synchronousGraphqlQuery({
 
   // Convert Headers to Record<string, string[]>
   const fetchedHeaders: Record<string, string[]> = {}
-  rawHeaders.forEach((value, key) => fetchedHeaders[key] = value.split(',').map(v => v.trim()))
+  rawHeaders.forEach(
+    (value, key) =>
+      (fetchedHeaders[key] = value.split(',').map((v) => v.trim())),
+  )
 
   return {
     status,
