@@ -20,7 +20,7 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   path: StringOrTemplate,
   method: StringSignal,
   headers: z.record(StringSignal).optional(),
-  body: StringOrTemplate.optional(),
+  body: z.any(StringOrTemplate).optional(),
   forceQuery: NumberSignal,
   output: z.array(UnknownSignal).optional(),
 })
