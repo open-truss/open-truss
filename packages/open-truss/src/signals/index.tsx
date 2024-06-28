@@ -161,7 +161,7 @@ type NavigateFrame = () => void
 export const NavigateFrameSignal = SignalType<NavigateFrame>(
   'NavigateFrame',
   // Need two functions here because .default can take in a function.
-  z.function().default(() => () => { }),
+  z.function().default(() => () => {}),
 )
 export type NavigateFrameSignalType = z.infer<typeof NavigateFrameSignal>
 

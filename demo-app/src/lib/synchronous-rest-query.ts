@@ -38,12 +38,10 @@ async function synchronousRestQuery({
     body: isString(body) ? body : JSON.stringify(body),
   })
 
-  const responseText = await response.text()
-
   return {
     status: response.status,
     headers: response.headers.raw(),
-    body: JSON.parse(responseText), // assume the response is JSON
+    body: await response.json(), // assume the response is JSON
   }
 }
 

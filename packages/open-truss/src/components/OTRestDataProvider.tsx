@@ -60,7 +60,13 @@ const OTRestDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = ({
           // application which triggers a re-rendering of this component.
           'uqi-force-query': String(forceQuery?.value),
         },
-        body: JSON.stringify({ source, path: resolvedPath, method, headers, body: resolvedBody }),
+        body: JSON.stringify({
+          source,
+          path: resolvedPath,
+          method,
+          headers,
+          body: resolvedBody,
+        }),
       })
       if (_DEBUG_) console.log({ m: 'REST API response', response: result })
 

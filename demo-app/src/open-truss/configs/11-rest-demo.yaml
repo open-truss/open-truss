@@ -2,8 +2,8 @@ workflow:
   version: 1
   _DEBUG_: true
   signals:
-    repo_name: string
-    repo_owner: string
+    repoName: string
+    repoOwner: string
     results:
       total_count: number
       incomplete_results: boolean
@@ -19,9 +19,9 @@ workflow:
         props:
           source: rest-demo
           path:
-            template: /search/issues?q=repo:${repo_owner}/${repo_name}+is:${issue_or_pr}
-            repo_name: :repo_name
-            repo_owner: :repo_owner
+            template: /search/issues?q=repo:${repoOwner}/${repoName}+is:${issue_or_pr}
+            repoName: :repoName
+            repoOwner: :repoOwner
             issue_or_pr: issue
           method: GET
           output: [:results]
@@ -32,8 +32,8 @@ workflow:
           view:
             component: RepoNameOwnerInput
             props:
-              repo_name: :repo_name
-              repo_owner: :repo_owner
+              repoName: :repoName
+              repoOwner: :repoOwner
         - frame:
           view:
             component: DataDemo
@@ -51,9 +51,9 @@ workflow:
             Content-Type: application/json
             User-Agent: open-truss-rest-demo
           body:
-            template: '{"query": "query { repository(name: \"${repo_name}\", owner: \"${repo_owner}\") { issues(first: 1) { totalCount } } }"}'
-            repo_name: :repo_name
-            repo_owner: :repo_owner
+            template: '{"query": "query { repository(name: \"${repoName}\", owner: \"${repoOwner}\") { issues(first: 1) { totalCount } } }"}'
+            repoName: :repoName
+            repoOwner: :repoOwner
       frames:
         - frame:
           view:
