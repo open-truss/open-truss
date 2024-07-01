@@ -1,22 +1,66 @@
+import { RenderConfig, type COMPONENTS } from '../../configuration'
 import {
-  withChildren,
-  type BaseOpenTrussComponentV1,
-  BaseOpenTrussComponentV1PropsShape,
-} from '../../configuration/engine-v1'
-import { type z } from 'zod'
+  ConfigBuilderContextProvider,
+  useConfigBuilderContext,
+} from '../../hooks'
+import { useState } from 'react'
+import ComponentList from './ComponentList'
+import ConfigYaml from './ConfigYaml'
+import ConfigBuilderFrameWrapper from './FrameWrapper'
 
-export const Props = BaseOpenTrussComponentV1PropsShape.extend({
-  ...withChildren,
-})
-
-const OTConfigBuilder: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
-  props,
-) => {
+const Output = function ({
+  OT_COMPONENTS,
+}: ConfigBuilderInterface): JSX.Element {
+  const [showConfig, setShowConfig] = useState<boolean>(false)
+  const { config } = useConfigBuilderContext()
   return (
-    <div className={'config-builder'}>
-      <h2 className={'title'}>Config Builder</h2>
-    </div>
+    <>
+      <button
+        className="text-right"
+        onClick={() => {
+          setShowConfig((prev) => !prev)
+        }}
+      >
+        {showConfig ? 'Show workflow' : 'Show config'}
+      </button>
+      {showConfig && (
+        <div>
+          <h2>config</h2>
+          <ConfigYaml />
+        </div>
+      )}
+      {!showConfig && (
+        <RenderConfig
+          config={config}
+          components={Object.assign({}, OT_COMPONENTS, {
+            ConfigBuilderFrameWrapper,
+          })}
+          validateConfig={false}
+        />
+      )}
+    </>
   )
 }
 
-export default OTConfigBuilder
+interface ConfigBuilderInterface {
+  OT_COMPONENTS: COMPONENTS
+}
+
+export const ConfigBuilder = function ({
+  OT_COMPONENTS,
+}: ConfigBuilderInterface): JSX.Element {
+  return (
+    <ConfigBuilderContextProvider>
+      <div className="flex justify-between p-2">
+        <div className="mr-2">
+          <ComponentList components={OT_COMPONENTS} />
+        </div>
+        <div className="flex-grow">
+          <Output OT_COMPONENTS={OT_COMPONENTS} />
+        </div>
+      </div>
+    </ConfigBuilderContextProvider>
+  )
+}
+
+// export default ConfigBuilder

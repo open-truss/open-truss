@@ -1,8 +1,3 @@
-// These imports make more sense in src/lib/ot-components
-// however for some reason they were not loading corretly.
-// Putting them in here for now
-import '@open-truss/open-truss/styles/ot-config-builder.css'
-
 export * as AvailableWorkflowsFromEndpoint from './AvailableWorkflowsFromEndpoint'
 export * as ClientPageTitle from './ClientPageTitle'
 export * as DataDemo from './DataDemo'
