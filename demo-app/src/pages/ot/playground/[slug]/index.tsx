@@ -12,6 +12,10 @@ export default function Page(): JSX.Element {
   }
   const sanitizedSlug = path.basename(slug)
 
+  const searchParams = new URLSearchParams(window.location.search)
+
+  const initialValue = searchParams.get('initialValue')
+
   return (
     <>
       <h1 className="text-4xl font-bold text-center">{sanitizedSlug}</h1>
@@ -19,6 +23,7 @@ export default function Page(): JSX.Element {
         configName={sanitizedSlug}
         components={components}
         validateConfig={false}
+        initialSignalValues={{ accountId: Number(initialValue) }}
       />
     </>
   )

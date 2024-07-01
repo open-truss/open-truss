@@ -1,11 +1,11 @@
 import {
-  Iterator,
-  type UqiColumn,
   uqi,
   type UqiClient,
+  type UqiColumn,
   type UqiContext,
   type UqiMappedType,
   type UqiResult,
+  type UqiScalar,
 } from '@open-truss/open-truss'
 import { Client, KustoConnectionStringBuilder } from 'azure-kusto-data'
 
@@ -52,27 +52,30 @@ interface KustoConfig {
   endpoint: string
 }
 
-export default async function (config: KustoConfig): Promise<UqiClient> {
+async function createKustoUqiClient(config: KustoConfig): Promise<UqiClient> {
+  /* eslint-disable quote-props */
+  // prettier-ignore
   const typeMappings: Record<string, UqiMappedType> = {
-    bool: 'Boolean',
-    datetime: 'Date',
-    decimal: 'Number',
-    dynamic: 'JSON',
-    guid: 'String',
-    int: 'Number',
-    long: 'BigInt',
-    real: 'Number',
-    string: 'String',
-    timespan: 'String',
+    'bool': 'Boolean',
+    'datetime': 'Date',
+    'decimal': 'Number',
+    'dynamic': 'JSON',
+    'guid': 'String',
+    'int': 'Number',
+    'long': 'BigInt',
+    'real': 'Number',
+    'string': 'String',
+    'timespan': 'String',
   }
+  /* eslint-enable quote-props */
 
   async function query(
     context: UqiContext<KustoConfig, Client>,
-    query: string,
+    q: string,
   ): Promise<AsyncIterableIterator<UqiResult>> {
-    const { database } = dataFromKustoQuery(query)
+    const { database } = dataFromKustoQuery(q)
 
-    const kustoResponseDataSet = await context.client.execute(database, query)
+    const kustoResponseDataSet = await context.client.execute(database, q)
 
     // TODO: handle failed query
     // if (kustoResponseDataSet.statusTable) {
@@ -87,7 +90,7 @@ export default async function (config: KustoConfig): Promise<UqiClient> {
 
     async function* asyncGenerator(): AsyncGenerator<UqiResult> {
       for await (const kustoResultRow of kustoResponseDataSet.primaryResults[0].rows()) {
-        const row = []
+        const row: UqiScalar[] = []
         for await (const column of kustoResultRow.values()) {
           row.push(column)
         }
@@ -100,7 +103,7 @@ export default async function (config: KustoConfig): Promise<UqiClient> {
       }
     }
 
-    return new Iterator(asyncGenerator())
+    return asyncGenerator()
   }
 
   const client = buildClient(config)
@@ -110,5 +113,12 @@ export default async function (config: KustoConfig): Promise<UqiClient> {
     config,
     client,
     query,
+    teardown: async (context) => {
+      context.client.close()
+    },
   })
 }
+
+createKustoUqiClient.engine = 'kusto'
+
+export { createKustoUqiClient }

@@ -20,6 +20,7 @@ describe('fake-client-uqi', () => {
       completedAt: null,
       failedAt: null,
       failedReason: '',
+      percentageComplete: 0,
       recordsReturned: 0,
       startedAt: null,
     }
@@ -67,6 +68,7 @@ describe('fake-client-uqi', () => {
       completedAt: null,
       failedAt: null,
       failedReason: '',
+      percentageComplete: 0,
       recordsReturned: 0,
       startedAt: null,
     }

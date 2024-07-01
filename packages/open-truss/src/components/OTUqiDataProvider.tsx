@@ -1,10 +1,9 @@
+import { z } from 'zod'
 import {
-  withChildren,
   BaseOpenTrussComponentV1PropsShape,
+  withChildren,
   type BaseOpenTrussComponentV1,
 } from '../configuration/engine-v1'
-import { parseUqiResult, type SynchronousQueryResult } from '../uqi/uqi'
-import { isObject } from '../utils/misc'
 import {
   NumberSignal,
   StringSignal,
@@ -12,25 +11,30 @@ import {
   signalValueShape,
   useSignalEffect,
 } from '../signals'
-import { z } from 'zod'
+import { type UqiMetadata, type UqiNamedFieldsRow } from '../uqi/uqi'
+import { isObject } from '../utils/misc'
+
+interface SynchronousUqiQueryResult {
+  metadata: UqiMetadata
+  rows: UqiNamedFieldsRow[]
+}
 
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   ...withChildren,
   source: StringSignal,
   query: StringSignal,
-  force_query: NumberSignal,
+  forceQuery: NumberSignal,
   output: z.array(UnknownSignal).optional(),
 })
 
 const OTUqiDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
   props,
 ) => {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { query, force_query, children, output, source, _DEBUG_ } = props
+  const { query, forceQuery, children, output, source, _DEBUG_ } = props
 
   useSignalEffect(() => {
     if (_DEBUG_) console.log({ m: 'Query values', query, source })
-    let queryResults: SynchronousQueryResult
+    let queryResults: SynchronousUqiQueryResult
     if (query.value === '') return
     const fetchData = async function (): Promise<undefined> {
       const result = await fetch('/api/synchronous-uqi-query', {
@@ -40,12 +44,13 @@ const OTUqiDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
           // The uqi-force-query header is a hack to make it easy to force a query
           // that works by including a NumberSignal that can be incremented by the
           // application which triggers a re-rendering of this component.
-          'uqi-force-query': String(force_query?.value),
+          'uqi-force-query': String(forceQuery?.value),
         },
         body: JSON.stringify({ query, source }),
       })
       const deserialized = await result.json()
-      if (_DEBUG_) console.log({ m: 'UQI API response', response: result })
+      if (_DEBUG_)
+        console.log({ m: 'UQI API response', response: deserialized })
       queryResults = deserialized
     }
 
@@ -55,14 +60,13 @@ const OTUqiDataProvider: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
 
         for (const signal of output || []) {
           const shape = signalValueShape(signal)
-          const parsedResults = parseUqiResult(queryResults)
           const defaultValue = shape.parse(undefined)
 
           const result = Array.isArray(defaultValue)
-            ? parsedResults
+            ? queryResults.rows
             : isObject(defaultValue)
-            ? parsedResults[0]
-            : parsedResults[0]?.[signal.yamlName]
+            ? queryResults.rows[0]
+            : queryResults.rows[0]?.[signal.yamlName]
 
           const validatedResult = shape.parse(result)
           if (_DEBUG_)

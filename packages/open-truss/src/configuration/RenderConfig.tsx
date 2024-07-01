@@ -4,8 +4,8 @@ import { OT_COMPONENTS } from '../components'
 import { parseYaml } from '../utils/yaml'
 import {
   RenderConfigV1,
-  type WorkflowV1,
   type BaseOpenTrussComponentV1,
+  type WorkflowV1,
 } from './engine-v1'
 
 export interface WorkflowSpec {
@@ -24,10 +24,12 @@ export function RenderConfig({
   components: appComponents,
   config,
   validateConfig = true,
+  initialSignalValues,
 }: {
   components: COMPONENTS
   config: string
   validateConfig?: boolean
+  initialSignalValues?: Record<string, unknown>
 }): JSX.Element {
   const components = Object.assign({}, appComponents, OT_COMPONENTS)
   const parsedConfig = parseYaml(config)
@@ -38,6 +40,7 @@ export function RenderConfig({
         COMPONENTS={components}
         config={workflow}
         validateConfig={validateConfig}
+        initialSignalValues={initialSignalValues}
       />
     )
   } else {
@@ -49,6 +52,7 @@ interface RenderFromEndpointInterface {
   components: COMPONENTS
   configName: string
   validateConfig?: boolean
+  initialSignalValues?: Record<string, unknown>
 }
 
 // TODO: Get this path from application config and only need to pass in filename?
@@ -57,6 +61,7 @@ export function RenderFromEndpoint({
   configName,
   components,
   validateConfig = true,
+  initialSignalValues = {},
 }: RenderFromEndpointInterface): JSX.Element {
   // TODO: Use UQI's REST client once that exists?
   const url = `${CONFIG_API}${configName}`
@@ -87,6 +92,7 @@ export function RenderFromEndpoint({
           config={config}
           components={components}
           validateConfig={validateConfig}
+          initialSignalValues={initialSignalValues}
         />
       </div>
     )
