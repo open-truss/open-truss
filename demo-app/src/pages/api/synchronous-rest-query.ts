@@ -11,6 +11,7 @@ export default async function handler(
         request.headers['content-type'] === 'application/json'
           ? request.body
           : JSON.parse(request.body)
+
       const result = await synchronousRestQuery(data)
       response.status(200).json({
         status: result.status,

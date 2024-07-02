@@ -2,10 +2,16 @@ workflow:
   version: 1
   _DEBUG_: true
   signals:
-    repo_nwo_input: string
+    repoName: string
+    repoOwner: string
     results:
       total_count: number
       incomplete_results: boolean
+    graphqlResults:
+      data:
+        repository:
+          issues:
+            totalCount: number
   frames:
     - frame:
       view:
@@ -13,21 +19,44 @@ workflow:
         props:
           source: rest-demo
           path:
-            template: /search/issues?q=repo:${repo_nwo}+is:${issue_or_pr}
-            repo_nwo: :repo_nwo_input
+            template: /search/issues?q=repo:${repoOwner}/${repoName}+is:${issue_or_pr}
+            repoName: :repoName
+            repoOwner: :repoOwner
             issue_or_pr: issue
           method: GET
           output: [:results]
-          headers: 
+          headers:
             User-Agent: open-truss-rest-demo
       frames:
         - frame:
           view:
-            component: StringInput
+            component: RepoNameOwnerInput
             props:
-              string: :repo_nwo_input
+              repoName: :repoName
+              repoOwner: :repoOwner
         - frame:
           view:
             component: DataDemo
             props:
               results: :results
+    - frame:
+      view:
+        component: OTRestDataProvider
+        props:
+          source: auth-github-demo
+          path: /graphql
+          method: POST
+          output: [:graphqlResults]
+          headers:
+            Content-Type: application/json
+            User-Agent: open-truss-rest-demo
+          body:
+            template: '{"query": "query { repository(name: \"${repoName}\", owner: \"${repoOwner}\") { issues(first: 1) { totalCount } } }"}'
+            repoName: :repoName
+            repoOwner: :repoOwner
+      frames:
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :graphqlResults
