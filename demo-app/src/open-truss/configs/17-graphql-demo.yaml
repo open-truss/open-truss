@@ -1,0 +1,43 @@
+workflow:
+  version: 1
+  _DEBUG_: true
+  signals:
+    repo_name: string
+    repo_owner: string
+    graphql_results:
+      repository:
+        issues:
+          totalCount: number
+  frames:
+    - frame:
+      view:
+        component: OTGraphqlDataProvider
+        props:
+          source: github-graphql-demo
+          output: [:graphql_results]
+          headers:
+            Content-Type: application/json
+            User-Agent: open-truss-rest-demo
+          query: >
+            query($repo_name: String!, $repo_owner: String!) {
+              repository(name: $repo_name, owner: $repo_owner) {
+                issues(first: 1) {
+                  totalCount
+                }
+              }
+            }
+          variables:
+            repo_name: :repo_name
+            repo_owner: :repo_owner
+      frames:
+        - frame:
+          view:
+            component: RepoNameOwnerInput
+            props:
+              repo_name: :repo_name
+              repo_owner: :repo_owner
+        - frame:
+          view:
+            component: DataDemo
+            props:
+              results: :graphql_results
