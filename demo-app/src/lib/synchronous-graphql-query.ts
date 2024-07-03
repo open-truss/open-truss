@@ -35,11 +35,6 @@ async function synchronousGraphqlQuery({
     },
   })
 
-  console.log({
-    query: body,
-    variables,
-  })
-
   const variableValues = Object.values(variables)
 
   // Filter out empty variables and don't run mutation if no variables
@@ -51,9 +46,12 @@ async function synchronousGraphqlQuery({
       status: 400,
       headers: {},
       body: {},
-      errors: {
-        message: 'Included variables all have 0 or null values.',
-      },
+      errors: [
+        {
+          type: 'BAD_REQUEST',
+          message: 'Included non-boolean variables all have falsy values.',
+        },
+      ],
     }
   }
 
@@ -66,8 +64,6 @@ async function synchronousGraphqlQuery({
     query: body,
     variables,
   })
-
-  console.log({ data, errors, status })
 
   // Convert Headers to Record<string, string[]>
   const fetchedHeaders: Record<string, string[]> = {}
