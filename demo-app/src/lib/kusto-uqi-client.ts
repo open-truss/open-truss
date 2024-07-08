@@ -89,7 +89,12 @@ async function createKustoUqiClient(config: KustoConfig): Promise<UqiClient> {
     // }
 
     async function* asyncGenerator(): AsyncGenerator<UqiResult> {
+      const totalResults = kustoResponseDataSet.primaryResults[0]._rows.length
+      let resultsProcessed = 0
       for await (const kustoResultRow of kustoResponseDataSet.primaryResults[0].rows()) {
+        context.status.percentageComplete = Math.floor(
+          (resultsProcessed / totalResults) * 100,
+        )
         const row: UqiScalar[] = []
         for await (const column of kustoResultRow.values()) {
           row.push(column)
@@ -100,6 +105,7 @@ async function createKustoUqiClient(config: KustoConfig): Promise<UqiClient> {
             columns: (kustoResultRow.columns as UqiColumn[]) || [],
           },
         }
+        resultsProcessed++
       }
     }
 
