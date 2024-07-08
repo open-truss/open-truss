@@ -54,7 +54,6 @@ async function createTrinoUqiClient(config: TrinoConfig): Promise<UqiClient> {
         totalResults = await status.queryStats.outputPositions || 0
       }
       context.status.percentageComplete = Math.floor((resultsProcessed / totalResults) * 100)
-      return context
     }
 
     async function* asyncGenerator(): AsyncGenerator<UqiResult> {
