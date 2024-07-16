@@ -1,5 +1,4 @@
-import { Button } from '@/components/ui/button'
-import { useConfigBuilderContext } from '@open-truss/open-truss'
+import { useConfigBuilderContext } from '../../hooks'
 
 const FRAMES_PATH_PARTS = ['workflow:', 'frames:', '- frame:']
 
@@ -53,14 +52,13 @@ export default function ConfigYaml(): JSX.Element {
                 }`}
               >
                 {line}
-                <Button
-                  size="xs"
+                <button
                   onClick={() => {
                     setFramesPath(thisFramesPath)
                   }}
                 >
                   Nest at this level
-                </Button>
+                </button>
               </pre>
             )
           } else {
