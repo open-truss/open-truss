@@ -43,6 +43,20 @@ async function createTrinoUqiClient(config: TrinoConfig): Promise<UqiClient> {
   ): Promise<AsyncIterableIterator<UqiResult>> {
     const queryIterator: TrinoIterator<QueryResult> =
       await context.client.query(q)
+    // eslint-disable-next-line @typescript-eslint/dot-notation
+    const queryId = queryIterator['iter'].queryResult.id
+    let resultsProcessed = 0
+    let totalResults = 1
+
+    async function updateStatus(): Promise<void> {
+      const status = (await context.client.queryInfo(queryId)) as any
+      if (totalResults === 1) {
+        totalResults = (await status.queryStats.outputPositions) || 0
+      }
+      context.status.percentageComplete = Math.floor(
+        (resultsProcessed / totalResults) * 100,
+      )
+    }
 
     async function* asyncGenerator(): AsyncGenerator<UqiResult> {
       for await (const queryResult of queryIterator) {
@@ -52,6 +66,9 @@ async function createTrinoUqiClient(config: TrinoConfig): Promise<UqiClient> {
 
         if (queryResult.data !== undefined) {
           for (const rawRow of queryResult.data) {
+            if (resultsProcessed % 10000 === 0) {
+              await updateStatus()
+            }
             const row: UqiScalar[] = []
             queryResult?.columns?.forEach((column, idx) => {
               row.push(trinoColumnParser(rawRow[idx], column.type))
@@ -64,11 +81,11 @@ async function createTrinoUqiClient(config: TrinoConfig): Promise<UqiClient> {
                 columns: queryResult.columns || [],
               },
             }
+            resultsProcessed++
           }
         }
       }
     }
-
     return asyncGenerator()
   }
 

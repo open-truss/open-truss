@@ -31,7 +31,9 @@ const WorkflowLink = ({ workflowId }: { workflowId: string }): JSX.Element => {
   }
   return (
     <li key={workflowId}>
-      <Link href={href}>{workflowId}</Link>
+      <Link href={href} style={{ fontFamily: 'monospace' }}>
+        {workflowId}
+      </Link>
       {input}
     </li>
   )
