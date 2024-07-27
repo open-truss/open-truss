@@ -1,7 +1,7 @@
 import {
   BaseOpenTrussComponentV1PropsShape,
-  useComputed,
   type z,
+  useSignals,
 } from '@open-truss/open-truss'
 import { useState } from 'react'
 import { AccountIDsSignal } from '../signals'
@@ -16,8 +16,8 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
 export default function SimpleSignalExample({
   accountIds,
 }: z.infer<typeof Props>): JSX.Element {
+  useSignals()
   const [inputValue, setInputValue] = useState('')
-  const accountIDsString = useComputed(() => JSON.stringify(accountIds))
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -32,7 +32,7 @@ export default function SimpleSignalExample({
 
   return (
     <div className="m-6 flex flex-col">
-      <h2>Currently selected AccountIDs: {accountIDsString}</h2>
+      <h2>Currently selected AccountIDs: {accountIds.value}</h2>
       <div className="flex flex-row mt-2 w-1/2 justify-start items-center">
         <Input type="number" value={inputValue} onChange={handleInputChange} />
         <Button className="ml-4" onClick={addAccountId}>
