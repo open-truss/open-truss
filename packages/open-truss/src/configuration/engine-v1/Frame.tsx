@@ -12,7 +12,9 @@ import {
   type OpenTrussComponent,
   type OpenTrussComponentExports,
 } from '../RenderConfig'
-import { useState } from 'react'
+// Do not remove import React
+// It is necessary for some apps
+import React, { useState } from 'react'
 import { getWorkflowSession, setWorkflowSessionValue } from './RenderConfig'
 import { type GlobalContext } from './RenderConfig'
 import {
