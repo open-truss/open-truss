@@ -83,6 +83,11 @@ workflow:
 - **signals** - This is a global state store that can be accessed by all parts of the workflow.
   - This will allow us to easily share state across workflows, components, and data.
   - Workflows, components, and data declare what signals they need and we can validate at config compile time when the workflow is not configured with the needed signals. If a signal is is missing we can do things like show a warning to the user or auto-suggest adding signals to their config.
+  - **Making OT components reactive to signal changes**
+    - **`useSignals()`** - Calling `useSignals()` inside of the component re renders the entire component when a signal is updated. For simplicity, this is the generally recommended hook.
+    - **`useSignalEffect(callback)`** - The callback will be run when the code is initially called and anytime a signal inside of the callback is updated.
+    - **`computedSignal = useComputed(callback)`** - A computed signal is generated. The callback will be run when the code is initially called and anytime a signal inside the callback is updated.
+    - signals-react docs - https://www.npmjs.com/package/@preact/signals-react
 - **frameRender** - This is tells the render how to render the current level of frames.
   - By default it will render frames inline.
   - The `sequence` annotation tells the renderer to render only one frame at a time. We will pass in navigation functions into components which will allow them to tell the render to move to the next / prev frames. We can persist a cursor to local / server storage saying where the user is in the workflow and the renderer can use that to render the appropriate frame on page load.

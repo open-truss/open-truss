@@ -10,6 +10,7 @@ export interface Signal<T = any | null> extends PreactSignal<T | null> {
 }
 
 export { useSignalEffect, useComputed } from '@preact/signals-react'
+export { useSignals } from '@preact/signals-react/runtime'
 
 export type SignalsZodType<T = any> = z.ZodDefault<z.ZodType<Signal<T>>>
 export type Signals = Record<string, Signal<any>>

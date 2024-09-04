@@ -12,8 +12,9 @@ import {
   type OpenTrussComponent,
   type OpenTrussComponentExports,
 } from '../RenderConfig'
+// Do not remove import React
+// It is necessary for some apps
 import React, { useState } from 'react'
-import DataProvider from './DataProvider'
 import { getWorkflowSession, setWorkflowSessionValue } from './RenderConfig'
 import { type GlobalContext } from './RenderConfig'
 import {
@@ -58,7 +59,7 @@ function ShowError({ error }: { error: FrameError }): JSX.Element {
 
 export function Frame(props: FrameContext): JSX.Element {
   const {
-    frame: { view, data, frames },
+    frame: { view, data },
     globalContext: { COMPONENTS, signals, debug },
     configPath,
   } = props
@@ -70,7 +71,7 @@ export function Frame(props: FrameContext): JSX.Element {
       render(renderCount + 1)
     }
 
-    let subframes
+    let subframes: JSX.Element[] | undefined
     const renderType = props?.frame?.renderFrames?.type
     if (renderType === 'inSequence') {
       subframes = FramesInSequence({ ...props, reRender })
@@ -92,16 +93,6 @@ export function Frame(props: FrameContext): JSX.Element {
       componentName: component,
     })
     processedProps._DEBUG_ = debug
-
-    if (frames === undefined) {
-      if (data) {
-        return (
-          <DataProvider {...processedProps} data={data} component={Component} />
-        )
-      } else {
-        return <Component {...processedProps} />
-      }
-    }
 
     return <Component {...processedProps}>{subframes}</Component>
   } catch (e: any) {
