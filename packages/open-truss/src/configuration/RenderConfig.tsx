@@ -87,12 +87,14 @@ export function RenderFromEndpoint({
     return <>Loading...</>
   } else if (config) {
     return (
-      <RenderConfig
-        config={config}
-        components={components}
-        validateConfig={validateConfig}
-        initialSignalValues={initialSignalValues}
-      />
+      <div className={'ot'}>
+        <RenderConfig
+          config={config}
+          components={components}
+          validateConfig={validateConfig}
+          initialSignalValues={initialSignalValues}
+        />
+      </div>
     )
   }
 

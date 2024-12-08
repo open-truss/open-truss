@@ -1,8 +1,5 @@
-import { Button } from '@/components/ui/button'
-import {
-  useConfigBuilderContext,
-  type FrameWrapper,
-} from '@open-truss/open-truss'
+import { useConfigBuilderContext } from '../../hooks'
+import { type FrameWrapper } from '../../configuration'
 
 const ConfigBuilderFrameWrapper: FrameWrapper = ({
   children,
@@ -45,13 +42,11 @@ const ConfigBuilderFrameWrapper: FrameWrapper = ({
     >
       <div className="absolute right-0 top-0 flex">
         {canNestFrames && (
-          <Button size="xs" className="mr-1" onClick={nestHere}>
+          <button className="mr-1" onClick={nestHere}>
             {nestingHere ? 'Stop nesting' : 'Nest here'}
-          </Button>
+          </button>
         )}
-        <Button size="xs" onClick={deleteThisFrame}>
-          Delete
-        </Button>
+        <button onClick={deleteThisFrame}>Delete</button>
       </div>
       {children}
     </div>
