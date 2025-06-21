@@ -39,7 +39,7 @@
     "react-resizable-panels": "^2.0.9",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
-    "trino-client": "^0.2.3",
+    "trino-client": "^0.2.7",
     "yaml": "^2.3.3"
   },
   "devDependencies": {
