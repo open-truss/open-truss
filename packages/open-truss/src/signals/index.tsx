@@ -69,22 +69,20 @@ export function SignalType<T>(
     .custom<Signal<T | null>>(validator)
     .superRefine((val, ctx) => {
       const stringedValue = String(val)
-      const yamlName = val.yamlName ?? ''
-      const path = `[${String(ctx.path)}]`
+      const yamlName = (val as any)?.yamlName ?? ''
       if (!isSignalLike(val)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: `Expected ${yamlName} signal of type=${name}, path=${path} to be a signal, but instead got ${stringedValue}`,
+          message: `Expected ${yamlName} signal of type=${name} but got ${stringedValue}`,
           fatal: true,
         })
       }
 
-      const parsedValue = wrappedValueShape.safeParse(val.value)
-      // We consider null a valid signal value since all values with be nullable
+      const parsedValue = wrappedValueShape.safeParse((val as any)?.value)
       if (!parsedValue.success) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: `${name} signal was set to value of incorrect type. value=${stringedValue}`,
+          message: `${name} signal value had incorrect type. value=${stringedValue}`,
           fatal: true,
         })
       }
