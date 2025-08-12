@@ -3,6 +3,8 @@ import { isString, mapValues, omit, template as templateFn } from 'lodash'
 
 import { StringSignal, isSignalLike } from '../signals'
 
+// Zod 4 deprecates .passthrough() but it still exists; keep compatibility
+// If removed in future, replace with z.object({template: z.string()}).catchall(z.any())
 export const TemplateObject = z.object({ template: z.string() }).passthrough()
 export type TemplateObjectType = z.infer<typeof TemplateObject>
 export function resolveTemplate(template: TemplateObjectType): string {

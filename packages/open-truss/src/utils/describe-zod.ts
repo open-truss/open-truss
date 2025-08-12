@@ -34,14 +34,16 @@ export function describeZod(
         value = signalAndValueShape.valueShape
         isSignal = true
       }
-
-      const type = value._def.typeName
+      // Zod 4 moved internal defs to _zod.def; keep backward compat for v3 just in case.
+      const v: any = value
+      const internalDef: any = v._zod?.def || v._def
+      const type = internalDef?.typeName
       if (type === 'ZodEnum') {
         description[key] = { type, shape: Object.keys(value.enum) }
       } else if (type === 'ZodObject') {
         description[key] = { type, shape: describeZod(value.shape) }
       } else if (type === 'ZodArray') {
-        const innerType = value._def.type
+        const innerType = internalDef?.type
         description[key] = {
           type,
           shape: describeZod({ innerType }).innerType,
@@ -49,19 +51,19 @@ export function describeZod(
       } else if (type === 'ZodUnion') {
         description[key] = {
           type,
-          shape: value._def.options.map((innerType: z.ZodType) => {
+          shape: internalDef?.options.map((innerType: z.ZodType) => {
             return describeZod({ innerType }).innerType
           }),
         }
       } else if (type === 'ZodDefault') {
-        const innerType = value._def.innerType
+        const innerType = internalDef?.innerType
         const desc: ZodDescriptionObject = {
           defaultValue: value.parse(undefined),
           ...(describeZod({ innerType }).innerType as object),
         }
         description[key] = desc
       } else if (type === 'ZodNullable') {
-        const innerType = value._def.innerType
+        const innerType = internalDef?.innerType
         description[key] = {
           ...(describeZod({ innerType }).innerType as object),
           nullable: true,
@@ -78,7 +80,7 @@ export function describeZod(
   )
 }
 
-export const typeToZodMap: Record<string, z.ZodTypeAny> = {
+export const typeToZodMap: Record<string, z.ZodType> = {
   string: zod.string(),
   number: zod.number(),
   boolean: zod.boolean(),

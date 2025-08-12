@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z } from 'zod'
 import { useSignal, type Signal as PreactSignal } from '@preact/signals-react'
 import { typeToZodMap, typeToDefaultValue } from '../utils/describe-zod'
 import { isObject } from '../utils/misc'
@@ -41,7 +41,9 @@ export function signalValueShape(signal: Signal): WrappedValueShape {
 export function getSignalAndValueShape(
   possibleZodObject: unknown,
 ): SignalAndValueShape | undefined {
-  const description = (possibleZodObject as SignalsZodType)?._def?.description
+  const description =
+    (possibleZodObject as any)?._zod?.def?.description ||
+    (possibleZodObject as any)?._def?.description
   if (description) {
     const matches = description.match(SignalsRegex)
     if (matches && matches.length > 1) {
@@ -123,7 +125,7 @@ function signalNameFromObject(signal: object | object[]): string {
 type DefaultValue = object | object[] | string | boolean | number
 
 interface createZodShapeReturn {
-  zodShape: ZodTypeAny
+  zodShape: z.ZodType
   defaultValue: DefaultValue
 }
 
@@ -135,7 +137,7 @@ function createZodShape(signal: object): createZodShapeReturn {
       defaultValue: [defaultValue],
     }
   } else if (isObject(signal)) {
-    const zodSchema: Record<string, ZodTypeAny> = {}
+    const zodSchema: Record<string, z.ZodType> = {}
     const defaultValue: Record<string, DefaultValue> = {}
 
     for (const [key, value] of Object.entries(signal)) {
@@ -159,10 +161,13 @@ function createZodShape(signal: object): createZodShapeReturn {
 
 // Navigation signals
 type NavigateFrame = () => void
+// z.function API changed in Zod 4 (no longer returns a schema). For a signal of a function
+// type we accept any function and validate at runtime if needed.
 export const NavigateFrameSignal = SignalType<NavigateFrame>(
   'NavigateFrame',
-  // Need two functions here because .default can take in a function.
-  z.function().default(() => () => {}),
+  z
+    .custom<NavigateFrame>((val) => typeof val === 'function')
+    .default(() => () => {}),
 )
 export type NavigateFrameSignalType = z.infer<typeof NavigateFrameSignal>
 
