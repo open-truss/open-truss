@@ -1,6 +1,6 @@
 {
   "name": "@open-truss/open-truss",
-  "version": "0.32.0-beta.2",
+  "version": "0.32.0-beta.3",
   "description": "Framework for building internal tools",
   "directories": {
     "doc": "docs"
