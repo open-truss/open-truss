@@ -41,15 +41,31 @@ export function signalValueShape(signal: Signal): WrappedValueShape {
 export function getSignalAndValueShape(
   possibleZodObject: unknown,
 ): SignalAndValueShape | undefined {
-  const description =
-    (possibleZodObject as any)?._zod?.def?.description ||
-    (possibleZodObject as any)?._def?.description
+  // In Zod v4, description is a getter property that returns a string
+  let description
+  try {
+    // Try Zod v4 format first (getter property)
+    description = (possibleZodObject as any)?.description
+    if (typeof description !== 'string') {
+      // Fallback to old format for backward compatibility
+      description =
+        (possibleZodObject as any)?._zod?.def?.description ||
+        (possibleZodObject as any)?._def?.description
+    }
+  } catch {
+    // Fallback to old format for backward compatibility
+    description =
+      (possibleZodObject as any)?._zod?.def?.description ||
+      (possibleZodObject as any)?._def?.description
+  }
+
   if (description) {
     const matches = description.match(SignalsRegex)
     if (matches && matches.length > 1) {
       return SIGNALS[matches[1]]
     }
   }
+  return undefined
 }
 
 export function isSignalLike(obj: unknown): obj is Signal {

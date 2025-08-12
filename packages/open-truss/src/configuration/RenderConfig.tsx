@@ -14,7 +14,7 @@ export interface WorkflowSpec {
 export type OpenTrussComponent = BaseOpenTrussComponentV1 // |BaseOpenTrussComponentV2
 export interface OpenTrussComponentExports {
   default: OpenTrussComponent
-  Props: z.AnyZodObject
+  Props: z.ZodObject<any>
 }
 export type COMPONENTS =
   | Record<string, OpenTrussComponent>

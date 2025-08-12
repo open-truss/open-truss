@@ -37,13 +37,36 @@ export function describeZod(
       // Zod 4 moved internal defs to _zod.def; keep backward compat for v3 just in case.
       const v: any = value
       const internalDef: any = v._zod?.def || v._def
-      const type = internalDef?.typeName
+
+      // In Zod v4, get the type name from traits or convert from the lowercase type
+      let type = internalDef?.typeName
+      if (!type) {
+        const traits = v._zod?.traits
+        if (traits) {
+          // Find the ZodXxx trait (not $ZodXxx or _ZodXxx)
+          type = Array.from(traits as Set<string>).find(
+            (trait: string) =>
+              trait.startsWith('Zod') &&
+              !trait.startsWith('ZodType') &&
+              !trait.startsWith('$') &&
+              !trait.startsWith('_'),
+          )
+        }
+        // Fallback: convert lowercase type to ZodXxx format
+        if (!type && internalDef?.type) {
+          const lowercaseType = internalDef.type
+          type =
+            'Zod' +
+            lowercaseType.charAt(0).toUpperCase() +
+            lowercaseType.slice(1)
+        }
+      }
       if (type === 'ZodEnum') {
         description[key] = { type, shape: Object.keys(value.enum) }
       } else if (type === 'ZodObject') {
         description[key] = { type, shape: describeZod(value.shape) }
       } else if (type === 'ZodArray') {
-        const innerType = internalDef?.type
+        const innerType = internalDef?.element || internalDef?.type
         description[key] = {
           type,
           shape: describeZod({ innerType }).innerType,
@@ -57,10 +80,30 @@ export function describeZod(
         }
       } else if (type === 'ZodDefault') {
         const innerType = internalDef?.innerType
+
+        // Check if this is a signal to avoid triggering React hooks
+        const signalShape = getSignalAndValueShape(value)
+
+        // Try to get the default value safely, but skip for signals
+        let defaultValue: YamlType | undefined
+        if (!signalShape) {
+          try {
+            defaultValue = internalDef?.defaultValue
+          } catch (error) {
+            // Default value might be using React hooks or other context-dependent code
+            // In tests or other non-React contexts, we can't evaluate it safely
+            defaultValue = undefined
+          }
+        }
+
         const desc: ZodDescriptionObject = {
-          defaultValue: value.parse(undefined),
           ...(describeZod({ innerType }).innerType as object),
         }
+
+        if (defaultValue !== undefined) {
+          desc.defaultValue = defaultValue
+        }
+
         description[key] = desc
       } else if (type === 'ZodNullable') {
         const innerType = internalDef?.innerType
