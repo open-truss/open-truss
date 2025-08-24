@@ -24,5 +24,6 @@
   "dependencies": {
     "@open-truss/open-truss": "^0.3.0"
   },
-  "ot:setup": "open-truss setup"
+  "ot:setup": "open-truss setup",
+  "version": "0.0.1-beta.0"
 }

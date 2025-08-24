@@ -17,9 +17,9 @@ import { StringOrTemplate, resolveStringOrTemplate } from '../utils/template'
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   ...withChildren,
   source: z.string(),
-  headers: z.record(StringSignal).optional(),
+  headers: z.record(z.string(), StringSignal).optional(),
   body: StringOrTemplate,
-  variables: z.record(StringOrTemplate).optional(),
+  variables: z.record(z.string(), StringOrTemplate).optional(),
   forceQuery: NumberSignal,
   output: z.array(UnknownSignal).optional(),
 })

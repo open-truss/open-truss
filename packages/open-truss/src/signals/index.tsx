@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z } from 'zod'
 import { useSignal, type Signal as PreactSignal } from '@preact/signals-react'
 import { typeToZodMap, typeToDefaultValue } from '../utils/describe-zod'
 import { isObject } from '../utils/misc'
@@ -41,13 +41,31 @@ export function signalValueShape(signal: Signal): WrappedValueShape {
 export function getSignalAndValueShape(
   possibleZodObject: unknown,
 ): SignalAndValueShape | undefined {
-  const description = (possibleZodObject as SignalsZodType)?._def?.description
+  // In Zod v4, description is a getter property that returns a string
+  let description
+  try {
+    // Try Zod v4 format first (getter property)
+    description = (possibleZodObject as any)?.description
+    if (typeof description !== 'string') {
+      // Fallback to old format for backward compatibility
+      description =
+        (possibleZodObject as any)?._zod?.def?.description ||
+        (possibleZodObject as any)?._def?.description
+    }
+  } catch {
+    // Fallback to old format for backward compatibility
+    description =
+      (possibleZodObject as any)?._zod?.def?.description ||
+      (possibleZodObject as any)?._def?.description
+  }
+
   if (description) {
     const matches = description.match(SignalsRegex)
     if (matches && matches.length > 1) {
       return SIGNALS[matches[1]]
     }
   }
+  return undefined
 }
 
 export function isSignalLike(obj: unknown): obj is Signal {
@@ -67,22 +85,20 @@ export function SignalType<T>(
     .custom<Signal<T | null>>(validator)
     .superRefine((val, ctx) => {
       const stringedValue = String(val)
-      const yamlName = val.yamlName ?? ''
-      const path = `[${String(ctx.path)}]`
+      const yamlName = (val as any)?.yamlName ?? ''
       if (!isSignalLike(val)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: `Expected ${yamlName} signal of type=${name}, path=${path} to be a signal, but instead got ${stringedValue}`,
+          message: `Expected ${yamlName} signal of type=${name} but got ${stringedValue}`,
           fatal: true,
         })
       }
 
-      const parsedValue = wrappedValueShape.safeParse(val.value)
-      // We consider null a valid signal value since all values with be nullable
+      const parsedValue = wrappedValueShape.safeParse((val as any)?.value)
       if (!parsedValue.success) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: `${name} signal was set to value of incorrect type. value=${stringedValue}`,
+          message: `${name} signal value had incorrect type. value=${stringedValue}`,
           fatal: true,
         })
       }
@@ -123,7 +139,7 @@ function signalNameFromObject(signal: object | object[]): string {
 type DefaultValue = object | object[] | string | boolean | number
 
 interface createZodShapeReturn {
-  zodShape: ZodTypeAny
+  zodShape: z.ZodType
   defaultValue: DefaultValue
 }
 
@@ -135,7 +151,7 @@ function createZodShape(signal: object): createZodShapeReturn {
       defaultValue: [defaultValue],
     }
   } else if (isObject(signal)) {
-    const zodSchema: Record<string, ZodTypeAny> = {}
+    const zodSchema: Record<string, z.ZodType> = {}
     const defaultValue: Record<string, DefaultValue> = {}
 
     for (const [key, value] of Object.entries(signal)) {
@@ -159,10 +175,13 @@ function createZodShape(signal: object): createZodShapeReturn {
 
 // Navigation signals
 type NavigateFrame = () => void
+// z.function API changed in Zod 4 (no longer returns a schema). For a signal of a function
+// type we accept any function and validate at runtime if needed.
 export const NavigateFrameSignal = SignalType<NavigateFrame>(
   'NavigateFrame',
-  // Need two functions here because .default can take in a function.
-  z.function().default(() => () => {}),
+  z
+    .custom<NavigateFrame>((val) => typeof val === 'function')
+    .default(() => () => {}),
 )
 export type NavigateFrameSignalType = z.infer<typeof NavigateFrameSignal>
 
