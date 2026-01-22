@@ -1,7 +1,5 @@
-import {
-  type YamlType,
-  type ZodDescriptionObject,
-} from '@open-truss/open-truss'
+import { type YamlType } from '../../utils/yaml'
+import { type ZodDescriptionObject } from '../../utils/describe-zod'
 import { useEffect } from 'react'
 
 export default function PropInput({
