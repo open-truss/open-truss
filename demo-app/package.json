@@ -13,7 +13,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@apollo/server": "^4.9.5",
+    "@apollo/server": "^4.13.0",
     "@as-integrations/next": "^3.0.0",
     "@graphql-tools/graphql-file-loader": "^8.0.1",
     "@graphql-tools/load": "^8.0.2",
@@ -32,7 +32,7 @@
     "lodash": "^4.17.21",
     "lucide-react": "^0.331.0",
     "mysql2": "^3.9.8",
-    "next": "^14.2.35",
+    "next": "^16.1.6",
     "node-fetch": "^3.3.2",
     "react": "^18",
     "react-dom": "^18",
