@@ -1,6 +1,6 @@
 {
   "name": "@open-truss/open-truss",
-  "version": "0.31.0",
+  "version": "0.32.0-beta.3",
   "description": "Framework for building internal tools",
   "directories": {
     "doc": "docs"
@@ -56,7 +56,7 @@
     "sql-formatter": "^13.0.4",
     "ts-node": "^10.9.1",
     "yaml": "^2.3.4",
-    "zod": "^3.22.4"
+    "zod": "^4.0.17"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.2.2",

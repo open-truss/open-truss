@@ -101,7 +101,7 @@ workflow:
 export const FramesV1Shape = FrameV1Shape.array()
 export type FramesV1 = z.infer<typeof FramesV1Shape>
 
-export const SignalsV1Shape = z.record(z.string()).optional()
+export const SignalsV1Shape = z.record(z.string(), z.string()).optional()
 export type SignalsV1 = z.infer<typeof SignalsV1Shape>
 
 export const WorkflowV1Shape = z.object({
