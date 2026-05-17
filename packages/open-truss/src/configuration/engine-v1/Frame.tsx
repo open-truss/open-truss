@@ -17,12 +17,6 @@ import {
 import React, { useState } from 'react'
 import { getWorkflowSession, setWorkflowSessionValue } from './RenderConfig'
 import { type GlobalContext } from './RenderConfig'
-import {
-  getSignalsType,
-  type Signals,
-  type SignalsZodType,
-  type Signal,
-} from '../../signals'
 
 interface FrameContext {
   frame: FrameV1
@@ -60,7 +54,7 @@ function ShowError({ error }: { error: FrameError }): JSX.Element {
 export function Frame(props: FrameContext): JSX.Element {
   const {
     frame: { view, data },
-    globalContext: { COMPONENTS, signals, debug },
+    globalContext: { COMPONENTS, debug },
     configPath,
   } = props
   const { component, props: viewProps } = view
@@ -89,7 +83,6 @@ export function Frame(props: FrameContext): JSX.Element {
       configPath,
       viewProps,
       COMPONENTS,
-      signals,
       componentName: component,
     })
     processedProps._DEBUG_ = debug
@@ -113,7 +106,7 @@ const FramesInSequence = (
       renderFrames,
       view: { component },
     },
-    globalContext: { FrameWrapper, workflowId, signals },
+    globalContext: { FrameWrapper, workflowId },
     configPath,
     reRender,
   } = props
@@ -123,28 +116,6 @@ const FramesInSequence = (
 
   const frameLevel = `${configPath}.frames`
   const frameToRender = getCurrentFrameCursor(workflowId, frameLevel)
-
-  const nextFuncName = parseSignalName(renderFrames?.next)
-  if (nextFuncName && signals[nextFuncName]) {
-    signals[nextFuncName].value = () => {
-      const nextFrameNumber = frameToRender + 1
-      if (nextFrameNumber < (frames?.length || 1)) {
-        setFrameCursor(workflowId, frameLevel, nextFrameNumber)
-        reRender()
-      }
-    }
-  }
-
-  const backFuncName = parseSignalName(renderFrames?.back)
-  if (backFuncName && signals[backFuncName]) {
-    signals[backFuncName].value = () => {
-      const backFrameNumber = frameToRender - 1
-      if (backFrameNumber >= 0) {
-        setFrameCursor(workflowId, frameLevel, backFrameNumber)
-        reRender()
-      }
-    }
-  }
 
   return frames?.map((subframe, k) => {
     if (k !== frameToRender) return <div key={k}></div>
@@ -205,13 +176,11 @@ interface ComponentPropsShape {
   viewProps: ViewPropsV1
   COMPONENTS: COMPONENTS
   componentName: string
-  signals: Signals
 }
 
 type ComponentProp =
   | YamlType
   | OpenTrussComponent
-  | Signal<any>
   | ComponentProp[]
   | ComponentPropsReturnShape
 
@@ -225,35 +194,12 @@ function isComponent(prop: YamlType): prop is string {
 }
 
 function processProps(props: ComponentPropsShape): ComponentPropsReturnShape {
-  const { configPath, viewProps, componentName, signals, COMPONENTS } = props
+  const { configPath, viewProps, componentName, COMPONENTS } = props
   const newProps: ComponentPropsReturnShape = {}
   if (viewProps !== undefined) {
     const processedViewProps = processViewProps(props)
     Object.assign(newProps, processedViewProps)
   }
-
-  eachComponentSignal(componentName, COMPONENTS, (propName, signalsType) => {
-    const viewPropVal = viewProps?.[propName]
-    let signal: Signal
-    if (isSymbol(viewPropVal)) {
-      const signalName = parseSignalName(viewPropVal) ?? ''
-      signal = signals[signalName]
-      if (signal === undefined) {
-        const mes = `Signal ${signalName} is used by Component ${componentName} but was not declared`
-        throw new Error(mes)
-      }
-    } else if (viewPropVal !== undefined) {
-      // TODO This condition is for viewProps that are hard coded values (not signals)
-      // We need to transform them into a signal so that the component can use them.
-      // If creating many signals becomes an issue, perhaps we can make a simple wrapper
-      // object that mirrors the signal interface (eg. signal.value) and use that instead
-      signal = signalsType.parse(undefined)
-      signal.value = viewPropVal
-    } else {
-      signal = signals[propName]
-    }
-    addSignalToProps(propName, signal, signalsType, newProps)
-  })
 
   const compiledProps = { ...viewProps, ...newProps }
 
@@ -280,18 +226,12 @@ function processProps(props: ComponentPropsShape): ComponentPropsReturnShape {
 function processViewProps(
   props: ComponentPropsShape,
 ): ComponentPropsReturnShape {
-  const { configPath, viewProps, signals, COMPONENTS } = props
+  const { configPath, viewProps, COMPONENTS } = props
   const newProps: ComponentPropsReturnShape = {}
   for (const propName in viewProps) {
     const prop = viewProps[propName]
     if (isComponent(prop)) {
       newProps[propName] = getDefaultComponent(prop, configPath, COMPONENTS)
-    } else if (isSymbol(prop)) {
-      const signalName = parseSignalName(prop) ?? ''
-      const signal = signals[signalName]
-      signal === undefined
-        ? (newProps[propName] = prop)
-        : (newProps[propName] = signal)
     } else if (isViewProps(prop)) {
       const subProps = Object.assign({}, props, { viewProps: prop })
       newProps[propName] = processViewProps(subProps)
@@ -309,59 +249,6 @@ function processViewProps(
     }
   }
   return newProps
-}
-
-// This adds Signals to props which allows components to set state
-// globally so that it can be used by other components.
-function addSignalToProps(
-  propName: string,
-  signal: Signal<any>,
-  signalsType: SignalsZodType,
-  newProps: ComponentPropsReturnShape,
-): void {
-  const result = signalsType.safeParse(signal)
-  if (result.success) {
-    newProps[propName] = signal
-  } else {
-    throw new Error(`Signal passed to component is incorrect type.
-      Expected ${propName} to be type ${signalsType.description},
-      but got ${typeof signal}.
-    `)
-  }
-}
-
-function isSymbol(possibleSignal: any): boolean {
-  if (typeof possibleSignal !== 'string') return false
-  if (!possibleSignal.startsWith(':')) return false
-
-  return true
-}
-
-function parseSignalName(possibleSignal: any): string | undefined {
-  if (!isSymbol(possibleSignal)) return
-
-  return possibleSignal.slice(1)
-}
-
-type EachComponentSignal = (
-  componentName: string,
-  COMPONENTS: COMPONENTS,
-  func: (propName: string, signalType: SignalsZodType) => void,
-) => void
-
-export const eachComponentSignal: EachComponentSignal = (
-  componentName,
-  COMPONENTS,
-  func,
-) => {
-  const Component = getComponent(componentName, '', COMPONENTS)
-  if (!hasPropsExport(Component)) return
-  Object.entries(Component.Props.shape).forEach(([propName, propValue]) => {
-    const signalsType = getSignalsType(propValue)
-    if (signalsType !== undefined) {
-      func(propName, signalsType)
-    }
-  })
 }
 
 export function getDefaultComponent(

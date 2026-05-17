@@ -1,8 +1,0 @@
-workflow:
-  version: 1
-  signals:
-    accountId: AccountID
-  frames:
-    - frame:
-      view:
-        component: DisplayInitialAccountId
