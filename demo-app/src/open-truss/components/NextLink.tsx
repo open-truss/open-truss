@@ -4,7 +4,6 @@ import {
   type BaseOpenTrussComponentV1,
   BaseOpenTrussComponentV1PropsShape,
 } from '@open-truss/open-truss'
-import Link from 'next/link'
 
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   ...withChildren,
@@ -12,9 +11,7 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
 })
 
 const NextLink: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (props) => {
-  // z.string is type string | undefined and Link doesn't like that
-  // need to figure out how to get zod to not have types with undefined
-  return <Link href={props.to || '/'}>{props.children}</Link>
+  return <a href={`#${props.to || '/'}`}>{props.children}</a>
 }
 
 export default NextLink

@@ -78,7 +78,7 @@
     @apply bg-background text-foreground h-full;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
-  #__next {
+  #root {
     @apply flex flex-col h-screen;
   }
 }

@@ -4,7 +4,6 @@ import {
   withChildren,
   type BaseOpenTrussComponentV1,
 } from '@open-truss/open-truss'
-import Link from 'next/link'
 import * as React from 'react'
 import { type z } from 'zod'
 
@@ -15,7 +14,7 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
 const WorkflowLink = ({ workflowId }: { workflowId: string }): JSX.Element => {
   const [inputValue, setInputValue] = React.useState<string>('')
   let input = null
-  let href = `/ot/playground/${workflowId}`
+  let href = `#/playground/${workflowId}`
 
   if (workflowId.endsWith('initial-value')) {
     input = (
@@ -27,13 +26,13 @@ const WorkflowLink = ({ workflowId }: { workflowId: string }): JSX.Element => {
         }}
       />
     )
-    href = `/ot/playground/${workflowId}?initialValue=${inputValue}`
+    href = `#/playground/${workflowId}?initialValue=${inputValue}`
   }
   return (
     <li key={workflowId}>
-      <Link href={href} style={{ fontFamily: 'monospace' }}>
+      <a href={href} style={{ fontFamily: 'monospace' }}>
         {workflowId}
-      </Link>
+      </a>
       {input}
     </li>
   )
@@ -43,13 +42,13 @@ const AvailableWorkflowsFromEndpoint: BaseOpenTrussComponentV1<
   z.infer<typeof Props>
 > = () => {
   const [workflowIds, setConfigs] = React.useState<string[]>([])
-  const [loading, setLoading] = React.useState<boolean>(false)
+  const [loading, setLoading] = React.useState<boolean>(true)
   const [error, setError] = React.useState<Error | null>(null)
   React.useEffect(() => {
     const fetchConfigs = async (): Promise<void> => {
-      const response = await fetch(`/api/ot/configs/`)
+      const response = await fetch(`/configs/index.json`)
       const json = await response.json()
-      setConfigs(json.configs)
+      setConfigs(json)
     }
     setLoading(true)
     fetchConfigs().catch((e) => {
