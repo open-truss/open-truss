@@ -1,2 +1,5 @@
 # Dependency directories
 node_modules/
+
+# Build for demo app
+demo-app/dist
