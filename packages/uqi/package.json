@@ -1,6 +1,6 @@
 {
   "name": "@open-truss/uqi",
-  "version": "0.31.0",
+  "version": "1.0.0",
   "description": "Unified Query Interface - a unified query client builder for any data source",
   "scripts": {
     "build": "bin/build",
