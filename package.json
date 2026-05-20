@@ -22,7 +22,8 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@open-truss/open-truss": "^0.3.0"
+    "@open-truss/open-truss": "^0.3.0",
+    "@open-truss/uqi": "^0.31.0"
   },
   "ot:setup": "open-truss setup"
 }

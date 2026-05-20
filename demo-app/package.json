@@ -19,6 +19,7 @@
     "@graphql-tools/load": "^8.0.2",
     "@monaco-editor/react": "^4.6.0",
     "@open-truss/open-truss": "file:../packages/open-truss",
+    "@open-truss/uqi": "file:../packages/uqi",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tabs": "^1.0.4",
     "azure-kusto-data": "^6.0.2",

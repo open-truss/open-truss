@@ -1,0 +1,41 @@
+{
+  "name": "@open-truss/uqi",
+  "version": "0.31.0",
+  "description": "Unified Query Interface - a unified query client builder for any data source",
+  "scripts": {
+    "build": "bin/build",
+    "test": "jest"
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "tsconfig.json",
+    "tsconfig.esm.json",
+    "src",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/open-truss/open-truss.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/open-truss/open-truss/issues"
+  },
+  "homepage": "https://github.com/open-truss/open-truss#readme",
+  "exports": {
+    ".": {
+      "import": "./dist/mjs/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/mjs/index.d.ts"
+    }
+  },
+  "typings": "./dist/mjs/index.d.ts",
+  "devDependencies": {
+    "@types/jest": "^29.5.8",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.2.2"
+  }
+}

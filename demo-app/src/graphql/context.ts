@@ -1,5 +1,5 @@
 import sources from '@/lib/uqi-sources'
-import { type UqiClient } from '@open-truss/open-truss'
+import { type UqiClient } from '@open-truss/uqi'
 
 export interface Context {
   db: UqiClient

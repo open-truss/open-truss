@@ -11,7 +11,7 @@ import {
   signalValueShape,
   useSignalEffect,
 } from '../signals'
-import { type UqiMetadata, type UqiNamedFieldsRow } from '../uqi/uqi'
+import { type UqiMetadata, type UqiNamedFieldsRow } from '@open-truss/uqi'
 import { isObject } from '../utils/misc'
 
 interface SynchronousUqiQueryResult {

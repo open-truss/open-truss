@@ -1,8 +1,5 @@
 import sources from '@/lib/uqi-sources'
-import {
-  type UqiMetadata,
-  type UqiNamedFieldsRow,
-} from '@open-truss/open-truss'
+import { type UqiMetadata, type UqiNamedFieldsRow } from '@open-truss/uqi'
 
 interface Args {
   source: string

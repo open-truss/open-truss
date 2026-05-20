@@ -31,8 +31,13 @@ await client.teardown()
 
 ```typescript
 import createClient from 'path/to/json-client-uqi'
-const client = await createClient({ path: 'path/to/users.json', queryLanguage: 'jq' })
-const queryIterator = await client.query('.[] | select(.first_name | startswith("J")) | .first_name')
+const client = await createClient({
+  path: 'path/to/users.json',
+  queryLanguage: 'jq',
+})
+const queryIterator = await client.query(
+  '.[] | select(.first_name | startswith("J")) | .first_name',
+)
 
 for await (const { row, metadata } of queryIterator) {
   console.log({ metadata })
@@ -72,10 +77,12 @@ await client.teardown()
 import createClient from 'path/to/trino-client-uqi'
 const client = await createClient({
   server: process.env.TRINO_URI,
-  auth: new BasicAuth(process.env.TRINO_USER_IDENTIFIER, ),
+  auth: new BasicAuth(process.env.TRINO_USER_IDENTIFIER),
   source: 'acme/production',
 })
-const queryIterator = await client.query('SELECT first_name FROM acme.production.users')
+const queryIterator = await client.query(
+  'SELECT first_name FROM acme.production.users',
+)
 
 for await (const { row, metadata } of queryIterator) {
   console.log({ metadata })
@@ -96,7 +103,9 @@ const client = await createClient({
   username: process.env.KUSTO_USERNAME,
   password: process.env.KUSTO_PASSWORD,
 })
-const queryIterator = await client.query('acme.production.users | project first_name')
+const queryIterator = await client.query(
+  'acme.production.users | project first_name',
+)
 
 for await (const { row, metadata } of queryIterator) {
   console.log({ metadata })

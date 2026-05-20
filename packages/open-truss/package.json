@@ -50,6 +50,7 @@
   },
   "typings": "./dist/mjs/index.d.ts",
   "dependencies": {
+    "@open-truss/uqi": "file:../uqi",
     "@preact/signals-react": "^2.0.0",
     "lodash": "^4.17.21",
     "object-hash": "^3.0.0",

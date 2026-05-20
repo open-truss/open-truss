@@ -5,7 +5,7 @@ import {
   type UqiMappedType,
   type UqiResult,
   type UqiScalar,
-} from '@open-truss/open-truss'
+} from '@open-truss/uqi'
 import {
   BasicAuth,
   Trino,

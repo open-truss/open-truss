@@ -6,7 +6,7 @@ import {
   type UqiMappedType,
   type UqiResult,
   type UqiScalar,
-} from '@open-truss/open-truss'
+} from '@open-truss/uqi'
 import { Client, KustoConnectionStringBuilder } from 'azure-kusto-data'
 
 interface BuildClientArgs {
