@@ -15,6 +15,18 @@ jobs:
       - name: Install client dependencies
         working-directory: ./
         run: npm ci --ignore-scripts
+      - name: Install open-truss dependencies
+        working-directory: ./packages/open-truss
+        run: npm ci --ignore-scripts
+      - name: Install uqi dependencies
+        working-directory: ./packages/uqi
+        run: npm ci --ignore-scripts
+      - name: Install demo-app dependencies
+        working-directory: ./demo-app
+        run: npm ci --ignore-scripts
+      - name: Build open-truss
+        working-directory: ./packages/open-truss
+        run: npm run build
       - name: Run linter
         working-directory: ./
         run: npm run lint:ci

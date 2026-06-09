@@ -67,7 +67,8 @@
     "@types/object-hash": "^3.0.6",
     "@types/react": "^18.2.0",
     "fs-extra": "^11.2.0",
-    "oxlint": "^1.69.0",
+    "jest": "^30.4.2",
+    "oxlint": "1.16.0",
     "react": "^18.2.0",
     "ts-jest": "^29.1.1",
     "typescript": "^5.2.2"
