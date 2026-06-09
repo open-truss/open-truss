@@ -19,17 +19,33 @@ jobs:
       - name: Build open-truss
         working-directory: ./packages/open-truss
         run: npm run build
-      - uses: JS-DevTools/npm-publish@v3
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          package: ./packages/open-truss
+      - name: Publish @open-truss/open-truss
+        working-directory: ./packages/open-truss
+        run: |
+          PUBLISHED=$(npm view . version 2>/dev/null || echo "")
+          CURRENT=$(node -p "require('./package.json').version")
+          if [ "$CURRENT" != "$PUBLISHED" ]; then
+            npm publish --access public --ignore-scripts
+          else
+            echo "Version $CURRENT already published, skipping"
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Install uqi dependencies
         working-directory: ./packages/uqi
         run: npm ci
       - name: Build uqi
         working-directory: ./packages/uqi
         run: npm run build
-      - uses: JS-DevTools/npm-publish@v3
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          package: ./packages/uqi
+      - name: Publish @open-truss/uqi
+        working-directory: ./packages/uqi
+        run: |
+          PUBLISHED=$(npm view . version 2>/dev/null || echo "")
+          CURRENT=$(node -p "require('./package.json').version")
+          if [ "$CURRENT" != "$PUBLISHED" ]; then
+            npm publish --access public --ignore-scripts
+          else
+            echo "Version $CURRENT already published, skipping"
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
