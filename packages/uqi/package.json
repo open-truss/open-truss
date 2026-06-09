@@ -4,7 +4,9 @@
   "description": "Unified Query Interface - a unified query client builder for any data source",
   "scripts": {
     "build": "bin/build",
-    "test": "jest"
+    "lint": "oxlint",
+    "test": "jest",
+    "typecheck": "tsc --noEmit"
   },
   "files": [
     "dist",
@@ -35,6 +37,7 @@
   "devDependencies": {
     "@types/jest": "^29.5.8",
     "jest": "^29.7.0",
+    "oxlint": "^1.16.0",
     "ts-jest": "^29.1.1",
     "typescript": "^5.2.2"
   }
