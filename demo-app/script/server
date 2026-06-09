@@ -1,4 +1,6 @@
 #!/bin/bash
+# Usage: script/server
+# Ensures dependencies are installed and starts the dev server.
 
 script_dir=$(dirname "$(readlink -f "$0")")
 demo_app_dir=$(dirname "$script_dir")
@@ -7,29 +9,8 @@ open_truss_package_dir="$root_dir/packages/open-truss"
 
 script/bootstrap
 
-# delete /dist folder in package
-cd $open_truss_package_dir \
-  && rm -r dist/ \
-  && cd $demo_app_dir
+# Build the open-truss package so dist/ is up to date
+cd $open_truss_package_dir && npm run build && cd $demo_app_dir
 
-npm run tsc:sync
-
-# Function to terminate both tsc processes
-terminate_tsc_processes() {
-  echo "Terminating TypeScript watch processes..."
-  pkill -P $$
-}
-
-# Trap SIGINT and SIGTERM and call the function to terminate tsc processes
-trap 'terminate_tsc_processes' SIGINT SIGTERM
-
-echo "Running npm run tsc:watch"
-(npm run tsc:watch) &
-
-echo "Runing npm run dev"
-(npm run dev) &
-
-echo "Running tailwindcss watch"
-(npx tailwindcss -i ./src/styles.css -o ./src/output.css --watch) &
-
-wait
+echo "Starting Vite dev server..."
+npm run dev
