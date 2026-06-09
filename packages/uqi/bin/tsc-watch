@@ -1,0 +1,25 @@
+#!/bin/bash
+
+package_dir="${PACKAGE_DIR:-.}"
+cd $package_dir
+
+if [ "$1" == "--sync" ]; then
+  tsc --project $PACKAGE_DIR/tsconfig.json
+  tsc --project $PACKAGE_DIR/tsconfig.esm.json
+  exit
+fi
+
+terminate_tsc_processes() {
+  echo "Terminating TypeScript watch processes..."
+  pkill -P $$
+}
+
+trap 'terminate_tsc_processes' SIGINT SIGTERM
+
+echo "Running tsc watch using $(echo $package_dir/tsconfig.json)"
+(tsc --watch --preserveWatchOutput --project $package_dir/tsconfig.json) &
+
+echo "Running tsc watch using $(echo $package_dir/tsconfig.esm.json)"
+(tsc --watch --preserveWatchOutput --project $package_dir/tsconfig.esm.json) &
+
+wait

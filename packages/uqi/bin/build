@@ -1,0 +1,7 @@
+#!/bin/bash
+
+package_dir="${PACKAGE_DIR:-.}"
+cd $package_dir
+
+tsc --project $package_dir/tsconfig.json
+tsc --project $package_dir/tsconfig.esm.json
