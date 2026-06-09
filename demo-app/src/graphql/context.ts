@@ -1,18 +1,12 @@
-import sources from '@/lib/uqi-sources'
-import { type UqiClient } from '@open-truss/open-truss'
-
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Context {
-  db: UqiClient
+  // database clients, etc.
 }
 
-const { config: dbConfig, createClient: createDbClient } = sources['mysql-demo']
-
 async function context(): Promise<Context> {
-  const db = await createDbClient(dbConfig)
-
   // Return anything needed in the global context like instantiated
   // database clients, etc.
-  return { db }
+  return {}
 }
 
 export default context

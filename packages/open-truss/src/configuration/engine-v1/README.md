@@ -4,7 +4,6 @@ These are docs for engine v1
 
 ### File structure
 
-- **DataProvider.tsx** - Simple DataProvider react component used to issue synchronous uqi queries
 - **config-schemas.tsx** - zod types and validations for configurations
 - **RenderConfig.tsx** - root of open-truss engine v1 and entry point function for the engine
 - **index.ts** - exported types and functions for engine-v1

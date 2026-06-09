@@ -6,6 +6,24 @@ _pronounced: yoo-kee_
 
 It is a query client and client builder that can be used to wrap any data source client and present a unified query interface.
 
+## Migration from @open-truss/open-truss
+
+In June 2026 we moved `uqi` out of the `@open-truss/open-truss` package. UQI types and helpers (`uqi`, `UqiClient`, `UqiContext`, `UqiSettings`,
+`UqiStatus`, `UqiResult`, `UqiYieldResult`, `UqiColumn`, `UqiMappedType`,
+`UqiScalar`, `UqiNamedFieldsRow`, `UqiMetadata`, `Iterator`) are now in their own package `@open-truss/uqi`.
+
+**Before:**
+
+```ts
+import { type UqiClient, uqi } from '@open-truss/open-truss'
+```
+
+**After:**
+
+```ts
+import { type UqiClient, uqi } from '@open-truss/uqi'
+```
+
 ## Aspirational Examples
 
 These examples are not yet implemented, but are the goal of this project. See the [example](./example) folder for an example implementation.
