@@ -1,0 +1,4 @@
+# Build folders
+dist/
+tsconfig.esm.tsbuildinfo
+tsconfig.tsbuildinfo
