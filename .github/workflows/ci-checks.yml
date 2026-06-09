@@ -18,6 +18,9 @@ jobs:
       - name: Run linter
         working-directory: ./
         run: npm run lint:ci
+      - name: Type check
+        working-directory: ./
+        run: npm run typecheck
   test:
     runs-on: ubuntu-latest
     steps:
