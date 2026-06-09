@@ -1,7 +1,11 @@
 /packages/open-truss/dist/*
+/packages/uqi/dist/*
 demo-app/next.config.js
 demo-app/next-env.d.ts
+demo-app/postcss.config.cjs
 demo-app/postcss.config.js
 demo-app/src/graphql/generated-types.ts
+demo-app/tailwind.config.ts
+demo-app/vite.config.ts
 /packages/open-truss/nextjs/next.config.js
 /packages/open-truss/nextjs/next-env.d.ts

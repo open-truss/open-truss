@@ -1,22 +1,30 @@
 # Model Home
 
-Model Home is Open Truss's demo application to help showcase how to use OT and help develop the OT libraries. It is a [Next.js](https://nextjs.org/) project originally bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) and `npm run ot:setup`.
+Model Home is Open Truss's demo application to help showcase how to use OT and help develop the OT libraries. It is a [Vite](https://vitejs.dev/) + [React](https://react.dev/) application.
 
 ## Getting Started
 
-This will ensure you have everything you need installed and boot up the development server:
+Install dependencies and start the dev server:
 
 ```bash
-script/server
+npm install
+npm run dev
 ```
 
-The application will be available at [http://localhost:3000](http://localhost:3000) and the GraphiQL UI will be available at [http://localhost:3000/api/graphql](http://localhost:3000/api/graphql).
+The application will be available at [http://localhost:5173](http://localhost:5173).
+
+## Production build
+
+```bash
+npm run build
+npm run preview
+```
 
 ## Development
 
 Model Home is a mix of Open Truss examples and research we're doing that has not yet been added to an `@open-truss` package.
 
-When making changes to `src/graphql/schema.graphql` make sure to run `npm run codegen` to regenerate Typescript types from the GraphQL SDL.
+Open Truss configs live in `src/open-truss/configs/`. They are loaded at build time via Vite's `import.meta.glob`.
 
 ## FAQ
 
@@ -33,13 +41,7 @@ When making changes to `src/graphql/schema.graphql` make sure to run `npm run co
       model-home@0.1.0 /Users/hktouw/Repos/open-truss/open-truss/demo-app
       ├─┬ @open-truss/open-truss@0.3.0 -> ./../packages/open-truss
       │ └── react@18.2.0
-      ├─┬ next@14.0.4
-      │ ├── react@18.2.0 deduped
-      │ └─┬ styled-jsx@5.1.1
-      │   └── react@18.2.0 deduped
-      ├─┬ react-dom@18.2.0
-      │ └── react@18.2.0 deduped
-      └── react@18.2.0
+      ├── react@18.2.0
       ```
     - To resolve this point the package version of react to the demo-app's version
     - ```bash
@@ -50,11 +52,5 @@ When making changes to `src/graphql/schema.graphql` make sure to run `npm run co
       model-home@0.1.0 /Users/hktouw/Repos/open-truss/open-truss/demo-app
       ├─┬ @open-truss/open-truss@0.3.0 -> ./../packages/open-truss
       │ └── react@18.2.0 -> ./node_modules/react
-      ├─┬ next@14.0.4
-      │ ├── react@18.2.0 deduped
-      │ └─┬ styled-jsx@5.1.1
-      │   └── react@18.2.0 deduped
-      ├─┬ react-dom@18.2.0
-      │ └── react@18.2.0 deduped
-      └── react@18.2.0
+      ├── react@18.2.0
       ```

@@ -26,9 +26,15 @@ jobs:
         with:
           node-version: '20.x'
           registry-url: 'https://registry.npmjs.org'
-      - name: Install client dependencies
+      - name: Install open-truss dependencies
         working-directory: ./packages/open-truss
         run: npm ci --ignore-scripts
-      - name: Run tests
+      - name: Run open-truss tests
         working-directory: ./packages/open-truss
+        run: npm run test
+      - name: Install uqi dependencies
+        working-directory: ./packages/uqi
+        run: npm ci --ignore-scripts
+      - name: Run uqi tests
+        working-directory: ./packages/uqi
         run: npm run test
