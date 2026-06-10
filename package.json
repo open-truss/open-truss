@@ -1,23 +1,11 @@
 {
   "scripts": {
-    "lint": "npm run lint:prettier && npm run lint:eslint",
-    "lint:prettier": "node_modules/.bin/prettier \"./**/*.{js,ts,json}\" --write --log-level error",
-    "lint:eslint": "node_modules/.bin/eslint \"./**/*.{ts,tsx}\" --fix",
-    "lint:ci": "npm run lint:prettier:ci && npm run lint:eslint:ci",
-    "lint:prettier:ci": "prettier \"./**/*.{js,ts,json}\" --check",
-    "lint:eslint:ci": "eslint \"./**/*.{ts,tsx}\""
+    "lint": "prettier --write \"./**/*.{js,ts,json}\" && oxlint --fix",
+    "lint:ci": "prettier --check \"./**/*.{js,ts,json}\" && oxlint",
+    "typecheck": "tsc --noEmit -p packages/open-truss && tsc --noEmit -p packages/uqi && tsc --noEmit -p demo-app"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.10.0",
-    "eslint": "^8.53.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-config-standard-with-typescript": "^39.1.1",
-    "eslint-plugin-check-file": "^2.6.2",
-    "eslint-plugin-import": "^2.29.0",
-    "eslint-plugin-n": "^16.3.0",
-    "eslint-plugin-prettier": "^5.0.1",
-    "eslint-plugin-promise": "^6.1.1",
-    "eslint-plugin-react": "^7.33.2",
+    "oxlint": "^1.16.0",
     "prettier": "^3.0.3",
     "typescript": "^5.2.2"
   },
