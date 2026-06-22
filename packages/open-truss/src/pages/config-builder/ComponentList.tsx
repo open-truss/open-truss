@@ -1,14 +1,13 @@
-import { Button } from '@/components/ui/button'
 import React, { useState } from 'react'
+import { useConfigBuilderContext } from '../../hooks'
+import { OT_COMPONENTS } from '../../components'
 import {
-  type YamlType,
-  useConfigBuilderContext,
+  type COMPONENTS,
   type OpenTrussComponentExports,
   type FrameType,
-  type COMPONENTS,
-  OT_COMPONENTS,
-  describeZod,
-} from '@open-truss/open-truss'
+} from '../../configuration'
+import { type YamlType } from '../../utils/yaml'
+import { describeZod } from '../../utils/describe-zod'
 import PropInput from './PropInput'
 
 type ViewProps = FrameType['view']['props']
@@ -76,15 +75,14 @@ function ComponentListItem({
   return (
     <div className="border-2 mb-2 p-2 rounded-md relative">
       {componentName}
-      <Button
-        size="xs"
+      <button
         className="absolute right-2 top-2"
         onClick={() => {
           addFrame(frame)
         }}
       >
         Add
-      </Button>
+      </button>
       {hasPropsConfigured && (
         <PropInputs component={component} onChange={onChange} props={props} />
       )}
