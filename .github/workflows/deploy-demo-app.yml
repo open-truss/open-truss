@@ -33,7 +33,7 @@ jobs:
         run: npm ci && npm run build
       - name: Install & build demo-app
         working-directory: ./demo-app
-        run: npm install && npm run build -- --base=/open-truss/
+        run: npm install && npm run build -- --base=/demo-app/
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
