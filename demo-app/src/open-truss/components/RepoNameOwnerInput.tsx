@@ -28,7 +28,7 @@ export default function RepoNameOwnerInput({
       repoName.value = String(inputName)
       repoOwner.value = String(inputOwner)
     })
-    submit?.value()
+    if (submit.value) submit.value()
   }
 
   return (

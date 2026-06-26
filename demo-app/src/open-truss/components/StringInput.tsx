@@ -28,7 +28,7 @@ export default function StringInput({
   const handleInput = (): void => {
     string.value = String(inputValue)
     setInputValue('')
-    submit?.value()
+    if (submit.value) submit.value()
   }
 
   return (
