@@ -3,10 +3,10 @@ import {
   BaseOpenTrussComponentV1PropsShape,
   withChildren,
   type BaseOpenTrussComponentV1,
+  type z,
 } from '@open-truss/open-truss'
 import { Link } from 'react-router-dom'
 import * as React from 'react'
-import { type z } from 'zod'
 import { getConfigNames } from '../../configs'
 
 export const Props = BaseOpenTrussComponentV1PropsShape.extend({
