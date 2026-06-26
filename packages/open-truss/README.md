@@ -244,11 +244,13 @@ The `validateConfig` prop (default `true`) controls whether the full config is v
 You can provide a custom `FrameWrapper` component to wrap every rendered frame. This is useful for adding UI chrome like delete buttons, drag handles, or navigation controls ([the open-truss demo app's config builder does this](https://github.com/open-truss/open-truss/blob/main/demo-app/src/pages/ot/config-builder/index.tsx)):
 
 ```tsx
-export const Props = BaseOpenTrussComponentV1PropsShape.extend({
-  ...withChildren,
-  configPath: z.string(),
-  frame: FrameV1Shape,
-})
+import { type FrameWrapper } from '@open-truss/open-truss'
+
+const MyFrameWrapper: FrameWrapper = ({ children }) => {
+  return <div style={{ border: '1px solid #ddd', padding: '8px' }}>{children}</div>
+}
+
+export default MyFrameWrapper
 ```
 
 Reference it in the config or pass it as a component that overrides the default:
