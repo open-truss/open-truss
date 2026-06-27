@@ -12,7 +12,7 @@ export interface ConfigEntry {
 export function getConfigs(): ConfigEntry[] {
   return Object.entries(configModules).map(([path, content]) => {
     const name = path.replace(/^.*\/configs\//, '').replace(/\.yaml$/, '')
-    return { name, content }
+    return { name, content: content as string }
   })
 }
 

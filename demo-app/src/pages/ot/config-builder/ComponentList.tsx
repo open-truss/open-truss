@@ -70,7 +70,10 @@ function ComponentListItem({
   }
 
   const onChange = (propName: string) => (value: YamlType) => {
-    setProps((currentProps) => ({ ...currentProps, [propName]: value }))
+    setProps((currentProps) => ({
+      ...currentProps,
+      [propName]: value,
+    }))
   }
 
   return (

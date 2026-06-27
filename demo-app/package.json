@@ -13,27 +13,28 @@
     "@open-truss/open-truss": "file:../packages/open-truss",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tabs": "^1.0.4",
+    "@tailwindcss/postcss": "^4.3.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "lodash": "^4.17.21",
     "lucide-react": "^0.331.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-resizable-panels": "^2.0.0",
     "react-router-dom": "^7",
     "tailwind-merge": "^2.2.1",
-    "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.22.4"
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.202",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@vitejs/plugin-react": "^4",
+    "@vitejs/plugin-react": "^6",
     "autoprefixer": "^10.4.17",
     "encoding": "^0.1.13",
     "postcss": "^8.4.35",
     "tailwindcss": "^4.3.0",
     "typescript": "^5",
-    "vite": "^6"
+    "vite": "^8"
   }
 }

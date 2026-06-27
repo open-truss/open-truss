@@ -16,26 +16,17 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   title: z.string().default('Page Title'),
 })
 
-const ClientPageTitle: BaseOpenTrussComponentV1<z.infer<typeof Props>> = ({
-  color,
-  headerElement = 'h1',
-  title,
-}) => {
-  let Component
-  switch (headerElement) {
-    case 'h1':
-      Component = TypographyH1
-      break
-    case 'h2':
-      Component = TypographyH2
-      break
-    case 'h3':
-      Component = TypographyH3
-      break
-    case 'h4':
-      Component = TypographyH4
-      break
-  }
+const ClientPageTitle: BaseOpenTrussComponentV1<z.infer<typeof Props>> = (
+  props,
+) => {
+  const { color, headerElement, title } = props
+  const components = {
+    h1: TypographyH1,
+    h2: TypographyH2,
+    h3: TypographyH3,
+    h4: TypographyH4,
+  } as const
+  const Component = components[headerElement as 'h1' | 'h2' | 'h3' | 'h4']
 
   return (
     <Component style={{ color }}>
