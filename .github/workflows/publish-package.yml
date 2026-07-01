@@ -22,8 +22,9 @@ jobs:
       - name: Publish @open-truss/open-truss
         working-directory: ./packages/open-truss
         run: |
-          PUBLISHED=$(npm view . version 2>/dev/null || echo "")
+          NAME=$(node -p "require('./package.json').name")
           CURRENT=$(node -p "require('./package.json').version")
+          PUBLISHED=$(npm view "$NAME@$CURRENT" version 2>/dev/null || echo "")
           if [ "$CURRENT" != "$PUBLISHED" ]; then
             npm publish --access public --ignore-scripts
           else
@@ -40,8 +41,9 @@ jobs:
       - name: Publish @open-truss/uqi
         working-directory: ./packages/uqi
         run: |
-          PUBLISHED=$(npm view . version 2>/dev/null || echo "")
+          NAME=$(node -p "require('./package.json').name")
           CURRENT=$(node -p "require('./package.json').version")
+          PUBLISHED=$(npm view "$NAME@$CURRENT" version 2>/dev/null || echo "")
           if [ "$CURRENT" != "$PUBLISHED" ]; then
             npm publish --access public --ignore-scripts
           else

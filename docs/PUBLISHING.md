@@ -13,8 +13,8 @@ triggers on pushes to `main`. For each package it:
 3. Builds the package (`npm run build`)
 4. Publishes to npm (`npm publish --access public --ignore-scripts`)
 
-A version guard checks whether the local `package.json` version differs from
-the latest published version on npm and skips the publish step if they match.
+A version guard checks whether the local `package.json` version has already
+been published (regardless of dist-tag) and skips the publish step if it has.
 This avoids noisy failures when pushing commits that don't include a version
 bump.
 
