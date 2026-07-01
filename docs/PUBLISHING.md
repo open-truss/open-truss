@@ -31,9 +31,10 @@ bump.
 
 ## Manual publish
 
-To publish a new version locally:
+To publish a new version locally, run `npm version` from the package directory and push:
 
 ```bash
+cd packages/open-truss # or packages/uqi
 npm version <major|minor|patch>
 git push --follow-tags
 ```
