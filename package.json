@@ -1,8 +1,8 @@
 {
   "scripts": {
     "lint": "npm run lint:prettier && npm run lint:eslint",
-    "lint:prettier": "node_modules/.bin/prettier \"./**/*.{js,ts,json}\" --write --log-level error",
-    "lint:eslint": "node_modules/.bin/eslint \"./**/*.{ts,tsx}\" --fix",
+    "lint:prettier": "prettier \"./**/*.{js,ts,json}\" --write --log-level error",
+    "lint:eslint": "eslint \"./**/*.{ts,tsx}\" --fix",
     "lint:ci": "npm run lint:prettier:ci && npm run lint:eslint:ci",
     "lint:prettier:ci": "prettier \"./**/*.{js,ts,json}\" --check",
     "lint:eslint:ci": "eslint \"./**/*.{ts,tsx}\""
@@ -24,5 +24,6 @@
   "dependencies": {
     "@open-truss/open-truss": "^0.3.0"
   },
-  "ot:setup": "open-truss setup"
+  "ot:setup": "open-truss setup",
+  "private": true
 }
