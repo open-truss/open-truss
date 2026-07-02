@@ -3,6 +3,6 @@
   "categories": {
     "correctness": "error",
     "suspicious": "error",
-    "style": "warn"
+    "style": "off"
   }
 }

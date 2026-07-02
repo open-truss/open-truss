@@ -4,7 +4,8 @@
   "description": "Unified Query Interface - a unified query client builder for any data source",
   "scripts": {
     "build": "bin/build",
-    "lint": "oxlint",
+    "lint": "prettier --write . && oxlint",
+    "lint:ci": "prettier --check . && oxlint",
     "test": "jest",
     "typecheck": "tsc --noEmit"
   },
@@ -38,6 +39,7 @@
     "@types/jest": "^29.5.8",
     "jest": "^29.7.0",
     "oxlint": "1.16.0",
+    "prettier": "^3.0.3",
     "ts-jest": "^29.1.1",
     "typescript": "^5.2.2"
   }

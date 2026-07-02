@@ -1,3 +1,4 @@
+*.md
 demo-app/.next
 demo-app/dist
 demo-app/src/graphql/generated-types.ts
