@@ -26,6 +26,8 @@ jobs:
         run: npm run build
       - name: Run linter
         run: ./script/lint-ci
+      - name: Run typecheck
+        run: ./script/typecheck
   test:
     runs-on: ubuntu-latest
     steps:
