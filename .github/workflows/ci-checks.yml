@@ -34,12 +34,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v3
         with:
           node-version: '24.x'
           registry-url: 'https://registry.npmjs.org'
-      - name: Upgrade npm
-        run: npm install -g npm@latest
       - name: Install open-truss dependencies
         working-directory: ./packages/open-truss
         run: npm ci --ignore-scripts
