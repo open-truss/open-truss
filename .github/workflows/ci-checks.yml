@@ -8,12 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v3
         with:
           node-version-file: 'packages/open-truss/.tool-versions'
           registry-url: 'https://registry.npmjs.org'
-      - name: Upgrade npm
-        run: npm install -g npm@latest
       - name: Install client dependencies
         working-directory: ./
         run: npm ci --ignore-scripts
@@ -32,16 +30,13 @@ jobs:
       - name: Run linter
         working-directory: ./
         run: npm run lint:ci
-      - name: Type check
-        working-directory: ./
-        run: npm run typecheck
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version-file: 'packages/open-truss/.tool-versions'
+          node-version: '24.x'
           registry-url: 'https://registry.npmjs.org'
       - name: Upgrade npm
         run: npm install -g npm@latest

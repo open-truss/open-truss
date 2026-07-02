@@ -13,7 +13,7 @@
     "typecheck": "tsc --noEmit"
   },
   "bin": {
-    "open-truss": "./bin/open-truss"
+    "open-truss": "bin/open-truss"
   },
   "files": [
     "dist",

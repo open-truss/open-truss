@@ -9,8 +9,6 @@
     "prettier": "^3.0.3",
     "typescript": "^5.2.2"
   },
-  "dependencies": {
-    "@open-truss/open-truss": "^0.3.0"
-  },
-  "ot:setup": "open-truss setup"
+  "ot:setup": "open-truss setup",
+  "private": true
 }
