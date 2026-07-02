@@ -27,7 +27,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '24.x'
-          cache: 'npm'
       - name: Install & build @open-truss/open-truss
         working-directory: ./packages/open-truss
         run: npm ci && npm run build
