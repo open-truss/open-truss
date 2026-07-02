@@ -17,8 +17,7 @@ export interface OpenTrussComponentExports {
   Props: z.AnyZodObject
 }
 export type COMPONENTS =
-  | Record<string, OpenTrussComponent>
-  | Record<string, OpenTrussComponentExports>
+  Record<string, OpenTrussComponent> | Record<string, OpenTrussComponentExports>
 
 export function RenderConfig({
   components: appComponents,

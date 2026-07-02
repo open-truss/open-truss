@@ -1,12 +1,7 @@
 import Iterator from './iterator'
 
 export type UqiMappedType =
-  | 'String'
-  | 'Number'
-  | 'Boolean'
-  | 'BigInt'
-  | 'Date'
-  | 'JSON'
+  'String' | 'Number' | 'Boolean' | 'BigInt' | 'Date' | 'JSON'
 
 export type UqiTypeMappings = Record<string, UqiMappedType>
 

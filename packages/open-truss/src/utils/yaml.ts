@@ -3,12 +3,7 @@ import { z } from 'zod'
 
 export interface YamlObject extends Record<string, YamlType> {}
 export type YamlType =
-  | null
-  | number
-  | string
-  | boolean
-  | YamlType[]
-  | YamlObject
+  null | number | string | boolean | YamlType[] | YamlObject
 
 const yamlScalars = z.union([z.null(), z.number(), z.string(), z.boolean()])
 
