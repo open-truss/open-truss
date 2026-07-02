@@ -5,6 +5,7 @@ import { parseYaml } from '../utils/yaml'
 import {
   RenderConfigV1,
   type BaseOpenTrussComponentV1,
+  type FrameWrapper,
   type WorkflowV1,
 } from './engine-v1'
 
@@ -16,8 +17,10 @@ export interface OpenTrussComponentExports {
   default: OpenTrussComponent
   Props: z.AnyZodObject
 }
-export type COMPONENTS =
-  Record<string, OpenTrussComponent> | Record<string, OpenTrussComponentExports>
+export type COMPONENTS = Record<
+  string,
+  OpenTrussComponent | OpenTrussComponentExports | FrameWrapper
+>
 
 export function RenderConfig({
   components: appComponents,
