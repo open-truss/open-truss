@@ -4,6 +4,7 @@ import {
   type FrameV1,
   type DataV1,
   type ViewPropsV1,
+  type FrameWrapper,
   hasDefaultExport,
   hasPropsExport,
 } from './config-schemas'
@@ -373,14 +374,14 @@ export function getDefaultComponent(
   if (hasDefaultExport(Component)) {
     Component = Component.default
   }
-  return Component
+  return Component as OpenTrussComponent
 }
 
 export function getComponent(
   component: string,
   configPath: string,
   COMPONENTS: COMPONENTS,
-): OpenTrussComponent | OpenTrussComponentExports {
+): OpenTrussComponent | OpenTrussComponentExports | FrameWrapper {
   const componentName = parseComponentName(component)
   const Component = COMPONENTS[componentName]
   if (!Component) {
