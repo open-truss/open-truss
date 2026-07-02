@@ -61,10 +61,9 @@ export function SignalType<T>(
   const wrappedValueShape = valueShape.nullable()
   const defaultValue = wrappedValueShape.parse(undefined)
   // Validation is in superRefine so fine to return true
-  const validator: (val: unknown) => boolean = () => true
 
   const zodType = z
-    .custom<Signal<T | null>>(validator)
+    .custom<Signal<T | null>>(() => true)
     .superRefine((val, ctx) => {
       const stringedValue = String(val)
       const yamlName = val.yamlName ?? ''

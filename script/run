@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+CMD="${1:?usage: run <command>}"
+
+for dir in packages/open-truss packages/uqi demo-app; do
+  echo "--- $dir: npm run $CMD"
+  cd "$ROOT/$dir" && npm run "$CMD"
+done

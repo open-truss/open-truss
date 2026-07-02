@@ -12,26 +12,20 @@ jobs:
         with:
           node-version-file: 'packages/open-truss/.tool-versions'
           registry-url: 'https://registry.npmjs.org'
-      - name: Install client dependencies
-        working-directory: ./
-        run: npm ci --ignore-scripts
-      - name: Run linter
-        working-directory: ./
-        run: npm run lint:ci
-  typecheck-demo-app:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '24.x'
-          registry-url: 'https://registry.npmjs.org'
-      - name: Install & build @open-truss/open-truss
+      - name: Install open-truss dependencies
         working-directory: ./packages/open-truss
-        run: npm ci && npm run build
-      - name: Install & typecheck demo-app
+        run: npm ci --ignore-scripts
+      - name: Install uqi dependencies
+        working-directory: ./packages/uqi
+        run: npm ci --ignore-scripts
+      - name: Install demo-app dependencies
         working-directory: ./demo-app
-        run: npm install && npx tsc -b
+        run: npm ci --ignore-scripts
+      - name: Build open-truss
+        working-directory: ./packages/open-truss
+        run: npm run build
+      - name: Run linter
+        run: ./script/lint-ci
   test:
     runs-on: ubuntu-latest
     steps:

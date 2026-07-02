@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "lint": "eslint ."
+    "lint": "prettier --write . && oxlint",
+    "lint:ci": "prettier --check . && oxlint",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@open-truss/open-truss": "file:../packages/open-truss",
@@ -32,7 +34,9 @@
     "@vitejs/plugin-react": "^6",
     "autoprefixer": "^10.4.17",
     "encoding": "^0.1.13",
+    "oxlint": "^1.16.0",
     "postcss": "^8.4.35",
+    "prettier": "^3.0.3",
     "tailwindcss": "^4.3.0",
     "typescript": "^5",
     "vite": "^8"

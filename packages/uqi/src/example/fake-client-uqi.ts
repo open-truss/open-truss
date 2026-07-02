@@ -10,6 +10,12 @@ import createFakeClient, {
   type FakeClientConfig,
 } from './fake-client'
 
+async function teardown(
+  context: UqiContext<FakeClientConfig, FakeClient>,
+): Promise<void> {
+  await context.client.close()
+}
+
 export default async function (config: FakeClientConfig): Promise<UqiClient> {
   const typeMappings: Record<string, UqiMappedType> = {
     int: 'Number',
@@ -36,12 +42,6 @@ export default async function (config: FakeClientConfig): Promise<UqiClient> {
     }
 
     return new Iterator(asyncGenerator())
-  }
-
-  async function teardown(
-    context: UqiContext<FakeClientConfig, FakeClient>,
-  ): Promise<void> {
-    await context.client.close()
   }
 
   const client = await createFakeClient(config)

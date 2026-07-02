@@ -29,10 +29,11 @@ export default function PropInput({
   switch (type.type) {
     case 'ZodUndefined':
     case 'ZodNull':
-    case 'ZodVoid':
+    case 'ZodVoid': {
       return null
+    }
     case 'ZodNumber':
-    case 'ZodBigInt':
+    case 'ZodBigInt': {
       return (
         <input
           name={name}
@@ -43,7 +44,8 @@ export default function PropInput({
           }}
         />
       )
-    case 'ZodString':
+    }
+    case 'ZodString': {
       return (
         <input
           name={name}
@@ -54,7 +56,8 @@ export default function PropInput({
           }}
         />
       )
-    case 'ZodBoolean':
+    }
+    case 'ZodBoolean': {
       return (
         <div>
           <label htmlFor={name}>{name}</label>
@@ -70,7 +73,8 @@ export default function PropInput({
           />
         </div>
       )
-    case 'ZodEnum':
+    }
+    case 'ZodEnum': {
       if (Array.isArray(type?.shape)) {
         const enumOptions = type.shape.map((option: string) => (
           <div key={option}>
@@ -89,6 +93,7 @@ export default function PropInput({
         ))
         return <>{enumOptions}</>
       }
+    }
   }
 
   return (

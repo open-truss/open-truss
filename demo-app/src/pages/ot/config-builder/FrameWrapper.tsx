@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import {
-  useConfigBuilderContext,
   type FrameWrapper,
+  useConfigBuilderContext,
 } from '@open-truss/open-truss'
 
 const ConfigBuilderFrameWrapper: FrameWrapper = ({
@@ -13,11 +13,11 @@ const ConfigBuilderFrameWrapper: FrameWrapper = ({
 
   let nestingHere = false
   // When we add a frame we set its `.frames` to an empty array if
-  // it supports children, so here we just check if that field is truthy.
+  // It supports children, so here we just check if that field is truthy.
   const canNestFrames = Boolean(frame?.frames)
   if (canNestFrames) {
     // `framesPath` is the current nesting component's `.frames` so to ask
-    // if this component is the nester, we remove `.frames` from the end.
+    // If this component is the nester, we remove `.frames` from the end.
     nestingHere = configPath === framesPath.replace(/\.frames$/, '')
   }
 

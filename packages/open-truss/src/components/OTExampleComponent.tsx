@@ -1,6 +1,6 @@
 import { type BaseOpenTrussComponentV1 } from '@/configuration'
 
-const OTExampleComponent: BaseOpenTrussComponentV1 = (props) => {
+const OTExampleComponent: BaseOpenTrussComponentV1 = (_props) => {
   return (
     <div>
       This component is from OT. It is called <b>OTExampleComponent</b>.

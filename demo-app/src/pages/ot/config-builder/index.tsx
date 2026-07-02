@@ -33,9 +33,7 @@ const Output: React.FC = () => {
       {!showConfig && (
         <RenderConfig
           config={config}
-          components={Object.assign({}, OT_COMPONENTS, {
-            ConfigBuilderFrameWrapper,
-          })}
+          components={{ ...OT_COMPONENTS, ConfigBuilderFrameWrapper }}
           validateConfig={false}
         />
       )}
@@ -43,19 +41,17 @@ const Output: React.FC = () => {
   )
 }
 
-const ConfigBuilder: React.FC = () => {
-  return (
-    <ConfigBuilderContextProvider>
-      <div className="flex justify-between p-2">
-        <div className="mr-2">
-          <ComponentList components={OT_COMPONENTS} />
-        </div>
-        <div className="flex-grow">
-          <Output />
-        </div>
+const ConfigBuilder: React.FC = () => (
+  <ConfigBuilderContextProvider>
+    <div className="flex justify-between p-2">
+      <div className="mr-2">
+        <ComponentList components={OT_COMPONENTS} />
       </div>
-    </ConfigBuilderContextProvider>
-  )
-}
+      <div className="flex-grow">
+        <Output />
+      </div>
+    </div>
+  </ConfigBuilderContextProvider>
+)
 
 export default ConfigBuilder

@@ -1,11 +1,9 @@
-/* eslint-disable no-template-curly-in-string */
 import {
   StringOrTemplate,
   resolveStringOrTemplate,
   resolveTemplate,
 } from './template'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const signal = (value: any) => ({ value, toString: () => String(value) })
 
 test('resolveTemplate', () => {
