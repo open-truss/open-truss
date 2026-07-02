@@ -12,9 +12,6 @@ jobs:
         with:
           node-version-file: 'packages/open-truss/.tool-versions'
           registry-url: 'https://registry.npmjs.org'
-      - name: Install client dependencies
-        working-directory: ./
-        run: npm ci --ignore-scripts
       - name: Install open-truss dependencies
         working-directory: ./packages/open-truss
         run: npm ci --ignore-scripts
@@ -28,8 +25,7 @@ jobs:
         working-directory: ./packages/open-truss
         run: npm run build
       - name: Run linter
-        working-directory: ./
-        run: npm run lint:ci
+        run: ./script/lint-ci
   test:
     runs-on: ubuntu-latest
     steps:
