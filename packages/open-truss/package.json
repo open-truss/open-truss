@@ -54,7 +54,7 @@
   "typings": "./dist/mjs/index.d.ts",
   "dependencies": {
     "@preact/signals-react": "^2.0.0",
-    "lodash": "^4.17.21",
+    "lodash": "^4.18.1",
     "object-hash": "^3.0.0",
     "sql-formatter": "^13.0.4",
     "ts-node": "^10.9.1",
