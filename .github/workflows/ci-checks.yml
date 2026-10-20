@@ -2,6 +2,7 @@ run-name: CI Checks on ${{ github.head_ref}} by @${{ github.actor }}
 
 on:
   push:
+  pull_request:
 
 jobs:
   lint:
