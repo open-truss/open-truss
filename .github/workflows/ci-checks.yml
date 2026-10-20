@@ -25,6 +25,9 @@ jobs:
       - name: Build open-truss
         working-directory: ./packages/open-truss
         run: npm run build
+      - name: Check tree shaking
+        working-directory: ./demo-app
+        run: npm run test:bundle
       - name: Run linter
         run: ./script/lint-ci
       - name: Run typecheck

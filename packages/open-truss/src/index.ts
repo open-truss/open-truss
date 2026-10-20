@@ -17,4 +17,4 @@ export {
   useComputed,
   useSignal,
   useSignalEffect,
-} from '@preact/signals-react'
+} from './preact-signals'
