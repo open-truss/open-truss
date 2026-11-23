@@ -19,8 +19,9 @@ export const Props = BaseOpenTrussComponentV1PropsShape.extend({
   source: z.string(),
   path: StringOrTemplate,
   method: StringSignal,
-  headers: z.record(StringSignal).optional(),
-  body: z.any(StringOrTemplate).optional(),
+  headers: z.record(z.string(), StringSignal).optional(),
+  // Zod 4 evaluates inner .default() under .optional(); match undefined first so omitting body does not invoke StringSignal's useSignal default.
+  body: z.union([z.undefined(), StringOrTemplate]).optional(),
   forceQuery: NumberSignal,
   output: z.array(UnknownSignal).optional(),
 })

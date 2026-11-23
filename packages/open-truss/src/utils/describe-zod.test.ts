@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { describeZod } from './describe-zod'
-import { SignalType } from '../signals'
+import { BaseOpenTrussComponentV1PropsShape } from '../configuration'
+import { NavigateFrameSignal, SignalType } from '../signals'
 
 test('describeZod', () => {
   const nestedObjectShape = z.object({
@@ -101,6 +102,66 @@ test('describeZod', () => {
       },
       defaultValue: ['a', 'b'],
       nullable: true,
+    },
+  })
+})
+
+test('describeZod omits base props and describes boolean, bigint, nan, nullable, unknown, and NavigateFrameSignal', () => {
+  const props = BaseOpenTrussComponentV1PropsShape.extend({
+    flagProp: z.boolean().default(false),
+    bigIntProp: z.bigint(),
+    nanProp: z.nan(),
+    nullableStringProp: z.string().nullable(),
+    unknownProp: z.unknown(),
+    submit: NavigateFrameSignal,
+  })
+
+  const described = describeZod(props.shape)
+
+  expect(described.data).toBeUndefined()
+  expect(described.config).toBeUndefined()
+  expect(described._DEBUG_).toBeUndefined()
+  expect(described.flagProp).toEqual({
+    type: 'ZodBoolean',
+    defaultValue: false,
+  })
+  expect(described.bigIntProp).toEqual({
+    type: 'ZodBigInt',
+  })
+  expect(described.nanProp).toEqual({
+    type: 'ZodNaN',
+  })
+  expect(described.nullableStringProp).toEqual({
+    type: 'ZodString',
+    nullable: true,
+  })
+  expect(described.unknownProp).toEqual({
+    type: 'ZodUnknown',
+  })
+  expect(described.submit).toMatchObject({
+    type: 'ZodFunction',
+    isSignal: true,
+    nullable: true,
+  })
+  expect(typeof described.submit.defaultValue).toBe('function')
+})
+
+test('describeZod uses structural type checks instead of instanceof', () => {
+  const foreignSchema = {
+    nested: {
+      type: 'object',
+      shape: {
+        count: { type: 'bigint' },
+      },
+    },
+  }
+
+  expect(describeZod(foreignSchema)).toEqual({
+    nested: {
+      type: 'ZodObject',
+      shape: {
+        count: { type: 'ZodBigInt' },
+      },
     },
   })
 })

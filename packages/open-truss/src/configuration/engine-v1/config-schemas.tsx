@@ -73,7 +73,7 @@ const FrameV1Shape: z.ZodType<FrameType> = FrameBase.extend({
 
   if (Component === undefined) {
     ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+      code: 'custom',
       message: `Did not find ${val.view.component}`,
       fatal: true,
     })
@@ -82,7 +82,7 @@ const FrameV1Shape: z.ZodType<FrameType> = FrameBase.extend({
 
   if (val.frames && !hasChildren(Component)) {
     ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+      code: 'custom',
       message: `${val.view.component} given \`frames\` but doesn't support \`children\``,
     })
     return z.NEVER
@@ -101,7 +101,7 @@ workflow:
 export const FramesV1Shape = FrameV1Shape.array()
 export type FramesV1 = z.infer<typeof FramesV1Shape>
 
-export const SignalsV1Shape = z.record(z.string()).optional()
+export const SignalsV1Shape = z.record(z.string(), z.string()).optional()
 export type SignalsV1 = z.infer<typeof SignalsV1Shape>
 
 export const WorkflowV1Shape = z.object({

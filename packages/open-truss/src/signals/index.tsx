@@ -1,4 +1,4 @@
-import { z, type ZodTypeAny } from 'zod'
+import { z } from 'zod'
 import { useSignal, type Signal as PreactSignal } from '@preact/signals-react'
 import { typeToZodMap, typeToDefaultValue } from '../utils/describe-zod'
 import { isObject } from '../utils/misc'
@@ -41,7 +41,8 @@ export function signalValueShape(signal: Signal): WrappedValueShape {
 export function getSignalAndValueShape(
   possibleZodObject: unknown,
 ): SignalAndValueShape | undefined {
-  const description = (possibleZodObject as SignalsZodType)?._def?.description
+  const description = (possibleZodObject as { description?: string })
+    ?.description
   if (description) {
     const matches = description.match(SignalsRegex)
     if (matches && matches.length > 1) {
@@ -66,21 +67,20 @@ export function SignalType<T>(
     .custom<Signal<T | null>>(() => true)
     .superRefine((val, ctx) => {
       const stringedValue = String(val)
-      const yamlName = val.yamlName ?? ''
-      const path = `[${String(ctx.path)}]`
       if (!isSignalLike(val)) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `Expected ${yamlName} signal of type=${name}, path=${path} to be a signal, but instead got ${stringedValue}`,
+          code: 'custom',
+          message: `Expected signal of type=${name} to be a signal, but instead got ${stringedValue}`,
           fatal: true,
         })
+        return
       }
 
       const parsedValue = wrappedValueShape.safeParse(val.value)
-      // We consider null a valid signal value since all values with be nullable
+      // We consider null a valid signal value since all values will be nullable
       if (!parsedValue.success) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: 'custom',
           message: `${name} signal was set to value of incorrect type. value=${stringedValue}`,
           fatal: true,
         })
@@ -122,7 +122,7 @@ function signalNameFromObject(signal: object | object[]): string {
 type DefaultValue = object | object[] | string | boolean | number
 
 interface createZodShapeReturn {
-  zodShape: ZodTypeAny
+  zodShape: z.ZodType
   defaultValue: DefaultValue
 }
 
@@ -134,7 +134,7 @@ function createZodShape(signal: object): createZodShapeReturn {
       defaultValue: [defaultValue],
     }
   } else if (isObject(signal)) {
-    const zodSchema: Record<string, ZodTypeAny> = {}
+    const zodSchema: Record<string, z.ZodType> = {}
     const defaultValue: Record<string, DefaultValue> = {}
 
     for (const [key, value] of Object.entries(signal)) {
@@ -161,7 +161,7 @@ type NavigateFrame = () => void
 export const NavigateFrameSignal = SignalType<NavigateFrame>(
   'NavigateFrame',
   // Need two functions here because .default can take in a function.
-  z.function().default(() => () => {}),
+  z.function({ input: [], output: z.void() }).default(() => () => {}),
 )
 export type NavigateFrameSignalType = z.infer<typeof NavigateFrameSignal>
 
