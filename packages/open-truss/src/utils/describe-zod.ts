@@ -13,9 +13,17 @@ export interface ZodDescriptionObject {
   nullable?: boolean
 }
 
+const ZOD_TYPE_NAME_OVERRIDES: Record<string, string> = {
+  bigint: 'ZodBigInt',
+  nan: 'ZodNaN',
+}
+
 function getZodTypeName(value: z.ZodType): string {
   const schemaType = value.type
-  return `Zod${schemaType.charAt(0).toUpperCase()}${schemaType.slice(1)}`
+  return (
+    ZOD_TYPE_NAME_OVERRIDES[schemaType] ??
+    `Zod${schemaType.charAt(0).toUpperCase()}${schemaType.slice(1)}`
+  )
 }
 
 // describeZod outputs a readable summary of a zod type.
@@ -40,34 +48,34 @@ export function describeZod(
         isSignal = true
       }
 
-      if (value instanceof zod.ZodEnum) {
+      if (value.type === 'enum') {
         description[key] = { type: 'ZodEnum', shape: Object.keys(value.enum) }
-      } else if (value instanceof zod.ZodObject) {
+      } else if (value.type === 'object') {
         description[key] = {
           type: 'ZodObject',
           shape: describeZod(value.shape),
         }
-      } else if (value instanceof zod.ZodArray) {
+      } else if (value.type === 'array') {
         const innerType = value.element
         description[key] = {
           type: 'ZodArray',
           shape: describeZod({ innerType }).innerType,
         }
-      } else if (value instanceof zod.ZodUnion) {
+      } else if (value.type === 'union') {
         description[key] = {
           type: 'ZodUnion',
-          shape: value.options.map((innerType) => {
+          shape: value.options.map((innerType: z.ZodType) => {
             return describeZod({ innerType }).innerType
           }) as unknown as ZodShape,
         }
-      } else if (value instanceof zod.ZodDefault) {
+      } else if (value.type === 'default') {
         const innerType = value.unwrap()
         const desc: ZodDescriptionObject = {
           defaultValue: value.parse(undefined) as YamlType,
           ...(describeZod({ innerType }).innerType as object),
         }
         description[key] = desc
-      } else if (value instanceof zod.ZodNullable) {
+      } else if (value.type === 'nullable') {
         const innerType = value.unwrap()
         description[key] = {
           ...(describeZod({ innerType }).innerType as object),

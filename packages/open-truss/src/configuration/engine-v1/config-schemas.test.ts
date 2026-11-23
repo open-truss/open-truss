@@ -1,4 +1,11 @@
-import { SignalsV1Shape } from './config-schemas'
+import * as RenderConfigModule from './RenderConfig'
+import {
+  BaseOpenTrussComponentV1PropsShape,
+  SignalsV1Shape,
+  WorkflowV1Shape,
+  withChildren,
+  type BaseOpenTrussComponentV1,
+} from './config-schemas'
 import { Props as GraphqlProps } from '../../components/OTGraphqlDataProvider'
 import { Props as RestProps } from '../../components/OTRestDataProvider'
 
@@ -64,5 +71,84 @@ describe('engine-v1 config and data provider schemas', () => {
       forceQuery: fakeSignal(0),
     })
     expect(invalidBody.success).toBe(false)
+  })
+
+  test('WorkflowV1Shape validates frame components and children support', () => {
+    const WithChildrenComponent = {
+      default: (() => null) as unknown as BaseOpenTrussComponentV1,
+      Props: BaseOpenTrussComponentV1PropsShape.extend(withChildren),
+    }
+    const LeafComponent = {
+      default: (() => null) as unknown as BaseOpenTrussComponentV1,
+      Props: BaseOpenTrussComponentV1PropsShape,
+    }
+    const spy = jest
+      .spyOn(RenderConfigModule, 'RUNTIME_COMPONENTS')
+      .mockReturnValue({
+        WithChildrenComponent,
+        LeafComponent,
+      })
+
+    try {
+      const valid = WorkflowV1Shape.safeParse({
+        version: 1,
+        frames: [
+          {
+            frame: null,
+            view: { component: 'WithChildrenComponent' },
+            frames: [
+              {
+                frame: null,
+                view: { component: 'LeafComponent' },
+              },
+            ],
+          },
+        ],
+      })
+      expect(valid.success).toBe(true)
+
+      const missingComponent = WorkflowV1Shape.safeParse({
+        version: 1,
+        frames: [
+          {
+            frame: null,
+            view: { component: 'MissingComponent' },
+          },
+        ],
+      })
+      expect(missingComponent.success).toBe(false)
+      if (!missingComponent.success) {
+        expect(missingComponent.error.issues[0]).toMatchObject({
+          code: 'custom',
+          message: 'Did not find MissingComponent',
+        })
+      }
+
+      const unsupportedChildren = WorkflowV1Shape.safeParse({
+        version: 1,
+        frames: [
+          {
+            frame: null,
+            view: { component: 'LeafComponent' },
+            frames: [
+              {
+                frame: null,
+                view: { component: 'LeafComponent' },
+              },
+            ],
+          },
+        ],
+      })
+      expect(unsupportedChildren.success).toBe(false)
+      if (!unsupportedChildren.success) {
+        expect(unsupportedChildren.error.issues[0]).toMatchObject({
+          code: 'custom',
+          message:
+            "LeafComponent given `frames` but doesn't support `children`",
+        })
+      }
+    } finally {
+      spy.mockRestore()
+    }
   })
 })

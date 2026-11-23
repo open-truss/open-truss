@@ -106,9 +106,11 @@ test('describeZod', () => {
   })
 })
 
-test('describeZod omits base props and describes boolean, nullable, unknown, and NavigateFrameSignal', () => {
+test('describeZod omits base props and describes boolean, bigint, nan, nullable, unknown, and NavigateFrameSignal', () => {
   const props = BaseOpenTrussComponentV1PropsShape.extend({
     flagProp: z.boolean().default(false),
+    bigIntProp: z.bigint(),
+    nanProp: z.nan(),
     nullableStringProp: z.string().nullable(),
     unknownProp: z.unknown(),
     submit: NavigateFrameSignal,
@@ -123,6 +125,12 @@ test('describeZod omits base props and describes boolean, nullable, unknown, and
     type: 'ZodBoolean',
     defaultValue: false,
   })
+  expect(described.bigIntProp).toEqual({
+    type: 'ZodBigInt',
+  })
+  expect(described.nanProp).toEqual({
+    type: 'ZodNaN',
+  })
   expect(described.nullableStringProp).toEqual({
     type: 'ZodString',
     nullable: true,
@@ -131,8 +139,29 @@ test('describeZod omits base props and describes boolean, nullable, unknown, and
     type: 'ZodUnknown',
   })
   expect(described.submit).toMatchObject({
+    type: 'ZodFunction',
     isSignal: true,
     nullable: true,
   })
   expect(typeof described.submit.defaultValue).toBe('function')
+})
+
+test('describeZod uses structural type checks instead of instanceof', () => {
+  const foreignSchema = {
+    nested: {
+      type: 'object',
+      shape: {
+        count: { type: 'bigint' },
+      },
+    },
+  }
+
+  expect(describeZod(foreignSchema)).toEqual({
+    nested: {
+      type: 'ZodObject',
+      shape: {
+        count: { type: 'ZodBigInt' },
+      },
+    },
+  })
 })
