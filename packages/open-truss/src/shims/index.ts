@@ -7,12 +7,12 @@ const JSXShape = z.custom<JSX.Element>((value) => {
 })
 
 // Component Shims
-export const CSLinkShape = z
-  .function()
-  .args(
+export const CSLinkShape = z.function({
+  input: [
     z.object({
       to: z.string(),
       children: z.any().optional(),
     }),
-  )
-  .returns(JSXShape)
+  ],
+  output: JSXShape,
+})

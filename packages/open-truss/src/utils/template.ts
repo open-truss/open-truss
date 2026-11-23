@@ -3,7 +3,7 @@ import { isString, mapValues, omit, template as templateFn } from 'lodash'
 
 import { StringSignal, isSignalLike } from '../signals'
 
-export const TemplateObject = z.object({ template: z.string() }).passthrough()
+export const TemplateObject = z.looseObject({ template: z.string() })
 export type TemplateObjectType = z.infer<typeof TemplateObject>
 export function resolveTemplate(template: TemplateObjectType): string {
   const pathValues = omit(template, 'template')

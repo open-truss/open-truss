@@ -1,5 +1,5 @@
 import { z as zod, type z } from 'zod'
-import { BaseOpenTrussComponentV1PropsShape } from '../configuration'
+import { BaseOpenTrussComponentV1PropsShape } from '../configuration/engine-v1/config-schemas'
 import { getSignalAndValueShape } from '../signals'
 import { type YamlType } from './yaml'
 
@@ -11,6 +11,11 @@ export interface ZodDescriptionObject {
   defaultValue?: YamlType
   shape?: ZodShape
   nullable?: boolean
+}
+
+function getZodTypeName(value: z.ZodType): string {
+  const schemaType = value.type
+  return `Zod${schemaType.charAt(0).toUpperCase()}${schemaType.slice(1)}`
 }
 
 // describeZod outputs a readable summary of a zod type.
@@ -35,39 +40,41 @@ export function describeZod(
         isSignal = true
       }
 
-      const type = value._def.typeName
-      if (type === 'ZodEnum') {
-        description[key] = { type, shape: Object.keys(value.enum) }
-      } else if (type === 'ZodObject') {
-        description[key] = { type, shape: describeZod(value.shape) }
-      } else if (type === 'ZodArray') {
-        const innerType = value._def.type
+      if (value instanceof zod.ZodEnum) {
+        description[key] = { type: 'ZodEnum', shape: Object.keys(value.enum) }
+      } else if (value instanceof zod.ZodObject) {
         description[key] = {
-          type,
+          type: 'ZodObject',
+          shape: describeZod(value.shape),
+        }
+      } else if (value instanceof zod.ZodArray) {
+        const innerType = value.element
+        description[key] = {
+          type: 'ZodArray',
           shape: describeZod({ innerType }).innerType,
         }
-      } else if (type === 'ZodUnion') {
+      } else if (value instanceof zod.ZodUnion) {
         description[key] = {
-          type,
-          shape: value._def.options.map((innerType: z.ZodType) => {
+          type: 'ZodUnion',
+          shape: value.options.map((innerType) => {
             return describeZod({ innerType }).innerType
-          }),
+          }) as unknown as ZodShape,
         }
-      } else if (type === 'ZodDefault') {
-        const innerType = value._def.innerType
+      } else if (value instanceof zod.ZodDefault) {
+        const innerType = value.unwrap()
         const desc: ZodDescriptionObject = {
-          defaultValue: value.parse(undefined),
+          defaultValue: value.parse(undefined) as YamlType,
           ...(describeZod({ innerType }).innerType as object),
         }
         description[key] = desc
-      } else if (type === 'ZodNullable') {
-        const innerType = value._def.innerType
+      } else if (value instanceof zod.ZodNullable) {
+        const innerType = value.unwrap()
         description[key] = {
           ...(describeZod({ innerType }).innerType as object),
           nullable: true,
         }
       } else {
-        description[key] = { type }
+        description[key] = { type: getZodTypeName(value) }
       }
       if (isSignal) {
         description[key].isSignal = true
@@ -78,7 +85,7 @@ export function describeZod(
   )
 }
 
-export const typeToZodMap: Record<string, z.ZodTypeAny> = {
+export const typeToZodMap: Record<string, z.ZodType> = {
   string: zod.string(),
   number: zod.number(),
   boolean: zod.boolean(),

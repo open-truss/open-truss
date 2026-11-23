@@ -1,5 +1,6 @@
 import {
   StringOrTemplate,
+  TemplateObject,
   resolveStringOrTemplate,
   resolveTemplate,
 } from './template'
@@ -28,4 +29,20 @@ test('resolveStringOrTemplate', () => {
   expect(resolveStringOrTemplate(StringOrTemplate.parse(signal('hello')))).toBe(
     'hello',
   )
+})
+
+test('TemplateObject preserves extra template keys and requires string template', () => {
+  const parsed = TemplateObject.parse({
+    template: '/items/${id}',
+    id: '42',
+    extra: 7,
+  })
+  expect(parsed).toEqual({
+    template: '/items/${id}',
+    id: '42',
+    extra: 7,
+  })
+
+  expect(TemplateObject.safeParse({ id: '42' }).success).toBe(false)
+  expect(TemplateObject.safeParse({ template: 123 }).success).toBe(false)
 })
